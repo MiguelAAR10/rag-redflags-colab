@@ -13,6 +13,7 @@ for deterministic unit tests without GPU.
 from __future__ import annotations
 
 import logging
+from functools import lru_cache
 from typing import Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
@@ -61,14 +62,14 @@ def _build_prompt(query: str, chunks: List[Dict], system_prompt: str) -> str:
     )
 
 
-def _qwen_generate(
-    query: str, chunks: List[Dict], system_prompt: str
-) -> str:
-    """Generate answer with Qwen2.5-3B locally via transformers."""
-    from transformers import AutoModelForCausalLM, AutoTokenizer
+@lru_cache(maxsize=1)
+def _load_qwen(model_name: str = "Qwen/Qwen2.5-3B-Instruct"):
+    """Carga (y CACHEA) tokenizer+model de Qwen. Se carga UNA sola vez.
 
-    model_name = "Qwen/Qwen2.5-3B-Instruct"
-    prompt = _build_prompt(query, chunks, system_prompt)
+    Evita recargar el modelo (~6GB) en cada llamada a analyze() → menos tiempo
+    y menor riesgo de OOM en Colab.
+    """
+    from transformers import AutoModelForCausalLM, AutoTokenizer
 
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
@@ -77,6 +78,17 @@ def _qwen_generate(
         device_map="auto",
         trust_remote_code=True,
     )
+    return tokenizer, model
+
+
+def _qwen_generate(
+    query: str, chunks: List[Dict], system_prompt: str
+) -> str:
+    """Generate answer with Qwen2.5-3B locally via transformers (modelo cacheado)."""
+    model_name = "Qwen/Qwen2.5-3B-Instruct"
+    prompt = _build_prompt(query, chunks, system_prompt)
+
+    tokenizer, model = _load_qwen(model_name)
 
     messages = [
         {"role": "system", "content": system_prompt},

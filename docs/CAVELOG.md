@@ -2,6 +2,26 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-05-30 — FIX: cache de modelos (evitar recargas/OOM en Colab)
+
+### Problema
+En Colab, `analyze(..., grounding_method="embedding")` mostraba muchas veces "LOAD REPORT ... multilingual-e5-base": el modelo de embeddings se recargaba en cada `embed_texts` (retrieval, grounding por frase, route_family). Igual el reranker y Qwen se recargaban por llamada.
+
+### Solución
+- `embeddings._load_model` → `@lru_cache(maxsize=2)` (carga una vez por nombre; reutilizado en retrieval/grounding/route).
+- `rerankers._load_cross_encoder` → `@lru_cache(maxsize=1)`.
+- `agent`: nuevo `_load_qwen()` `@lru_cache(maxsize=1)` (tokenizer+model una vez); `_qwen_generate` lo reutiliza.
+- No cambia arquitectura ni formato de salida de `analyze`.
+
+### Evidencia
+- Nuevo `tests/test_model_cache.py` (4 tests): los 3 loaders exponen `cache_info` + test funcional (SentenceTransformer falso construido 1 sola vez). 4/4 PASS.
+- `verify.sh` verde (tests previos intactos).
+
+### Resultado
+Misma respuesta, menos logs de carga, menor tiempo y menor riesgo de OOM en Colab.
+
+
+
 ## 2026-05-30 — Fase 9: RAG con LangChain para validar la data (Claude)
 
 ### Decisión

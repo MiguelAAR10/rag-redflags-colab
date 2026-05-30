@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import logging
 import os
+from functools import lru_cache
 from pathlib import Path
 from typing import List, Optional
 
@@ -44,8 +45,13 @@ def _read_hf_token() -> Optional[str]:
     return None
 
 
+@lru_cache(maxsize=2)
 def _load_model(model_name: str):
-    """Carga modelo sentence-transformers con token HF si está disponible."""
+    """Carga (y CACHEA) el modelo sentence-transformers con token HF si está disponible.
+
+    Cacheado con lru_cache → el modelo se carga UNA sola vez por nombre y se
+    reutiliza en retrieval, grounding y route_family (evita recargas/OOM en Colab).
+    """
     from sentence_transformers import SentenceTransformer
 
     token = _read_hf_token()

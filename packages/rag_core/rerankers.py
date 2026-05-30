@@ -8,6 +8,7 @@ Modelo: BAAI/bge-reranker-v2-m3 (o fallback).
 from __future__ import annotations
 
 import logging
+from functools import lru_cache
 from typing import Dict, List, Optional
 
 logger = logging.getLogger(__name__)
@@ -15,8 +16,9 @@ logger = logging.getLogger(__name__)
 DEFAULT_MODEL = "BAAI/bge-reranker-v2-m3"
 
 
+@lru_cache(maxsize=1)
 def _load_cross_encoder(model_name: str = DEFAULT_MODEL):
-    """Carga CrossEncoder con manejo de errores."""
+    """Carga (y CACHEA) el CrossEncoder. Se carga una sola vez y se reutiliza."""
     from sentence_transformers import CrossEncoder
 
     return CrossEncoder(model_name, trust_remote_code=True)

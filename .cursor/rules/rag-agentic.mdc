@@ -1,0 +1,13 @@
+---
+description: Reglas para trabajar en el RAG agentico
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+- Lee AGENTS.md antes de modificar código.
+- Usa specs/ como fuente de verdad.
+- No inventes evidencia.
+- Toda respuesta RAG debe citar fuentes.
+- Actualiza CAVELOG y progress cuando el cambio sea relevante.
+- Ejecuta scripts/init.sh antes de empezar y scripts/verify.sh al terminar.

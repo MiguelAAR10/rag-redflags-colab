@@ -1,0 +1,41 @@
+{
+  "configs": [
+    {
+      "label": "small",
+      "size": 512,
+      "overlap": 64,
+      "total_chunks": 472,
+      "avg_chunk_len": 368.8,
+      "max_chunk_len": 512,
+      "min_chunk_len": 3,
+      "fragmented_units": 130,
+      "fragmentation_pct": 54.9,
+      "avg_real_overlap": 62.6
+    },
+    {
+      "label": "medium",
+      "size": 1024,
+      "overlap": 128,
+      "total_chunks": 299,
+      "avg_chunk_len": 558.8,
+      "max_chunk_len": 1023,
+      "min_chunk_len": 17,
+      "fragmented_units": 40,
+      "fragmentation_pct": 16.9,
+      "avg_real_overlap": 124.5
+    },
+    {
+      "label": "large",
+      "size": 2048,
+      "overlap": 256,
+      "total_chunks": 249,
+      "avg_chunk_len": 650.8,
+      "max_chunk_len": 2045,
+      "min_chunk_len": 9,
+      "fragmented_units": 10,
+      "fragmentation_pct": 4.2,
+      "avg_real_overlap": 226.2
+    }
+  ],
+  "total_units": 237
+}

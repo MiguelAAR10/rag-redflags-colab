@@ -1,0 +1,1260 @@
+{
+  "generated_by": "scripts/build_context_graph.py",
+  "note": "Grafo determinista del harness. Regenerar tras cambios: bash scripts/build-context-graph.sh",
+  "counts": {
+    "nodes": 61,
+    "edges": 220,
+    "orphans": 0
+  },
+  "nodes": [
+    {
+      "id": "AGENTS.md",
+      "title": "AGENTS.md",
+      "kind": "root",
+      "lines": 73
+    },
+    {
+      "id": "CLAUDE.md",
+      "title": "CLAUDE.md",
+      "kind": "root",
+      "lines": 48
+    },
+    {
+      "id": "README.md",
+      "title": "RAG Agentic Harness Starter",
+      "kind": "root",
+      "lines": 36
+    },
+    {
+      "id": "docs/ARCHITECTURE.md",
+      "title": "Arquitectura — RAG Agentico",
+      "kind": "doc",
+      "lines": 90
+    },
+    {
+      "id": "docs/CAVELOG.md",
+      "title": "CAVELOG",
+      "kind": "doc",
+      "lines": 421
+    },
+    {
+      "id": "docs/CAVEMAN.md",
+      "title": "CAVEMAN — Metodología de trabajo del arnés",
+      "kind": "doc",
+      "lines": 55
+    },
+    {
+      "id": "docs/COLAB.md",
+      "title": "COLAB — Cómo entregar y correr el notebook",
+      "kind": "doc",
+      "lines": 30
+    },
+    {
+      "id": "docs/CONTEXT_GRAPH.md",
+      "title": "CONTEXT_GRAPH (generado)",
+      "kind": "doc",
+      "lines": 285
+    },
+    {
+      "id": "docs/LOOP.md",
+      "title": "LOOP — El ciclo humano (a quién le hablas en cada paso)",
+      "kind": "doc",
+      "lines": 37
+    },
+    {
+      "id": "docs/MCP_POLICY.md",
+      "title": "MCP Policy",
+      "kind": "doc",
+      "lines": 52
+    },
+    {
+      "id": "docs/MEMORY_INDEX.md",
+      "title": "MEMORY_INDEX — Mapa de lectura (qué abrir y qué NO)",
+      "kind": "doc",
+      "lines": 68
+    },
+    {
+      "id": "docs/MEMORY_PROTOCOL.md",
+      "title": "MEMORY_PROTOCOL — Memoria inteligente sin saturar contexto",
+      "kind": "doc",
+      "lines": 85
+    },
+    {
+      "id": "docs/MULTI_CLI_PROTOCOL.md",
+      "title": "MULTI_CLI_PROTOCOL — Coordinación Claude · Codex · OpenCode",
+      "kind": "doc",
+      "lines": 86
+    },
+    {
+      "id": "docs/RUBRICA.md",
+      "title": "RUBRICA — Criterios de evaluación del proyecto final",
+      "kind": "doc",
+      "lines": 54
+    },
+    {
+      "id": "docs/SECURITY_MODEL.md",
+      "title": "Security Model — RAG Agentico",
+      "kind": "doc",
+      "lines": 30
+    },
+    {
+      "id": "docs/START_HERE.md",
+      "title": "START_HERE — Arranque universal para cualquier worker",
+      "kind": "doc",
+      "lines": 35
+    },
+    {
+      "id": "docs/TESTING.md",
+      "title": "TESTING — Estrategia de tests",
+      "kind": "doc",
+      "lines": 57
+    },
+    {
+      "id": "specs/001-product-brief.md",
+      "title": "Spec 001 — Product Brief",
+      "kind": "spec",
+      "lines": 31
+    },
+    {
+      "id": "specs/002-mvp-scope.md",
+      "title": "Spec 002 — MVP Scope",
+      "kind": "spec",
+      "lines": 29
+    },
+    {
+      "id": "specs/003-agent-runtime.md",
+      "title": "Spec 003 — Agent Runtime",
+      "kind": "spec",
+      "lines": 42
+    },
+    {
+      "id": "specs/004-redflags-rag.md",
+      "title": "Spec 004 — RAG Agéntico de Red Flags en Contratación Pública",
+      "kind": "spec",
+      "lines": 62
+    },
+    {
+      "id": "specs/005-multicli-orchestration.md",
+      "title": "Spec 005 — Orquestación Multi-CLI del Pipeline RAG",
+      "kind": "spec",
+      "lines": 100
+    },
+    {
+      "id": "specs/_TEMPLATE-feature.md",
+      "title": "Spec NNN — <título de la feature>",
+      "kind": "spec",
+      "lines": 24
+    },
+    {
+      "id": "progress/CURRENT_STATE.md",
+      "title": "CURRENT_STATE — Estado actual del proyecto",
+      "kind": "state",
+      "lines": 40
+    },
+    {
+      "id": "progress/HANDOFF.md",
+      "title": "HANDOFF — Punto de retoma más reciente",
+      "kind": "state",
+      "lines": 7
+    },
+    {
+      "id": "progress/NEXT_ACTION.md",
+      "title": "NEXT_ACTION — La siguiente tarea exacta (una sola)",
+      "kind": "state",
+      "lines": 24
+    },
+    {
+      "id": ".claude/agents/coordinator.md",
+      "title": ".claude/agents/coordinator.md",
+      "kind": "agent",
+      "lines": 14
+    },
+    {
+      "id": ".claude/agents/dataset-engineer.md",
+      "title": ".claude/agents/dataset-engineer.md",
+      "kind": "agent",
+      "lines": 14
+    },
+    {
+      "id": ".claude/agents/evaluator.md",
+      "title": ".claude/agents/evaluator.md",
+      "kind": "agent",
+      "lines": 12
+    },
+    {
+      "id": ".claude/agents/rag-implementer.md",
+      "title": ".claude/agents/rag-implementer.md",
+      "kind": "agent",
+      "lines": 12
+    },
+    {
+      "id": ".claude/agents/reviewer.md",
+      "title": ".claude/agents/reviewer.md",
+      "kind": "agent",
+      "lines": 8
+    },
+    {
+      "id": ".claude/agents/spec-planner.md",
+      "title": ".claude/agents/spec-planner.md",
+      "kind": "agent",
+      "lines": 13
+    },
+    {
+      "id": ".opencode/agent/worker.md",
+      "title": ".opencode/agent/worker.md",
+      "kind": "agent",
+      "lines": 23
+    },
+    {
+      "id": ".codex/skills/rag-agentic-harness/SKILL.md",
+      "title": "RAG Agentic Harness Skill",
+      "kind": "skill",
+      "lines": 24
+    },
+    {
+      "id": "tasks/backlog.json",
+      "title": "tasks/backlog.json",
+      "kind": "task",
+      "lines": 152
+    },
+    {
+      "id": "tasks/queue.json",
+      "title": "tasks/queue.json",
+      "kind": "task",
+      "lines": 88
+    },
+    {
+      "id": "packages/evals/metrics.py",
+      "title": "packages/evals/metrics.py",
+      "kind": "code",
+      "lines": 188
+    },
+    {
+      "id": "packages/rag_core/agent.py",
+      "title": "packages/rag_core/agent.py",
+      "kind": "code",
+      "lines": 212
+    },
+    {
+      "id": "packages/rag_core/chunkers.py",
+      "title": "packages/rag_core/chunkers.py",
+      "kind": "code",
+      "lines": 225
+    },
+    {
+      "id": "packages/rag_core/citations.py",
+      "title": "packages/rag_core/citations.py",
+      "kind": "code",
+      "lines": 49
+    },
+    {
+      "id": "packages/rag_core/embeddings.py",
+      "title": "packages/rag_core/embeddings.py",
+      "kind": "code",
+      "lines": 117
+    },
+    {
+      "id": "packages/rag_core/indexing.py",
+      "title": "packages/rag_core/indexing.py",
+      "kind": "code",
+      "lines": 177
+    },
+    {
+      "id": "packages/rag_core/loaders.py",
+      "title": "packages/rag_core/loaders.py",
+      "kind": "code",
+      "lines": 496
+    },
+    {
+      "id": "packages/rag_core/rerankers.py",
+      "title": "packages/rag_core/rerankers.py",
+      "kind": "code",
+      "lines": 119
+    },
+    {
+      "id": "packages/rag_core/retrievers.py",
+      "title": "packages/rag_core/retrievers.py",
+      "kind": "code",
+      "lines": 479
+    },
+    {
+      "id": "packages/rag_core/run_phase3.py",
+      "title": "packages/rag_core/run_phase3.py",
+      "kind": "code",
+      "lines": 112
+    },
+    {
+      "id": "packages/rag_core/run_phase4.py",
+      "title": "packages/rag_core/run_phase4.py",
+      "kind": "code",
+      "lines": 166
+    },
+    {
+      "id": "packages/rag_core/run_phase5.py",
+      "title": "packages/rag_core/run_phase5.py",
+      "kind": "code",
+      "lines": 101
+    },
+    {
+      "id": "packages/rag_core/run_phase6.py",
+      "title": "packages/rag_core/run_phase6.py",
+      "kind": "code",
+      "lines": 121
+    },
+    {
+      "id": "packages/rag_core/run_phase7.py",
+      "title": "packages/rag_core/run_phase7.py",
+      "kind": "code",
+      "lines": 217
+    },
+    {
+      "id": "packages/rag_core/tests/test_chunking.py",
+      "title": "packages/rag_core/tests/test_chunking.py",
+      "kind": "code",
+      "lines": 268
+    },
+    {
+      "id": "packages/rag_core/tests/test_dataset_contract.py",
+      "title": "packages/rag_core/tests/test_dataset_contract.py",
+      "kind": "code",
+      "lines": 299
+    },
+    {
+      "id": "packages/rag_core/tests/test_embeddings_faiss.py",
+      "title": "packages/rag_core/tests/test_embeddings_faiss.py",
+      "kind": "code",
+      "lines": 268
+    },
+    {
+      "id": "packages/rag_core/tests/test_eval.py",
+      "title": "packages/rag_core/tests/test_eval.py",
+      "kind": "code",
+      "lines": 184
+    },
+    {
+      "id": "packages/rag_core/tests/test_grounding.py",
+      "title": "packages/rag_core/tests/test_grounding.py",
+      "kind": "code",
+      "lines": 308
+    },
+    {
+      "id": "packages/rag_core/tests/test_notebook_smoke.py",
+      "title": "packages/rag_core/tests/test_notebook_smoke.py",
+      "kind": "code",
+      "lines": 69
+    },
+    {
+      "id": "packages/rag_core/tests/test_reranker.py",
+      "title": "packages/rag_core/tests/test_reranker.py",
+      "kind": "code",
+      "lines": 235
+    },
+    {
+      "id": "packages/rag_core/tests/test_retrieval_router.py",
+      "title": "packages/rag_core/tests/test_retrieval_router.py",
+      "kind": "code",
+      "lines": 463
+    },
+    {
+      "id": "packages/rag_core/verifier.py",
+      "title": "packages/rag_core/verifier.py",
+      "kind": "code",
+      "lines": 135
+    },
+    {
+      "id": "apps/api/app/main.py",
+      "title": "apps/api/app/main.py",
+      "kind": "code",
+      "lines": 8
+    },
+    {
+      "id": "apps/api/tests/test_health.py",
+      "title": "apps/api/tests/test_health.py",
+      "kind": "code",
+      "lines": 9
+    }
+  ],
+  "edges": [
+    {
+      "from": "AGENTS.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "docs/CAVEMAN.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "docs/MEMORY_PROTOCOL.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "docs/START_HERE.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "progress/HANDOFF.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "docs/CAVEMAN.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "progress/HANDOFF.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "CLAUDE.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "README.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "README.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "README.md",
+      "to": "tasks/backlog.json"
+    },
+    {
+      "from": "docs/ARCHITECTURE.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": ".opencode/agent/worker.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/ARCHITECTURE.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/CAVEMAN.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/COLAB.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/CONTEXT_GRAPH.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/MEMORY_PROTOCOL.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/RUBRICA.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/START_HERE.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/TESTING.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/evals/metrics.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/agent.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/chunkers.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/citations.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/embeddings.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/indexing.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/loaders.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/rerankers.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/retrievers.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/tests/test_chunking.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/tests/test_dataset_contract.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/tests/test_embeddings_faiss.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/tests/test_eval.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/verifier.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "specs/005-multicli-orchestration.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "specs/_TEMPLATE-feature.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "tasks/backlog.json"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "tasks/queue.json"
+    },
+    {
+      "from": "docs/CAVEMAN.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "docs/CAVEMAN.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "docs/CAVEMAN.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "docs/CAVEMAN.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": "docs/CAVEMAN.md",
+      "to": "progress/HANDOFF.md"
+    },
+    {
+      "from": "docs/CAVEMAN.md",
+      "to": "tasks/backlog.json"
+    },
+    {
+      "from": "docs/COLAB.md",
+      "to": "docs/RUBRICA.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": ".claude/agents/coordinator.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": ".claude/agents/dataset-engineer.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": ".claude/agents/evaluator.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": ".claude/agents/rag-implementer.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": ".claude/agents/reviewer.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": ".claude/agents/spec-planner.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": ".codex/skills/rag-agentic-harness/SKILL.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": ".opencode/agent/worker.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "CLAUDE.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "README.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "apps/api/app/main.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "apps/api/tests/test_health.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/ARCHITECTURE.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/CAVEMAN.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/LOOP.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/MCP_POLICY.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/MEMORY_PROTOCOL.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/RUBRICA.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/SECURITY_MODEL.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/START_HERE.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/TESTING.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/evals/metrics.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/agent.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/chunkers.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/citations.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/embeddings.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/indexing.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/loaders.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/rerankers.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/retrievers.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/run_phase3.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/run_phase4.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/run_phase5.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/run_phase6.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/run_phase7.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_chunking.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_dataset_contract.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_embeddings_faiss.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_eval.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_grounding.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_reranker.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_retrieval_router.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/verifier.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "progress/HANDOFF.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "specs/001-product-brief.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "specs/002-mvp-scope.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "specs/003-agent-runtime.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "specs/005-multicli-orchestration.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "specs/_TEMPLATE-feature.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "tasks/backlog.json"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "tasks/queue.json"
+    },
+    {
+      "from": "docs/LOOP.md",
+      "to": "docs/START_HERE.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "docs/CAVEMAN.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "docs/CONTEXT_GRAPH.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "docs/LOOP.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "docs/MEMORY_PROTOCOL.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "docs/RUBRICA.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "docs/SECURITY_MODEL.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/agent.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/chunkers.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/citations.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/embeddings.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/indexing.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/loaders.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/rerankers.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/retrievers.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "packages/rag_core/verifier.py"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "progress/HANDOFF.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "docs/CAVEMAN.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "docs/CONTEXT_GRAPH.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "docs/RUBRICA.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "progress/HANDOFF.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "tasks/backlog.json"
+    },
+    {
+      "from": "docs/MULTI_CLI_PROTOCOL.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "docs/MULTI_CLI_PROTOCOL.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "docs/MULTI_CLI_PROTOCOL.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "docs/MULTI_CLI_PROTOCOL.md",
+      "to": "docs/START_HERE.md"
+    },
+    {
+      "from": "docs/MULTI_CLI_PROTOCOL.md",
+      "to": "packages/rag_core/chunkers.py"
+    },
+    {
+      "from": "docs/MULTI_CLI_PROTOCOL.md",
+      "to": "packages/rag_core/loaders.py"
+    },
+    {
+      "from": "docs/MULTI_CLI_PROTOCOL.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "docs/START_HERE.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "docs/START_HERE.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "docs/START_HERE.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": "docs/START_HERE.md",
+      "to": "progress/HANDOFF.md"
+    },
+    {
+      "from": "docs/START_HERE.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "docs/START_HERE.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "docs/TESTING.md",
+      "to": "apps/api/tests/test_health.py"
+    },
+    {
+      "from": "docs/TESTING.md",
+      "to": "docs/START_HERE.md"
+    },
+    {
+      "from": "docs/TESTING.md",
+      "to": "packages/rag_core/tests/test_chunking.py"
+    },
+    {
+      "from": "docs/TESTING.md",
+      "to": "tasks/queue.json"
+    },
+    {
+      "from": "specs/004-redflags-rag.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "specs/005-multicli-orchestration.md",
+      "to": "docs/START_HERE.md"
+    },
+    {
+      "from": "specs/005-multicli-orchestration.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "specs/005-multicli-orchestration.md",
+      "to": "tasks/queue.json"
+    },
+    {
+      "from": "specs/_TEMPLATE-feature.md",
+      "to": "tasks/backlog.json"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "docs/CAVEMAN.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "docs/COLAB.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "docs/CONTEXT_GRAPH.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "docs/LOOP.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "docs/MEMORY_PROTOCOL.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "docs/RUBRICA.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "packages/rag_core/loaders.py"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "specs/_TEMPLATE-feature.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
+      "to": "tasks/queue.json"
+    },
+    {
+      "from": "progress/HANDOFF.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "progress/HANDOFF.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": "progress/HANDOFF.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "progress/NEXT_ACTION.md",
+      "to": "docs/COLAB.md"
+    },
+    {
+      "from": ".claude/agents/coordinator.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": ".claude/agents/coordinator.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": ".claude/agents/coordinator.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": ".claude/agents/coordinator.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": ".claude/agents/coordinator.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": ".claude/agents/coordinator.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": ".claude/agents/dataset-engineer.md",
+      "to": "packages/rag_core/loaders.py"
+    },
+    {
+      "from": ".claude/agents/rag-implementer.md",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": ".claude/agents/spec-planner.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": ".claude/agents/spec-planner.md",
+      "to": "docs/RUBRICA.md"
+    },
+    {
+      "from": ".claude/agents/spec-planner.md",
+      "to": "progress/CURRENT_STATE.md"
+    },
+    {
+      "from": ".claude/agents/spec-planner.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": ".opencode/agent/worker.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": ".opencode/agent/worker.md",
+      "to": "docs/MEMORY_INDEX.md"
+    },
+    {
+      "from": ".codex/skills/rag-agentic-harness/SKILL.md",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "tasks/backlog.json",
+      "to": "AGENTS.md"
+    },
+    {
+      "from": "tasks/backlog.json",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_chunking.py"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_dataset_contract.py"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_embeddings_faiss.py"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_eval.py"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_grounding.py"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_notebook_smoke.py"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_reranker.py"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_retrieval_router.py"
+    },
+    {
+      "from": "packages/rag_core/tests/test_dataset_contract.py",
+      "to": "packages/rag_core/loaders.py"
+    }
+  ],
+  "orphans": []
+}

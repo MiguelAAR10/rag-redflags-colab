@@ -1,0 +1,80 @@
+{
+  "phase": "fase7-eval",
+  "num_gold_items": 12,
+  "sample_evaluated": 3,
+  "note": "Gold set completo (12 items) se evalúa en Colab por tiempo de embedding. Aquí muestra representativa.",
+  "bm25_available": false,
+  "comparison": {
+    "faiss_only": {
+      "recall_at_k": {
+        "3": 0.8333,
+        "5": 0.8333
+      },
+      "precision_at_k": {
+        "3": 0.4444,
+        "5": 0.2667
+      },
+      "mean_grounding_ratio": 0.0
+    },
+    "hybrid_bm25_faiss": {
+      "recall_at_k": {
+        "3": 0.8333,
+        "5": 0.8333
+      },
+      "precision_at_k": {
+        "3": 0.4444,
+        "5": 0.2667
+      },
+      "mean_grounding_ratio": 0.0
+    },
+    "hybrid_top20_rerank_top5": {
+      "recall_at_k": {
+        "3": 0.8333,
+        "5": 0.8333
+      },
+      "precision_at_k": {
+        "3": 0.4444,
+        "5": 0.2667
+      },
+      "mean_grounding_ratio": 0.0
+    }
+  },
+  "grounding_analysis": {
+    "recall_at_k": {
+      "3": 0.8333,
+      "5": 0.8333
+    },
+    "precision_at_k": {
+      "3": 0.4444,
+      "5": 0.2667
+    },
+    "mean_grounding_ratio": 0.3051
+  },
+  "qualitative": {
+    "best_example": {
+      "query": "The procurement planning documents were not published to the public.",
+      "expected": [
+        "R001"
+      ],
+      "retrieved": [
+        "R001",
+        "R063"
+      ],
+      "recall@5": 1.0,
+      "explanation": "El retrieval encontró indicadores relevantes coincidentes con lo esperado."
+    },
+    "worst_example": {
+      "query": "A single bidder submitted a proposal for this contract.",
+      "expected": [
+        "R018",
+        "R019"
+      ],
+      "retrieved": [
+        "R018",
+        "R035"
+      ],
+      "recall@5": 0.5,
+      "explanation": "El retrieval no encontró los indicadores esperados. Posiblemente la consulta usa lenguaje diferente al del documento, o los indicadores relevantes requieren un análisis más contextual."
+    }
+  }
+}

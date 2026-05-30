@@ -1,0 +1,16 @@
+{
+  "model": "intfloat/multilingual-e5-base",
+  "embedding_dim": 768,
+  "num_chunks": 299,
+  "num_vectors": 299,
+  "embedding_time_s": 85.3,
+  "index_time_s": 0.0,
+  "index_type": "IndexFlatIP",
+  "index_path": "data/index/redflags_flatip.index",
+  "mapping_path": "data/index/chunk_id_mapping.json",
+  "norms": {
+    "min": 1.0,
+    "max": 1.0,
+    "mean": 1.0
+  }
+}

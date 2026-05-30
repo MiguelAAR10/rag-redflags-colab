@@ -1,0 +1,15 @@
+.env
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+*:Zone.Identifier
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/index/*
+!data/index/.gitkeep

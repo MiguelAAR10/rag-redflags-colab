@@ -1,0 +1,151 @@
+{
+  "project": "rag-redflags-colab",
+  "spec_activa": "specs/004-redflags-rag.md",
+  "tasks": [
+    {
+      "id": "F0-HARNESS",
+      "title": "Construir harness multi-CLI",
+      "phase": 0,
+      "status": "done",
+      "cli": "claude",
+      "reviewer": "codex",
+      "acceptance_criteria": [
+        "AGENTS.md, MEMORY_INDEX, CAVEMAN, MULTI_CLI_PROTOCOL, RUBRICA creados",
+        "spec 004 creada",
+        "progress/ (CURRENT_STATE, NEXT_ACTION, HANDOFF, runs/, reviews/, evidence/)",
+        "scripts init/verify/handoff/context-pack",
+        "subagentes .claude/agents + .opencode/agent",
+        "bash scripts/verify.sh pasa"
+      ]
+    },
+    {
+      "id": "F0.1-HARDENING",
+      "title": "Hardening de verificacion del harness",
+      "phase": 0,
+      "status": "done",
+      "cli": "claude",
+      "reviewer": "codex",
+      "acceptance_criteria": [
+        "scripts/validate-harness.sh creado",
+        "valida frontmatter de agentes Claude y OpenCode",
+        "valida AGENTS.md <180 lineas, backlog JSON, CAVELOG fechado, NEXT_ACTION unico",
+        "integrado en verify.sh",
+        "validate-harness OK"
+      ]
+    },
+    {
+      "id": "F1-DATASET",
+      "title": "PDF -> unidades documentales logicas con metadata",
+      "phase": 1,
+      "status": "done",
+      "validated": "test_dataset_contract.py 10/10 PASS sobre rework Kimi (237 unidades)",
+      "review": "progress/reviews/2026-05-29-claude-fase1-review.md",
+      "note": "1a pasada (MiniMax) rechazada: indicator_name 95% None, family 30% unknown sin adjudicacion, unidades por pagina. Rework en Fase 1.1.",
+      "cli": "opencode|codex",
+      "reviewer": "claude",
+      "acceptance_criteria": [
+        ">=100 unidades en data/processed/redflags_units.jsonl",
+        "metadata completa por unidad",
+        "reporte de exploracion en progress/evidence"
+      ]
+    },
+    {
+      "id": "F2-CHUNKING",
+      "title": "Chunking + overlap, comparar 2 tamanos",
+      "phase": 2,
+      "status": "done",
+      "validated": "test_chunking.py 12/12 PASS; 299 chunks 1024/128; comparativa small/medium/large",
+      "cli": "codex",
+      "reviewer": "claude",
+      "acceptance_criteria": [
+        "2 tamanos de chunk comparados con overlap",
+        "tabla de tradeoff y analisis"
+      ]
+    },
+    {
+      "id": "F3-FAISS",
+      "title": "Embeddings + FAISS (Flat; HNSW bonus)",
+      "phase": 3,
+      "status": "done",
+      "validated": "test_embeddings_faiss.py 16/16 PASS; e5-base 768d, 299 vectores IndexFlatIP en data/index/",
+      "cli": "codex",
+      "reviewer": "claude",
+      "acceptance_criteria": [
+        "embeddings multilingues justificados",
+        "IndexFlatIP funcional + top-k",
+        "HNSW comparado (bonus)"
+      ]
+    },
+    {
+      "id": "F4-RETRIEVAL",
+      "title": "Retrieval hibrido (BM25+FAISS) + router de familias",
+      "phase": 4,
+      "status": "done",
+      "validated": "test_retrieval_router.py 14 PASS + 3 skip; RRF/weighted + route_family. BM25 requiere rank_bm25 (Colab)",
+      "cli": "codex",
+      "reviewer": "claude",
+      "acceptance_criteria": [
+        "router clasifica familia de red flags",
+        "retrieval hibrido top-20"
+      ]
+    },
+    {
+      "id": "F5-RERANKER",
+      "title": "Cross-encoder reranker (bonus, con fallback)",
+      "phase": 5,
+      "status": "done",
+      "validated": "test_reranker.py 7 PASS + 1 skip; bge-reranker-v2-m3 + fallback graceful",
+      "cli": "codex",
+      "reviewer": "claude",
+      "acceptance_criteria": [
+        "FAISS top-20 -> reranker -> top-5",
+        "fallback a FAISS top-k si falla memoria",
+        "comparacion top-5 vs top-20+rerank"
+      ]
+    },
+    {
+      "id": "F6-QWEN-GROUNDING",
+      "title": "Qwen2.5-3B genera observaciones + grounding",
+      "phase": 6,
+      "status": "done",
+      "validated": "test_grounding.py 15/15 PASS; analyze+verifier+citations; SYSTEM_PROMPT lenguaje seguro; Qwen runtime",
+      "cli": "claude|codex",
+      "reviewer": "cruzado",
+      "acceptance_criteria": [
+        "respuesta con citas",
+        "grounding ratio por frase",
+        "refusal si no hay evidencia",
+        "lenguaje seguro + revision humana"
+      ]
+    },
+    {
+      "id": "F7-EVAL",
+      "title": "Evaluacion: Recall@k, Precision@k, grounding, casos",
+      "phase": 7,
+      "status": "done",
+      "validated": "test_eval.py 15/15 PASS; goldset 12; R@3=R@5=0.833 (muestra); ejemplo bueno/malo; ROUGE/BLEU bonus",
+      "cli": "opencode",
+      "reviewer": "claude",
+      "acceptance_criteria": [
+        "gold set de contratos",
+        "metricas con evidencia",
+        "analisis cualitativo bueno/malo",
+        "BLEU/ROUGE (bonus)"
+      ]
+    },
+    {
+      "id": "F8-NOTEBOOK-SLIDES",
+      "title": "Notebook Colab (10 secciones) + slides (7 min)",
+      "phase": 8,
+      "status": "in_progress",
+      "validated": "notebook listo + smoke gate 5/5; slides aparte; pendiente correr en Colab",
+      "cli": "claude|codex",
+      "reviewer": "codex|humano",
+      "acceptance_criteria": [
+        "notebook corre end-to-end en Colab T4",
+        "diagrama del pipeline",
+        "slides con 8 secciones"
+      ]
+    }
+  ]
+}

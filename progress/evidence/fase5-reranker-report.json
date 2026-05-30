@@ -1,0 +1,226 @@
+{
+  "phase": "fase5-reranker",
+  "model": "BAAI/bge-reranker-v2-m3",
+  "queries_tested": 3,
+  "results": {
+    "bid rigging during tender competition": {
+      "elapsed_ms": 37594.91,
+      "num_candidates": 20,
+      "hybrid_top5": [
+        {
+          "chunk_id": "ocp_R036_core_6c05b5cd0b1f_c0_6c05b5cd0b1f",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8664
+        },
+        {
+          "chunk_id": "ocp_R007_core_e76d2245cd55_c0_e76d2245cd55",
+          "family": "competencia/licitacion",
+          "indicator_name": "Unreasonable prequalification requirements",
+          "score": 0.8629
+        },
+        {
+          "chunk_id": "ocp_R003_core_546b4b6c1510_c0_546b4b6c1510",
+          "family": "competencia/licitacion",
+          "indicator_name": "Short time between tender advertising and bid opening",
+          "score": 0.8621
+        },
+        {
+          "chunk_id": "ocp_R008_core_d711d57d42a3_c0_d711d57d42a3",
+          "family": "competencia/licitacion",
+          "indicator_name": "Unreasonable participation fees",
+          "score": 0.8621
+        },
+        {
+          "chunk_id": "ocp_R038_formula_56ae9eebf449_c0_56ae9eebf449",
+          "family": "adjudicacion",
+          "indicator_name": "Excessive disqualified bids",
+          "score": 0.8607
+        }
+      ],
+      "reranked_top5": [
+        {
+          "chunk_id": "ocp_R036_core_6c05b5cd0b1f_c0_6c05b5cd0b1f",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8664,
+          "rerank_score": 0.6162
+        },
+        {
+          "chunk_id": "ocp_R030_core_d408629e132e_c0_d408629e132e",
+          "family": "adjudicacion",
+          "indicator_name": "Late bid won",
+          "score": 0.8594,
+          "rerank_score": 0.5937
+        },
+        {
+          "chunk_id": "ocp_R057_core_86c818a49c0d_c0_86c818a49c0d",
+          "family": "adjudicacion",
+          "indicator_name": "Bid rotation",
+          "score": 0.8575,
+          "rerank_score": 0.5809
+        },
+        {
+          "chunk_id": "ocp_R041_core_7997edaad1eb_c0_7997edaad1eb",
+          "family": "competencia/licitacion",
+          "indicator_name": "Physical similarities in documents by different bidders",
+          "score": 0.8546,
+          "rerank_score": 0.555
+        },
+        {
+          "chunk_id": "ocp_R002_core_1dedda7946d7_c0_1dedda7946d7",
+          "family": "planeacion",
+          "indicator_name": "Splitting purchases to avoid procurement thresholds",
+          "score": 0.857,
+          "rerank_score": 0.5278
+        }
+      ]
+    },
+    "contract execution delays and payment issues": {
+      "elapsed_ms": 29177.9,
+      "num_candidates": 20,
+      "hybrid_top5": [
+        {
+          "chunk_id": "ocp_meta_p019_156b1ba5d649_c1_6c12473f5fe3",
+          "family": "metodologia",
+          "indicator_name": "Table 3. List of procurement red flags",
+          "score": 0.8427
+        },
+        {
+          "chunk_id": "ocp_R067_formula_14f8be3ae786_c0_14f8be3ae786",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Delivery failure",
+          "score": 0.8405
+        },
+        {
+          "chunk_id": "ocp_R060_formula_19c783cc35b0_c0_d6bf5fabde45",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Long time between award date and contract signature date",
+          "score": 0.8366
+        },
+        {
+          "chunk_id": "ocp_meta_p021_9bf2d0de6615_c1_74f00a224744",
+          "family": "metodologia",
+          "indicator_name": "General",
+          "score": 0.8358
+        },
+        {
+          "chunk_id": "ocp_R073_formula_06790c96ce87_c0_06790c96ce87",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Discrepancies between work completed and contract specifications",
+          "score": 0.8356
+        }
+      ],
+      "reranked_top5": [
+        {
+          "chunk_id": "ocp_R067_formula_14f8be3ae786_c0_14f8be3ae786",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Delivery failure",
+          "score": 0.8405,
+          "rerank_score": 0.0527
+        },
+        {
+          "chunk_id": "ocp_R060_formula_19c783cc35b0_c0_d6bf5fabde45",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Long time between award date and contract signature date",
+          "score": 0.8366,
+          "rerank_score": 0.0442
+        },
+        {
+          "chunk_id": "ocp_meta_p019_156b1ba5d649_c1_6c12473f5fe3",
+          "family": "metodologia",
+          "indicator_name": "Table 3. List of procurement red flags",
+          "score": 0.8427,
+          "rerank_score": 0.0324
+        },
+        {
+          "chunk_id": "ocp_R073_formula_06790c96ce87_c0_06790c96ce87",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Discrepancies between work completed and contract specifications",
+          "score": 0.8356,
+          "rerank_score": 0.0123
+        },
+        {
+          "chunk_id": "ocp_meta_p009_6f9011029acc_c2_fe885b1d6593",
+          "family": "metodologia",
+          "indicator_name": "General",
+          "score": 0.8281,
+          "rerank_score": 0.0094
+        }
+      ]
+    },
+    "award winner selection lowest price": {
+      "elapsed_ms": 31575.14,
+      "num_candidates": 20,
+      "hybrid_top5": [
+        {
+          "chunk_id": "ocp_meta_p018_13b471d35b82_c0_13b471d35b82",
+          "family": "metodologia",
+          "indicator_name": "Fraud",
+          "score": 0.8217
+        },
+        {
+          "chunk_id": "ocp_R036_core_6c05b5cd0b1f_c0_6c05b5cd0b1f",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8215
+        },
+        {
+          "chunk_id": "ocp_R036_formula_920db41ed900_c0_920db41ed900",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8065
+        },
+        {
+          "chunk_id": "ocp_meta_p021_9bf2d0de6615_c0_61e1206f199f",
+          "family": "metodologia",
+          "indicator_name": "General",
+          "score": 0.8022
+        },
+        {
+          "chunk_id": "ocp_R031_formula_33d54171b95f_c0_33d54171b95f",
+          "family": "adjudicacion",
+          "indicator_name": "Winning bid price very close or higher than estimated price",
+          "score": 0.8018
+        }
+      ],
+      "reranked_top5": [
+        {
+          "chunk_id": "ocp_R036_formula_920db41ed900_c0_920db41ed900",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8065,
+          "rerank_score": 0.1332
+        },
+        {
+          "chunk_id": "ocp_R024_formula_eeed1829c50c_c0_23fd70d5e35e",
+          "family": "adjudicacion",
+          "indicator_name": "Price close to winning bid",
+          "score": 0.7936,
+          "rerank_score": 0.1027
+        },
+        {
+          "chunk_id": "ocp_R036_core_6c05b5cd0b1f_c0_6c05b5cd0b1f",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8215,
+          "rerank_score": 0.0959
+        },
+        {
+          "chunk_id": "ocp_meta_p021_9bf2d0de6615_c0_61e1206f199f",
+          "family": "metodologia",
+          "indicator_name": "General",
+          "score": 0.8022,
+          "rerank_score": 0.0427
+        },
+        {
+          "chunk_id": "ocp_meta_p018_13b471d35b82_c0_13b471d35b82",
+          "family": "metodologia",
+          "indicator_name": "Fraud",
+          "score": 0.8217,
+          "rerank_score": 0.0154
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "phase": "fase4-retrieval-router",
+  "num_chunks": 299,
+  "bm25_available": false,
+  "router": [
+    {
+      "query": "budget planning and needs assessment",
+      "families": [
+        "planeacion"
+      ],
+      "elapsed_ms": 0.04
+    },
+    {
+      "query": "bid rigging during tender competition",
+      "families": [
+        "competencia-licitacion"
+      ],
+      "elapsed_ms": 0.01
+    },
+    {
+      "query": "award winner selection lowest price",
+      "families": [
+        "adjudicacion"
+      ],
+      "elapsed_ms": 0.01
+    },
+    {
+      "query": "contract execution delay payment milestone",
+      "families": [
+        "ejecucion-contrato"
+      ],
+      "elapsed_ms": 0.04
+    },
+    {
+      "query": "collusion among bidders in open tender",
+      "families": [
+        "competencia-licitacion"
+      ],
+      "elapsed_ms": 0.01
+    }
+  ],
+  "faiss": {
+    "budget planning and needs assessment": {
+      "elapsed_ms": 15552.72,
+      "top_k": [
+        {
+          "chunk_id": "ocp_R002_formula_5ce391559601_c0_5ce391559601",
+          "family": "planeacion",
+          "indicator_name": "Manipulation of procurement thresholds",
+          "score": 0.8232,
+          "text_snippet": "Required data fields\nMethodology\nManipulation of procurement \nthresholds\nR002"
+        },
+        {
+          "chunk_id": "ocp_meta_p099_364119f4ada0_c3_4e25a06a3772",
+          "family": "metodologia",
+          "indicator_name": "General",
+          "score": 0.8209,
+          "text_snippet": "ce Risk Assessment System (GRAS) Advanced Data Analytics for \nDetecting Fraud, Corruption, and Collusion in Public Expen..."
+        },
+        {
+          "chunk_id": "ocp_R046_core_aff495a564d4_c0_aff495a564d4",
+          "family": "competencia/licitacion",
+          "indicator_name": "Bidder is debarred or on sanctions list",
+          "score": 0.8206,
+          "text_snippet": "Source\nBased on “Blacklisting” in A decision support system for fraud detection in public \nprocurement and “Sanctioned c..."
+        },
+        {
+          "chunk_id": "ocp_meta_p012_08a09a131397_c1_0e49c0989f7b",
+          "family": "metodologia",
+          "indicator_name": "indicator you should:",
+          "score": 0.8165,
+          "text_snippet": "elds. It can also assess non-\nstandardized procurement information and \nadvise on the feasibility of calculations, and \n..."
+        },
+        {
+          "chunk_id": "ocp_R023_core_fb677c46f1b7_c0_fb677c46f1b7",
+          "family": "competencia/licitacion",
+          "indicator_name": "Fixed-multiple bid prices",
+          "score": 0.8126,
+          "text_snippet": "Source\nBased on “Concerted bids” in A decision support system for fraud detection in \npublic procurement and “Number of ..."
+        }
+      ]
+    },
+    "bid rigging during tender competition": {
+      "elapsed_ms": 6357.68,
+      "top_k": [
+        {
+          "chunk_id": "ocp_R036_core_6c05b5cd0b1f_c0_6c05b5cd0b1f",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8664,
+          "text_snippet": "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImpleme..."
+        },
+        {
+          "chunk_id": "ocp_R007_core_e76d2245cd55_c0_e76d2245cd55",
+          "family": "competencia/licitacion",
+          "indicator_name": "Unreasonable prequalification requirements",
+          "score": 0.8629,
+          "text_snippet": "Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\n..."
+        },
+        {
+          "chunk_id": "ocp_R003_core_546b4b6c1510_c0_546b4b6c1510",
+          "family": "competencia/licitacion",
+          "indicator_name": "Short time between tender advertising and bid opening",
+          "score": 0.8621,
+          "text_snippet": "Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\n..."
+        },
+        {
+          "chunk_id": "ocp_R008_core_d711d57d42a3_c0_d711d57d42a3",
+          "family": "competencia/licitacion",
+          "indicator_name": "Unreasonable participation fees",
+          "score": 0.8621,
+          "text_snippet": "Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\n..."
+        },
+        {
+          "chunk_id": "ocp_R038_formula_56ae9eebf449_c0_56ae9eebf449",
+          "family": "adjudicacion",
+          "indicator_name": "Excessive disqualified bids",
+          "score": 0.8607,
+          "text_snippet": "Methodology\nData fields needed\nOCDS fields\n• Information on the bid \nstatus, id.\n• Bidder id\n• Buyer or procuring entity..."
+        }
+      ]
+    },
+    "award winner selection lowest price": {
+      "elapsed_ms": 6616.27,
+      "top_k": [
+        {
+          "chunk_id": "ocp_meta_p018_13b471d35b82_c0_13b471d35b82",
+          "family": "metodologia",
+          "indicator_name": "Fraud",
+          "score": 0.8217,
+          "text_snippet": "Low competition\nAward\nTender\nPlanning\nContract \nImplementation"
+        },
+        {
+          "chunk_id": "ocp_R036_core_6c05b5cd0b1f_c0_6c05b5cd0b1f",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8215,
+          "text_snippet": "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImpleme..."
+        },
+        {
+          "chunk_id": "ocp_R036_formula_920db41ed900_c0_920db41ed900",
+          "family": "adjudicacion",
+          "indicator_name": "Lowest bid disqualified",
+          "score": 0.8065,
+          "text_snippet": "Methodology\nRequired data fields\nData fields needed\nOCDS fields\n• Bid id\n• Bid status\n• Bid amounts\n• Award criteria\nbid..."
+        },
+        {
+          "chunk_id": "ocp_meta_p021_9bf2d0de6615_c0_61e1206f199f",
+          "family": "metodologia",
+          "indicator_name": "General",
+          "score": 0.8022,
+          "text_snippet": "R016 - Tender value is higher or lower than average for this item category\nR020 - Tender has a complaint\nR021 - High use..."
+        },
+        {
+          "chunk_id": "ocp_R031_formula_33d54171b95f_c0_33d54171b95f",
+          "family": "adjudicacion",
+          "indicator_name": "Winning bid price very close or higher than estimated price",
+          "score": 0.8018,
+          "text_snippet": "Methodology\nRequired data fields\nData fields needed\nOCDS fields\n• Bid amount\n• Bid status\n• Winning bidder\n• Tender amou..."
+        }
+      ]
+    },
+    "contract execution delay payment milestone": {
+      "elapsed_ms": 6592.18,
+      "top_k": [
+        {
+          "chunk_id": "ocp_R067_formula_14f8be3ae786_c0_14f8be3ae786",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Delivery failure",
+          "score": 0.8321,
+          "text_snippet": "Methodology\nData fields needed\nOCDS fields\n• Contract implementation \ndetails\n• Contract milestones due date \nand delive..."
+        },
+        {
+          "chunk_id": "ocp_R060_formula_19c783cc35b0_c1_2a7384b00637",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Long time between award date and contract signature date",
+          "score": 0.8278,
+          "text_snippet": "\ndate is above threshold value.  \nLong time between award date and \ncontract signature date \nR060\nAward\nTender\nPlanning\n..."
+        },
+        {
+          "chunk_id": "ocp_R060_formula_19c783cc35b0_c0_d6bf5fabde45",
+          "family": "ejecucion/contrato",
+          "indicator_name": "Long time between award date and contract signature date",
+          "score": 0.8265,
+          "text_snippet": "Methodology\nData fields needed\nOCDS fields\nAdditional information needed\n• Award date\n• Contract signature date\n• Procur..."
+        },
+        {
+          "chunk_id": "ocp_meta_p021_9bf2d0de6615_c1_74f00a224744",
+          "family": "metodologia",
+          "indicator_name": "General",
+          "score": 0.8243,
+          "text_snippet": "ct amount\nR060 - Long time between award date and contract signature date\nR061 - Decision period extremely short\nR062 - ..."
+        },
+        {
+          "chunk_id": "ocp_R003_core_546b4b6c1510_c0_546b4b6c1510",
+          "family": "competencia/licitacion",
+          "indicator_name": "Short time between tender advertising and bid opening",
+          "score": 0.824,
+          "text_snippet": "Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\n..."
+        }
+      ]
+    },
+    "collusion among bidders in open tender": {
+      "elapsed_ms": 7907.71,
+      "top_k": [
+        {
+          "chunk_id": "ocp_R028_formula_c1ffc5f33fe9_c0_c1ffc5f33fe9",
+          "family": "adjudicacion",
+          "indicator_name": "Identical bid prices",
+          "score": 0.8599,
+          "text_snippet": "Methodology\nRequired data fields\nData fields needed\nOCDS fields\n• Bid status\n• Bid values \nbids/details/id, \nbids/detail..."
+        },
+        {
+          "chunk_id": "ocp_R025_formula_a3efc0478d0e_c0_a3efc0478d0e",
+          "family": "adjudicacion",
+          "indicator_name": "Co-bidding pairs have same recurrent winner",
+          "score": 0.8558,
+          "text_snippet": "Data fields needed\nOCDS fields\n• Winning bidder\n• Bid status\n• Bidder details\nbids/details/id,bids/details/status, \nbids..."
+        },
+        {
+          "chunk_id": "ocp_R023_formula_37e43080918d_c0_37e43080918d",
+          "family": "competencia/licitacion",
+          "indicator_name": "Fixed-multiple bid prices",
+          "score": 0.8545,
+          "text_snippet": "Data fields needed\nOCDS fields\n• Individual bid data and their \namounts. \nbids/details/id, \nbids/details/value/amount, \n..."
+        },
+        {
+          "chunk_id": "ocp_R034_formula_8b701ea1a227_c0_8b701ea1a227",
+          "family": "competencia/licitacion",
+          "indicator_name": "Bids submitted in same order",
+          "score": 0.8543,
+          "text_snippet": "Methodology\nRequired data fields\nData fields needed\nOCDS fields\n• Bidder details\n• Bids date\n• Bid status\nbids/details/i..."
+        },
+        {
+          "chunk_id": "ocp_meta_p008_df029a7eb531_c1_dacc702de81d",
+          "family": "metodologia",
+          "indicator_name": "Table 1. Most useful data fields to calculate red flags indicators",
+          "score": 0.8535,
+          "text_snippet": "me\ntender/procuringEntity/id\ntender/procuringEntity/name\nDetails about the \nbidders participating \nin the process\nThe bi..."
+        }
+      ]
+    }
+  },
+  "hybrid": {},
+  "family_filter_demo": {
+    "planeacion": {
+      "count": 1,
+      "families_in_results": [
+        "planeacion"
+      ]
+    },
+    "competencia-licitacion": {
+      "count": 0,
+      "families_in_results": []
+    },
+    "adjudicacion": {
+      "count": 1,
+      "families_in_results": [
+        "adjudicacion"
+      ]
+    },
+    "ejecucion-contrato": {
+      "count": 0,
+      "families_in_results": []
+    }
+  }
+}

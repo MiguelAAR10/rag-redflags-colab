@@ -1,0 +1,64 @@
+{
+  "total_units": 237,
+  "indicator_pages": 73,
+  "indicator_units": 195,
+  "methodology_units": 42,
+  "family_distribution": {
+    "metodologia": 42,
+    "planeacion": 18,
+    "competencia/licitacion": 80,
+    "ejecucion/contrato": 47,
+    "adjudicacion": 50
+  },
+  "stage_distribution": {
+    "planning": 18,
+    "tender": 80,
+    "contract": 47,
+    "award": 50
+  },
+  "block_type_distribution": {
+    "section": 42,
+    "core": 102,
+    "formula": 81,
+    "example": 12
+  },
+  "indicator_name_coverage_pct": 100.0,
+  "indicator_name_coverage_count": "195/195",
+  "unknown_family_count": 0,
+  "missing_families": [],
+  "all_families_present": true,
+  "target_met": true,
+  "criteria_passed": true,
+  "sample_units": [
+    {
+      "doc_id": "ocp_meta_p002_3a105dcc8617",
+      "parent_doc_id": null,
+      "source_file": "OCP2024-RedFlagProcurement-1.pdf",
+      "page_start": 2,
+      "page_end": 2,
+      "section": "metodologia",
+      "block_type": "section",
+      "family": "metodologia",
+      "stage": null,
+      "indicator_code": null,
+      "indicator_name": "General",
+      "hash": "3a105dcc8617",
+      "text": "Open Contracting Partnership 2024.\nThis work by the Open Contracting Partnership, unless otherwise noted, \nis licensed under a Creative Commons Attribution-NonCommercial-\nShareAlike 4.0 International (CC BY-NC-SA 4.0) license.\nLead authors: Camila Salazar\nEditing: Sophie Brown, Georg Neumann\nDesign: Molly McLeod"
+    },
+    {
+      "doc_id": "ocp_meta_p003_357d406947d4",
+      "parent_doc_id": null,
+      "source_file": "OCP2024-RedFlagProcurement-1.pdf",
+      "page_start": 3,
+      "page_end": 3,
+      "section": "metodologia",
+      "block_type": "section",
+      "family": "metodologia",
+      "stage": null,
+      "indicator_code": null,
+      "indicator_name": "Introduction",
+      "hash": "357d406947d4",
+      "text": "Introduction\nThis guide builds on the Open Contracting Partnership’s (OCP) previous \nwork to help our global partners publish and use open contracting data \nto achieve greater public integrity. In 2016, we launched our Red Flags \nfor Integrity Guide, a methodology to calculate a list of risk indicators \nthat identify corruption risks throughout the procurement process from \nplanning to implementation, mapped to the Open Contracting Data \nStandard (OCDS). Our partners have used this guidance to build red \nflags analytical tools and dashboards and implement civic monitoring \ninitiatives. \nThis document refines our guidance on how to use public procurement \ndata to calculate red flags indicators. It covers: \n1. Our definition of red flags and OCP’s approach to supporting \npartners to calculate procurement risks.\n2. What data is most useful to calculate red flags.\n3. A step-by-step guide on how to implement red flags in practice. \n4. A revisited list of red flags indicators in public procurement, drawn \nfrom academic literature, international best practice and existing \nred flags implementations. The list includes definitions, detailed \nformulas to calculate red flags using standardized data and \nexamples."
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "updated": "2026-05-29",
+  "tasks": [
+    {
+      "id": "F1.1-dataset",
+      "phase": "1.1",
+      "title": "Construir y validar contrato del dataset (redflags)",
+      "owner_cli": "kimi",
+      "status": "done",
+      "validated": "gate 10/10 PASS (2026-05-29)",
+      "depends_on": [],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_dataset_contract.py -q"
+    },
+    {
+      "id": "F2-chunking",
+      "phase": "2",
+      "title": "Estrategia de chunking y normalizacion de documentos",
+      "owner_cli": "kimi",
+      "status": "done",
+      "validated": "gate 12/12 PASS; 299 chunks (1024/128)",
+      "depends_on": ["F1.1-dataset"],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_chunking.py -q"
+    },
+    {
+      "id": "F3-embeddings-faiss",
+      "phase": "3",
+      "title": "Generacion de embeddings e indice FAISS",
+      "owner_cli": "deepseek",
+      "status": "done",
+      "validated": "gate 16/16 PASS; e5-base 768d, 299 vectores, IndexFlatIP",
+      "depends_on": ["F2-chunking"],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_embeddings_faiss.py -q"
+    },
+    {
+      "id": "F4-retrieval-router",
+      "phase": "4",
+      "title": "Retrieval con router de consultas",
+      "owner_cli": "kimi",
+      "status": "done",
+      "validated": "gate 14 PASS + 3 skip (BM25 sin rank_bm25 local); RRF+weighted+router OK",
+      "depends_on": ["F3-embeddings-faiss"],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_retrieval_router.py -q"
+    },
+    {
+      "id": "F5-reranker",
+      "phase": "5",
+      "title": "Reranker cross-encoder sobre candidatos recuperados",
+      "owner_cli": "minimax",
+      "status": "done",
+      "validated": "gate 7 PASS + 1 skip; rerank bge-v2-m3 + fallback; reordena top-5",
+      "depends_on": ["F4-retrieval-router"],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_reranker.py -q"
+    },
+    {
+      "id": "F6-qwen-grounding",
+      "phase": "6",
+      "title": "Generacion con grounding y citas (Qwen)",
+      "owner_cli": "deepseek",
+      "note": "implementa DeepSeek; Qwen2.5-3B es el LLM de runtime que el codigo invoca (corre en Colab)",
+      "status": "done",
+      "validated": "gate 15/15 PASS; grounding+citations+refusal+lenguaje seguro; Qwen2.5-3B runtime",
+      "depends_on": ["F5-reranker"],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_grounding.py -q"
+    },
+    {
+      "id": "F7-eval",
+      "phase": "7",
+      "title": "Evaluacion end-to-end (faithfulness, recall, precision)",
+      "owner_cli": "deepseek",
+      "status": "done",
+      "validated": "gate 15/15 PASS; goldset 12 items; recall/precision@k + grounding + compare_methods + ROUGE/BLEU bonus",
+      "depends_on": ["F6-qwen-grounding"],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_eval.py -q"
+    },
+    {
+      "id": "F8-notebook",
+      "phase": "8",
+      "title": "Notebook de demo y reporte final del pipeline",
+      "owner_cli": "claude",
+      "status": "in_progress",
+      "validated": "notebook autorado (25 celdas, 10 secciones); smoke gate 5/5 PASS. Pendiente: correr en Colab T4 (humano)",
+      "depends_on": ["F7-eval"],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_notebook_smoke.py -q"
+    }
+  ]
+}

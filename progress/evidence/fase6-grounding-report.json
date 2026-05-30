@@ -1,0 +1,66 @@
+{
+  "phase": "fase6-qwen-grounding",
+  "model": "Qwen2.5-3B-Instruct (simulado con _minimal_analysis)",
+  "queries_tested": 3,
+  "results": {
+    "contract_bid_rigging": {
+      "query": "Un contrato de obra pública por 5M USD con solo un oferente y precios idénticos entre los dos únicos participantes. El p...",
+      "family": [
+        "adjudicacion"
+      ],
+      "num_candidates": 5,
+      "answer": "Análisis preliminar (sin modelo de lenguaje — requiere Qwen en Colab):\n\n1. Señal de riesgo potencial: Collusion risks (None, p.18-18). Requiere revisión humana.\n2. Señal de riesgo potencial: General (None, p.99-99). Requiere revisión humana.\n3. Señal de riesgo potencial: General (None, p.20-20). Requiere revisión humana.\n4. Señal de riesgo potencial: The submission period is too short (R014, p.26-26). Requiere revisión humana.\n5. Señal de riesgo potencial: References (None, p.97-97). Requiere revisión humana.",
+      "grounding_ratio": 0.0625,
+      "num_citations": 1,
+      "num_sentences": 16,
+      "supported_sentences": 1,
+      "citations": [
+        {
+          "sentence": "Señal de riesgo potencial: The submission period is too short (R014, p.26-26).",
+          "indicator_code": "R014",
+          "indicator_name": "The submission period is too short",
+          "page": "26-26"
+        }
+      ],
+      "has_refusal": true,
+      "has_safe_language": true
+    },
+    "contract_delays": {
+      "query": "Un contrato de servicios de consultoría con 18 meses de retraso en la entrega y pagos parciales sin hitos verificables. ...",
+      "family": [
+        "ejecucion-contrato"
+      ],
+      "num_candidates": 5,
+      "answer": "Análisis preliminar (sin modelo de lenguaje — requiere Qwen en Colab):\n\n1. Señal de riesgo potencial: General (None, p.99-99). Requiere revisión humana.\n2. Señal de riesgo potencial: References (None, p.97-97). Requiere revisión humana.\n3. Señal de riesgo potencial: Select the indicators (None, p.11-11). Requiere revisión humana.\n4. Señal de riesgo potencial: References (None, p.97-97). Requiere revisión humana.\n5. Señal de riesgo potencial: Fraud (None, p.18-18). Requiere revisión humana.",
+      "grounding_ratio": 0.0625,
+      "num_citations": 1,
+      "num_sentences": 16,
+      "supported_sentences": 1,
+      "citations": [
+        {
+          "sentence": "Señal de riesgo potencial: Select the indicators (None, p.11-11).",
+          "indicator_code": null,
+          "indicator_name": "References",
+          "page": "97-97"
+        }
+      ],
+      "has_refusal": true,
+      "has_safe_language": true
+    },
+    "contract_clean": {
+      "query": "Evaluación de un proceso de contratación estándar sin irregularidades aparentes, con múltiples oferentes y criterios de ...",
+      "family": [
+        "adjudicacion"
+      ],
+      "num_candidates": 5,
+      "answer": "Análisis preliminar (sin modelo de lenguaje — requiere Qwen en Colab):\n\n1. Señal de riesgo potencial: Collusion risks (None, p.18-18). Requiere revisión humana.\n2. Señal de riesgo potencial: References (None, p.97-97). Requiere revisión humana.\n3. Señal de riesgo potencial: References (None, p.97-97). Requiere revisión humana.\n4. Señal de riesgo potencial: Fraud (None, p.18-18). Requiere revisión humana.\n5. Señal de riesgo potencial: General (None, p.98-98). Requiere revisión humana.",
+      "grounding_ratio": 0.0,
+      "num_citations": 0,
+      "num_sentences": 16,
+      "supported_sentences": 0,
+      "citations": [],
+      "has_refusal": true,
+      "has_safe_language": true
+    }
+  }
+}

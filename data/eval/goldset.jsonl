@@ -1,0 +1,12 @@
+{"query": "The procurement planning documents were not published to the public.", "relevant_indicator_codes": ["R001"], "relevant_families": ["planeacion"]}
+{"query": "A single bidder submitted a proposal for this contract.", "relevant_indicator_codes": ["R018", "R019"], "relevant_families": ["competencia/licitacion"]}
+{"query": "The tender was advertised only 2 days before the submission deadline.", "relevant_indicator_codes": ["R003", "R014"], "relevant_families": ["competencia/licitacion"]}
+{"query": "Several bidders submitted identical bid prices in the tender.", "relevant_indicator_codes": ["R028", "R023"], "relevant_families": ["adjudicacion", "competencia/licitacion"]}
+{"query": "The winning bid was disqualified after being the lowest price.", "relevant_indicator_codes": ["R036", "R037"], "relevant_families": ["adjudicacion"]}
+{"query": "The buyer used a non-competitive procedure without justification.", "relevant_indicator_codes": ["R010", "R013"], "relevant_families": ["competencia/licitacion"]}
+{"query": "The contract delivery is delayed by 12 months and no penalty was applied.", "relevant_indicator_codes": ["R067"], "relevant_families": ["ejecucion/contrato"]}
+{"query": "Bidders used the same physical address and shared contact information.", "relevant_indicator_codes": ["R032", "R041", "R043"], "relevant_families": ["competencia/licitacion"]}
+{"query": "The contract price increased by 40 percent after award through amendments.", "relevant_indicator_codes": ["R059", "R068", "R069"], "relevant_families": ["ejecucion/contrato"]}
+{"query": "Multiple direct awards were made just below the competitive threshold value.", "relevant_indicator_codes": ["R011", "R012", "R054"], "relevant_families": ["adjudicacion"]}
+{"query": "The winning bidder is on a sanctions list and was debarred in another country.", "relevant_indicator_codes": ["R046", "R045"], "relevant_families": ["competencia/licitacion"]}
+{"query": "Technical specifications in the tender were tailored to a specific supplier brand.", "relevant_indicator_codes": ["R006", "R021"], "relevant_families": ["competencia/licitacion"]}

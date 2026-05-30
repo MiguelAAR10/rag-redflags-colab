@@ -2,6 +2,25 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-05-30 — Limpieza del notebook para Colab (feedback del revisor)
+
+### Decisión (aplicado al notebook, 32 celdas)
+1. **3.1 `compare_chunk_configs`**: ya usaba tuplas `(size, overlap, label)` ✓ (la función las exige).
+2. **LangChain fuera de la sección 1**: install movido a nueva celda **11.0** (RUN_LANGCHAIN con try/except). Evita conflictos de `requests` al inicio.
+3. **Token HF unificado**: una sola celda **1.0** robusta (Colab Secrets → getpass, nunca imprime el token). Eliminada la celda duplicada (1.3).
+4. **Sección 11 sin OOM**: 11.1 (retrieval LangChain) y 11.2 guardadas con `if not RUN_LANGCHAIN`; **11.2 (Qwen vía LangChain) es opt-in** (`RUN_LANGCHAIN_QWEN=False`) para no cargar un 2.º Qwen (el principal de la sección 7 ya está cacheado).
+5. **10.2 Resumen técnico** añadido (para la rúbrica/exposición).
+6. **Prefijos E5 `query:`/`passage:`**: verificado que `embeddings.embed_texts` ya los aplica (is_query) y `retrievers` usa is_query=True para queries → correcto, sin cambios.
+7. Qwen determinista (`do_sample=False`, sin temperature/top_p) → sin warning de sampling.
+
+### Evidencia
+- Smoke `test_notebook_smoke.py` 5/5; `verify.sh` = 102 passed, 6 skipped (26s con cache).
+
+### Próximos pasos
+- Correr en Colab (debería ir limpio, sin recargas ni OOM); capturas para slides.
+
+
+
 ## 2026-05-30 — FIX: cache de modelos (evitar recargas/OOM en Colab)
 
 ### Problema

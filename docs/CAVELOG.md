@@ -2,6 +2,25 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-05-30 — Fase 9: RAG con LangChain para validar la data (Claude)
+
+### Decisión
+- Añadida vía **LangChain** en paralelo a `rag_core`, para consultar/validar la data desde el notebook. API verificada vía Context7 (langchain_community.FAISS, langchain_huggingface.HuggingFaceEmbeddings, create_retrieval_chain, HuggingFacePipeline).
+- Nuevo `packages/rag_core/langchain_rag.py` (imports perezosos): `chunks_to_documents`, `build_vectorstore` (save_local), `load_vectorstore`, `get_retriever` (filtro por familia), `quick_query`, `build_qa_chain`, `get_qwen_llm`. Prompt con lenguaje seguro.
+- **Embeddings — dónde se guardan:** rag_core crudo en `data/index/redflags_flatip.index` (+ mapping); LangChain en `data/index/langchain_faiss/` (`index.faiss` + `index.pkl`) vía `FAISS.save_local`. Mismos chunks, mismo e5-base.
+- Notebook: nueva **sección 11 (Validación con LangChain)** (retriever + cadena Qwen) + deps langchain en la celda de instalación.
+
+### Evidencia
+- Gate `test_langchain_rag.py`: 3 PASS (mapeo metadata, imports perezosos, lenguaje seguro) + 2 skip (integración LangChain → Colab). Smoke notebook 5/5. `queue.json` F9 = done.
+
+### Riesgos
+- LangChain no instalado en local (integración hace skip); se valida en Colab con `pip install langchain langchain-community langchain-huggingface`.
+
+### Próximos pasos
+- Correr el notebook en Colab (F8b) — ahora incluye la validación LangChain.
+
+
+
 ## 2026-05-30 — Fase 8: Notebook de Colab (Claude)
 
 ### Decisión

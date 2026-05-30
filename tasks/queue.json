@@ -19,7 +19,9 @@
       "owner_cli": "kimi",
       "status": "done",
       "validated": "gate 12/12 PASS; 299 chunks (1024/128)",
-      "depends_on": ["F1.1-dataset"],
+      "depends_on": [
+        "F1.1-dataset"
+      ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_chunking.py -q"
     },
     {
@@ -29,7 +31,9 @@
       "owner_cli": "deepseek",
       "status": "done",
       "validated": "gate 16/16 PASS; e5-base 768d, 299 vectores, IndexFlatIP",
-      "depends_on": ["F2-chunking"],
+      "depends_on": [
+        "F2-chunking"
+      ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_embeddings_faiss.py -q"
     },
     {
@@ -39,7 +43,9 @@
       "owner_cli": "kimi",
       "status": "done",
       "validated": "gate 14 PASS + 3 skip (BM25 sin rank_bm25 local); RRF+weighted+router OK",
-      "depends_on": ["F3-embeddings-faiss"],
+      "depends_on": [
+        "F3-embeddings-faiss"
+      ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_retrieval_router.py -q"
     },
     {
@@ -49,7 +55,9 @@
       "owner_cli": "minimax",
       "status": "done",
       "validated": "gate 7 PASS + 1 skip; rerank bge-v2-m3 + fallback; reordena top-5",
-      "depends_on": ["F4-retrieval-router"],
+      "depends_on": [
+        "F4-retrieval-router"
+      ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_reranker.py -q"
     },
     {
@@ -60,7 +68,9 @@
       "note": "implementa DeepSeek; Qwen2.5-3B es el LLM de runtime que el codigo invoca (corre en Colab)",
       "status": "done",
       "validated": "gate 15/15 PASS; grounding+citations+refusal+lenguaje seguro; Qwen2.5-3B runtime",
-      "depends_on": ["F5-reranker"],
+      "depends_on": [
+        "F5-reranker"
+      ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_grounding.py -q"
     },
     {
@@ -70,7 +80,9 @@
       "owner_cli": "deepseek",
       "status": "done",
       "validated": "gate 15/15 PASS; goldset 12 items; recall/precision@k + grounding + compare_methods + ROUGE/BLEU bonus",
-      "depends_on": ["F6-qwen-grounding"],
+      "depends_on": [
+        "F6-qwen-grounding"
+      ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_eval.py -q"
     },
     {
@@ -80,8 +92,22 @@
       "owner_cli": "claude",
       "status": "in_progress",
       "validated": "notebook autorado (25 celdas, 10 secciones); smoke gate 5/5 PASS. Pendiente: correr en Colab T4 (humano)",
-      "depends_on": ["F7-eval"],
+      "depends_on": [
+        "F7-eval"
+      ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_notebook_smoke.py -q"
+    },
+    {
+      "id": "F9-langchain",
+      "phase": "9",
+      "title": "RAG con LangChain para validar la data en el notebook",
+      "owner_cli": "claude",
+      "status": "done",
+      "validated": "test_langchain_rag.py 3 PASS + 2 skip (integracion en Colab); seccion 11 en notebook; smoke 5/5",
+      "depends_on": [
+        "F8-notebook"
+      ],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_langchain_rag.py -q"
     }
   ]
 }

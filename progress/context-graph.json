@@ -2,8 +2,8 @@
   "generated_by": "scripts/build_context_graph.py",
   "note": "Grafo determinista del harness. Regenerar tras cambios: bash scripts/build-context-graph.sh",
   "counts": {
-    "nodes": 61,
-    "edges": 220,
+    "nodes": 63,
+    "edges": 226,
     "orphans": 0
   },
   "nodes": [
@@ -21,9 +21,9 @@
     },
     {
       "id": "README.md",
-      "title": "RAG Agentic Harness Starter",
+      "title": "🚩 RAG Agéntico para Señales de Riesgo en Contratación Pública",
       "kind": "root",
-      "lines": 36
+      "lines": 53
     },
     {
       "id": "docs/ARCHITECTURE.md",
@@ -35,7 +35,7 @@
       "id": "docs/CAVELOG.md",
       "title": "CAVELOG",
       "kind": "doc",
-      "lines": 421
+      "lines": 440
     },
     {
       "id": "docs/CAVEMAN.md",
@@ -47,13 +47,13 @@
       "id": "docs/COLAB.md",
       "title": "COLAB — Cómo entregar y correr el notebook",
       "kind": "doc",
-      "lines": 30
+      "lines": 31
     },
     {
       "id": "docs/CONTEXT_GRAPH.md",
       "title": "CONTEXT_GRAPH (generado)",
       "kind": "doc",
-      "lines": 285
+      "lines": 291
     },
     {
       "id": "docs/LOOP.md",
@@ -149,7 +149,7 @@
       "id": "progress/CURRENT_STATE.md",
       "title": "CURRENT_STATE — Estado actual del proyecto",
       "kind": "state",
-      "lines": 40
+      "lines": 41
     },
     {
       "id": "progress/HANDOFF.md",
@@ -221,7 +221,7 @@
       "id": "tasks/queue.json",
       "title": "tasks/queue.json",
       "kind": "task",
-      "lines": 88
+      "lines": 113
     },
     {
       "id": "packages/evals/metrics.py",
@@ -258,6 +258,12 @@
       "title": "packages/rag_core/indexing.py",
       "kind": "code",
       "lines": 177
+    },
+    {
+      "id": "packages/rag_core/langchain_rag.py",
+      "title": "packages/rag_core/langchain_rag.py",
+      "kind": "code",
+      "lines": 145
     },
     {
       "id": "packages/rag_core/loaders.py",
@@ -336,6 +342,12 @@
       "title": "packages/rag_core/tests/test_grounding.py",
       "kind": "code",
       "lines": 308
+    },
+    {
+      "id": "packages/rag_core/tests/test_langchain_rag.py",
+      "title": "packages/rag_core/tests/test_langchain_rag.py",
+      "kind": "code",
+      "lines": 71
     },
     {
       "id": "packages/rag_core/tests/test_notebook_smoke.py",
@@ -453,15 +465,19 @@
     },
     {
       "from": "README.md",
-      "to": "AGENTS.md"
+      "to": "docs/COLAB.md"
     },
     {
       "from": "README.md",
-      "to": "docs/CAVELOG.md"
+      "to": "docs/LOOP.md"
     },
     {
       "from": "README.md",
-      "to": "tasks/backlog.json"
+      "to": "docs/MEMORY_PROTOCOL.md"
+    },
+    {
+      "from": "README.md",
+      "to": "docs/MULTI_CLI_PROTOCOL.md"
     },
     {
       "from": "docs/ARCHITECTURE.md",
@@ -538,6 +554,10 @@
     {
       "from": "docs/CAVELOG.md",
       "to": "packages/rag_core/indexing.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/langchain_rag.py"
     },
     {
       "from": "docs/CAVELOG.md",
@@ -689,6 +709,10 @@
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/COLAB.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
       "to": "docs/LOOP.md"
     },
     {
@@ -798,6 +822,10 @@
     {
       "from": "docs/CONTEXT_GRAPH.md",
       "to": "packages/rag_core/tests/test_grounding.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_notebook_smoke.py"
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",
@@ -1121,6 +1149,10 @@
     },
     {
       "from": "progress/CURRENT_STATE.md",
+      "to": "packages/rag_core/langchain_rag.py"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
       "to": "packages/rag_core/loaders.py"
     },
     {
@@ -1238,6 +1270,10 @@
     {
       "from": "tasks/queue.json",
       "to": "packages/rag_core/tests/test_grounding.py"
+    },
+    {
+      "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_langchain_rag.py"
     },
     {
       "from": "tasks/queue.json",

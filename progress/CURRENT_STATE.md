@@ -4,7 +4,8 @@ _Actualizar al cerrar cada sesión._
 
 - **Fecha:** 2026-05-29
 - **Fase actual:** F0–F0.4 ✅ · F1.1–F7 ✅ · **F8 notebook autorado (Claude) + smoke gate 5/5** → `in_progress`. Falta: **correr en Colab T4** (humano, `docs/COLAB.md`) + slides aparte.
-- Entregable: `notebooks/redflags_rag_colab.ipynb` (10 secciones, APIs reales de rag_core).
+- Entregable: `notebooks/redflags_rag_colab.ipynb` (10 secciones + **sección 11: validación con LangChain**, 28 celdas).
+- **F9 (LangChain) ✅**: `packages/rag_core/langchain_rag.py` + gate (3 PASS, 2 skip). Embeddings LangChain en `data/index/langchain_faiss/`.
 - **Sistema multi-CLI por archivos FUNCIONA y se autovalida**: worker vía START_HERE → next-task → produce → `verify.sh` corre el **gate de pytest** (hoy **75 passed, 4 skipped**) → handoff → Claude integra. Cola: `tasks/queue.json` + `scripts/next-task.sh`. Ciclo humano: `docs/LOOP.md`.
 - **Modelos = HuggingFace**: e5-base (embeddings) + bge-reranker-v2-m3 (rerank) + Qwen2.5-3B (gen). Token en `.env`. Pendiente Colab: `pip install rank_bm25`.
 - **Pendiente Colab:** `pip install rank_bm25` (activa BM25 híbrido); el resto corre local.

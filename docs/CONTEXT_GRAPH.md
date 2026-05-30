@@ -1,7 +1,7 @@
 # CONTEXT_GRAPH (generado)
 
 > Generado por `scripts/build_context_graph.py`. **No editar a mano.**
-> Nodos: 61 · Aristas: 220 · Huérfanos: 0
+> Nodos: 63 · Aristas: 226 · Huérfanos: 0
 > Regenerar: `bash scripts/build-context-graph.sh`
 
 ```mermaid
@@ -48,6 +48,7 @@ graph LR
   n_packages_rag_core_citations_py["packages/rag_core/citations.py"]
   n_packages_rag_core_embeddings_py["packages/rag_core/embeddings.py"]
   n_packages_rag_core_indexing_py["packages/rag_core/indexing.py"]
+  n_packages_rag_core_langchain_rag_py["packages/rag_core/langchain_rag.py"]
   n_packages_rag_core_loaders_py["packages/rag_core/loaders.py"]
   n_packages_rag_core_rerankers_py["packages/rag_core/rerankers.py"]
   n_packages_rag_core_retrievers_py["packages/rag_core/retrievers.py"]
@@ -61,6 +62,7 @@ graph LR
   n_packages_rag_core_tests_test_embeddings_faiss_py["packages/rag_core/tests/test_embeddings_faiss.py"]
   n_packages_rag_core_tests_test_eval_py["packages/rag_core/tests/test_eval.py"]
   n_packages_rag_core_tests_test_grounding_py["packages/rag_core/tests/test_grounding.py"]
+  n_packages_rag_core_tests_test_langchain_rag_py["packages/rag_core/tests/test_langchain_rag.py"]
   n_packages_rag_core_tests_test_notebook_smoke_py["packages/rag_core/tests/test_notebook_smoke.py"]
   n_packages_rag_core_tests_test_reranker_py["packages/rag_core/tests/test_reranker.py"]
   n_packages_rag_core_tests_test_retrieval_router_py["packages/rag_core/tests/test_retrieval_router.py"]
@@ -86,9 +88,10 @@ graph LR
   n_CLAUDE_md --> n_progress_HANDOFF_md
   n_CLAUDE_md --> n_progress_NEXT_ACTION_md
   n_CLAUDE_md --> n_specs_004_redflags_rag_md
-  n_README_md --> n_AGENTS_md
-  n_README_md --> n_docs_CAVELOG_md
-  n_README_md --> n_tasks_backlog_json
+  n_README_md --> n_docs_COLAB_md
+  n_README_md --> n_docs_LOOP_md
+  n_README_md --> n_docs_MEMORY_PROTOCOL_md
+  n_README_md --> n_docs_MULTI_CLI_PROTOCOL_md
   n_docs_ARCHITECTURE_md --> n_specs_004_redflags_rag_md
   n_docs_CAVELOG_md --> n__opencode_agent_worker_md
   n_docs_CAVELOG_md --> n_AGENTS_md
@@ -108,6 +111,7 @@ graph LR
   n_docs_CAVELOG_md --> n_packages_rag_core_citations_py
   n_docs_CAVELOG_md --> n_packages_rag_core_embeddings_py
   n_docs_CAVELOG_md --> n_packages_rag_core_indexing_py
+  n_docs_CAVELOG_md --> n_packages_rag_core_langchain_rag_py
   n_docs_CAVELOG_md --> n_packages_rag_core_loaders_py
   n_docs_CAVELOG_md --> n_packages_rag_core_rerankers_py
   n_docs_CAVELOG_md --> n_packages_rag_core_retrievers_py
@@ -145,6 +149,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_docs_ARCHITECTURE_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_CAVELOG_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_CAVEMAN_md
+  n_docs_CONTEXT_GRAPH_md --> n_docs_COLAB_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_LOOP_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_MCP_POLICY_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_MEMORY_INDEX_md
@@ -173,6 +178,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_embeddings_faiss_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_eval_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_grounding_py
+  n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_notebook_smoke_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_reranker_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_retrieval_router_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_verifier_py
@@ -253,6 +259,7 @@ graph LR
   n_progress_CURRENT_STATE_md --> n_docs_MEMORY_PROTOCOL_md
   n_progress_CURRENT_STATE_md --> n_docs_MULTI_CLI_PROTOCOL_md
   n_progress_CURRENT_STATE_md --> n_docs_RUBRICA_md
+  n_progress_CURRENT_STATE_md --> n_packages_rag_core_langchain_rag_py
   n_progress_CURRENT_STATE_md --> n_packages_rag_core_loaders_py
   n_progress_CURRENT_STATE_md --> n_specs_004_redflags_rag_md
   n_progress_CURRENT_STATE_md --> n_specs__TEMPLATE_feature_md
@@ -283,6 +290,7 @@ graph LR
   n_tasks_queue_json --> n_packages_rag_core_tests_test_embeddings_faiss_py
   n_tasks_queue_json --> n_packages_rag_core_tests_test_eval_py
   n_tasks_queue_json --> n_packages_rag_core_tests_test_grounding_py
+  n_tasks_queue_json --> n_packages_rag_core_tests_test_langchain_rag_py
   n_tasks_queue_json --> n_packages_rag_core_tests_test_notebook_smoke_py
   n_tasks_queue_json --> n_packages_rag_core_tests_test_reranker_py
   n_tasks_queue_json --> n_packages_rag_core_tests_test_retrieval_router_py

@@ -142,3 +142,24 @@ def get_qwen_llm(model_id: str = "Qwen/Qwen2.5-3B-Instruct", max_new_tokens: int
         task="text-generation",
         pipeline_kwargs={"max_new_tokens": max_new_tokens, "do_sample": False},
     )
+
+
+def get_minimax_llm(model: Optional[str] = None, base_url: Optional[str] = None):
+    """LLM MiniMax vía API OpenAI-compatible (OPCIONAL / bonus, NO es el principal).
+
+    Qwen sigue siendo el LLM obligatorio del proyecto; MiniMax es una "segunda
+    opinión" opcional. Config por entorno (según tu plan MiniMax):
+      MINIMAX_API_KEY   (requerido)
+      MINIMAX_BASE_URL  (default https://api.minimax.io/v1)
+      MINIMAX_MODEL     (default MiniMax-Text-01)
+    """
+    import os
+
+    from langchain_openai import ChatOpenAI
+
+    return ChatOpenAI(
+        model=model or os.environ.get("MINIMAX_MODEL", "MiniMax-Text-01"),
+        base_url=base_url or os.environ.get("MINIMAX_BASE_URL", "https://api.minimax.io/v1"),
+        api_key=os.environ.get("MINIMAX_API_KEY", ""),
+        temperature=0.2,
+    )

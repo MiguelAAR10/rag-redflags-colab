@@ -66,3 +66,15 @@ def test_code_cells_non_empty():
     assert len(code) >= 8
     for c in code:
         assert "".join(c.get("source", [])).strip(), "celda de código vacía"
+
+
+def test_has_chat_section():
+    src = _all_source()
+    assert "## 12" in src, "falta la sección 12 (chat)"
+    assert "gr.ChatInterface" in src, "el chat debe usar gr.ChatInterface"
+    assert "analizar_contrato_chat" in src and "analyze(" in src, "el chat debe llamar analyze()"
+
+
+def test_has_hnsw_benchmark():
+    src = _all_source()
+    assert "IndexHNSWFlat" in src, "falta el benchmark HNSW (sección 5.2)"

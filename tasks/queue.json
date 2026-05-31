@@ -108,6 +108,18 @@
         "F8-notebook"
       ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_langchain_rag.py -q"
+    },
+    {
+      "id": "F10-chat",
+      "phase": "10",
+      "title": "Chat interactivo (Gradio) sobre analyze() + MiniMax opcional",
+      "owner_cli": "claude",
+      "status": "done",
+      "validated": "smoke 7/7 (chat+HNSW), verify 104 passed; Qwen principal, MiniMax opt-in",
+      "depends_on": [
+        "F9-langchain"
+      ],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_notebook_smoke.py -q"
     }
   ]
 }

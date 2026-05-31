@@ -2,6 +2,21 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-05-30 — Fase 10: Chat interactivo (Gradio) + mejora FAISS/HNSW
+
+### Decisión
+- **Sección 12 (chat)**: `gr.ChatInterface` sobre `rag_core.agent.analyze` (**Qwen principal**). Pega contrato/TDR → señales de riesgo + criterios + evidencia OCP (indicador+página) + grounding ratio + "requiere revisión humana". Lenguaje seguro, no determina corrupción. + 12.1 escenarios de prueba.
+- **MiniMax: opcional/bonus** (no principal, para no romper la demo): `langchain_rag.get_minimax_llm` (API OpenAI-compatible vía `ChatOpenAI`, config por entorno `MINIMAX_API_KEY/BASE_URL/MODEL`) en celda 12.2 con `RUN_MINIMAX=False`. Decisión alineada al consejo del revisor (Qwen obligatorio; MiniMax como 2.ª opinión).
+- **Sección 5 mejorada**: markdown de criterios (embeddings/top-k/k=5/Flat vs HNSW) + **5.2 benchmark honesto** Flat vs HNSW a N creciente (299/5k/50k): con N=299 ambos instantáneos (Flat exacto correcto); HNSW gana al escalar (O(log N)).
+
+### Evidencia
+- Notebook 39 celdas. Smoke `test_notebook_smoke.py` ahora 7/7 (incluye chat section + HNSW benchmark). `test_langchain_rag` 3+2skip. `verify.sh` = **104 passed, 6 skipped**.
+
+### Próximos pasos
+- Correr en Colab: la sección 12 lanza el chat (gradio share=True). MiniMax solo si `RUN_MINIMAX=True` con su API key.
+
+
+
 ## 2026-05-30 — Limpieza del notebook para Colab (feedback del revisor)
 
 ### Decisión (aplicado al notebook, 32 celdas)

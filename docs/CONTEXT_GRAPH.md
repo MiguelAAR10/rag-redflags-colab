@@ -1,7 +1,7 @@
 # CONTEXT_GRAPH (generado)
 
 > Generado por `scripts/build_context_graph.py`. **No editar a mano.**
-> Nodos: 63 · Aristas: 226 · Huérfanos: 0
+> Nodos: 64 · Aristas: 229 · Huérfanos: 1
 > Regenerar: `bash scripts/build-context-graph.sh`
 
 ```mermaid
@@ -63,6 +63,7 @@ graph LR
   n_packages_rag_core_tests_test_eval_py["packages/rag_core/tests/test_eval.py"]
   n_packages_rag_core_tests_test_grounding_py["packages/rag_core/tests/test_grounding.py"]
   n_packages_rag_core_tests_test_langchain_rag_py["packages/rag_core/tests/test_langchain_rag.py"]
+  n_packages_rag_core_tests_test_model_cache_py["packages/rag_core/tests/test_model_cache.py"]
   n_packages_rag_core_tests_test_notebook_smoke_py["packages/rag_core/tests/test_notebook_smoke.py"]
   n_packages_rag_core_tests_test_reranker_py["packages/rag_core/tests/test_reranker.py"]
   n_packages_rag_core_tests_test_retrieval_router_py["packages/rag_core/tests/test_retrieval_router.py"]
@@ -89,9 +90,6 @@ graph LR
   n_CLAUDE_md --> n_progress_NEXT_ACTION_md
   n_CLAUDE_md --> n_specs_004_redflags_rag_md
   n_README_md --> n_docs_COLAB_md
-  n_README_md --> n_docs_LOOP_md
-  n_README_md --> n_docs_MEMORY_PROTOCOL_md
-  n_README_md --> n_docs_MULTI_CLI_PROTOCOL_md
   n_docs_ARCHITECTURE_md --> n_specs_004_redflags_rag_md
   n_docs_CAVELOG_md --> n__opencode_agent_worker_md
   n_docs_CAVELOG_md --> n_AGENTS_md
@@ -165,6 +163,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_citations_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_embeddings_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_indexing_py
+  n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_langchain_rag_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_loaders_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_rerankers_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_retrievers_py
@@ -178,6 +177,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_embeddings_faiss_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_eval_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_grounding_py
+  n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_langchain_rag_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_notebook_smoke_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_reranker_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_retrieval_router_py
@@ -267,7 +267,11 @@ graph LR
   n_progress_HANDOFF_md --> n_AGENTS_md
   n_progress_HANDOFF_md --> n_progress_CURRENT_STATE_md
   n_progress_HANDOFF_md --> n_progress_NEXT_ACTION_md
-  n_progress_NEXT_ACTION_md --> n_docs_COLAB_md
+  n_progress_NEXT_ACTION_md --> n_README_md
+  n_progress_NEXT_ACTION_md --> n_docs_CAVELOG_md
+  n_progress_NEXT_ACTION_md --> n_docs_RUBRICA_md
+  n_progress_NEXT_ACTION_md --> n_specs_004_redflags_rag_md
+  n_progress_NEXT_ACTION_md --> n_tasks_queue_json
   n__claude_agents_coordinator_md --> n_AGENTS_md
   n__claude_agents_coordinator_md --> n_docs_CAVELOG_md
   n__claude_agents_coordinator_md --> n_docs_MEMORY_INDEX_md
@@ -296,3 +300,7 @@ graph LR
   n_tasks_queue_json --> n_packages_rag_core_tests_test_retrieval_router_py
   n_packages_rag_core_tests_test_dataset_contract_py --> n_packages_rag_core_loaders_py
 ```
+
+## Huérfanos (sin referencias entrantes/salientes)
+
+- `packages/rag_core/tests/test_model_cache.py`

@@ -2,9 +2,9 @@
   "generated_by": "scripts/build_context_graph.py",
   "note": "Grafo determinista del harness. Regenerar tras cambios: bash scripts/build-context-graph.sh",
   "counts": {
-    "nodes": 63,
-    "edges": 226,
-    "orphans": 0
+    "nodes": 64,
+    "edges": 229,
+    "orphans": 1
   },
   "nodes": [
     {
@@ -21,9 +21,9 @@
     },
     {
       "id": "README.md",
-      "title": "🚩 RAG Agéntico para Señales de Riesgo en Contratación Pública",
+      "title": "🚩 RAG-Scanner de *Red Flags* en Contratación Pública",
       "kind": "root",
-      "lines": 53
+      "lines": 200
     },
     {
       "id": "docs/ARCHITECTURE.md",
@@ -35,7 +35,7 @@
       "id": "docs/CAVELOG.md",
       "title": "CAVELOG",
       "kind": "doc",
-      "lines": 440
+      "lines": 509
     },
     {
       "id": "docs/CAVEMAN.md",
@@ -53,7 +53,7 @@
       "id": "docs/CONTEXT_GRAPH.md",
       "title": "CONTEXT_GRAPH (generado)",
       "kind": "doc",
-      "lines": 291
+      "lines": 299
     },
     {
       "id": "docs/LOOP.md",
@@ -149,7 +149,7 @@
       "id": "progress/CURRENT_STATE.md",
       "title": "CURRENT_STATE — Estado actual del proyecto",
       "kind": "state",
-      "lines": 41
+      "lines": 44
     },
     {
       "id": "progress/HANDOFF.md",
@@ -161,7 +161,7 @@
       "id": "progress/NEXT_ACTION.md",
       "title": "NEXT_ACTION — La siguiente tarea exacta (una sola)",
       "kind": "state",
-      "lines": 24
+      "lines": 55
     },
     {
       "id": ".claude/agents/coordinator.md",
@@ -221,7 +221,7 @@
       "id": "tasks/queue.json",
       "title": "tasks/queue.json",
       "kind": "task",
-      "lines": 113
+      "lines": 136
     },
     {
       "id": "packages/evals/metrics.py",
@@ -233,7 +233,7 @@
       "id": "packages/rag_core/agent.py",
       "title": "packages/rag_core/agent.py",
       "kind": "code",
-      "lines": 212
+      "lines": 224
     },
     {
       "id": "packages/rag_core/chunkers.py",
@@ -251,7 +251,7 @@
       "id": "packages/rag_core/embeddings.py",
       "title": "packages/rag_core/embeddings.py",
       "kind": "code",
-      "lines": 117
+      "lines": 123
     },
     {
       "id": "packages/rag_core/indexing.py",
@@ -263,7 +263,7 @@
       "id": "packages/rag_core/langchain_rag.py",
       "title": "packages/rag_core/langchain_rag.py",
       "kind": "code",
-      "lines": 145
+      "lines": 166
     },
     {
       "id": "packages/rag_core/loaders.py",
@@ -275,7 +275,7 @@
       "id": "packages/rag_core/rerankers.py",
       "title": "packages/rag_core/rerankers.py",
       "kind": "code",
-      "lines": 119
+      "lines": 121
     },
     {
       "id": "packages/rag_core/retrievers.py",
@@ -350,10 +350,16 @@
       "lines": 71
     },
     {
+      "id": "packages/rag_core/tests/test_model_cache.py",
+      "title": "packages/rag_core/tests/test_model_cache.py",
+      "kind": "code",
+      "lines": 47
+    },
+    {
       "id": "packages/rag_core/tests/test_notebook_smoke.py",
       "title": "packages/rag_core/tests/test_notebook_smoke.py",
       "kind": "code",
-      "lines": 69
+      "lines": 81
     },
     {
       "id": "packages/rag_core/tests/test_reranker.py",
@@ -466,18 +472,6 @@
     {
       "from": "README.md",
       "to": "docs/COLAB.md"
-    },
-    {
-      "from": "README.md",
-      "to": "docs/LOOP.md"
-    },
-    {
-      "from": "README.md",
-      "to": "docs/MEMORY_PROTOCOL.md"
-    },
-    {
-      "from": "README.md",
-      "to": "docs/MULTI_CLI_PROTOCOL.md"
     },
     {
       "from": "docs/ARCHITECTURE.md",
@@ -773,6 +767,10 @@
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/langchain_rag.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
       "to": "packages/rag_core/loaders.py"
     },
     {
@@ -822,6 +820,10 @@
     {
       "from": "docs/CONTEXT_GRAPH.md",
       "to": "packages/rag_core/tests/test_grounding.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_langchain_rag.py"
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",
@@ -1181,7 +1183,23 @@
     },
     {
       "from": "progress/NEXT_ACTION.md",
-      "to": "docs/COLAB.md"
+      "to": "README.md"
+    },
+    {
+      "from": "progress/NEXT_ACTION.md",
+      "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "progress/NEXT_ACTION.md",
+      "to": "docs/RUBRICA.md"
+    },
+    {
+      "from": "progress/NEXT_ACTION.md",
+      "to": "specs/004-redflags-rag.md"
+    },
+    {
+      "from": "progress/NEXT_ACTION.md",
+      "to": "tasks/queue.json"
     },
     {
       "from": ".claude/agents/coordinator.md",
@@ -1292,5 +1310,7 @@
       "to": "packages/rag_core/loaders.py"
     }
   ],
-  "orphans": []
+  "orphans": [
+    "packages/rag_core/tests/test_model_cache.py"
+  ]
 }

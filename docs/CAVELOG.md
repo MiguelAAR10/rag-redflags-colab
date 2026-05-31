@@ -2,6 +2,21 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-05-30 — README de investigación + actividad F11 (doc base para slides)
+
+### Decisión
+- **README reescrito** como **documento de investigación** centrado en la Maestría / RAG avanzado (NO en el harness). Incluye: portada con placeholders (logo `docs/assets/`, **Docente _\<completar\>_**, autor, fecha), abstract, caso de uso como **escáner de red flags bajo criterios claros (no sospechas)**, diagramas **mermaid**, técnicas avanzadas con **citas** [1]–[9], evaluación, ética, referencias. Harness queda como nota al pie.
+- `docs/assets/` creada para logo/foto.
+- **Fase 11 (worker)**: actividad en `NEXT_ACTION` → `docs/PROYECTO.md`, documento detallado paso a paso con **mapeo a los 8 slides** (base para generarlos). Owner DeepSeek; usa números reales de `progress/evidence`.
+
+### Evidencia
+- `verify.sh` = 104 passed, 6 skipped (README/docs no afectan tests). `queue.json` F11 = todo.
+
+### Próximos pasos
+- DeepSeek escribe `docs/PROYECTO.md` (vía START_HERE) → Claude revisa → base para slides.
+
+
+
 ## 2026-05-30 — Fase 10: Chat interactivo (Gradio) + mejora FAISS/HNSW
 
 ### Decisión

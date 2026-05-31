@@ -120,6 +120,17 @@
         "F9-langchain"
       ],
       "test_cmd": "python -m pytest packages/rag_core/tests/test_notebook_smoke.py -q"
+    },
+    {
+      "id": "F11-doc-slides",
+      "phase": "11",
+      "title": "docs/PROYECTO.md: documento de investigacion detallado, base para slides",
+      "owner_cli": "deepseek",
+      "status": "todo",
+      "depends_on": [
+        "F10-chat"
+      ],
+      "test_cmd": "test -f docs/PROYECTO.md && grep -q 'Mapeo' docs/PROYECTO.md"
     }
   ]
 }

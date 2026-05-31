@@ -23,6 +23,15 @@ def test_qwen_loader_is_cached():
     assert hasattr(_load_qwen, "cache_info")
 
 
+def test_qwen_loader_supports_4bit_env():
+    """Verifica (estático, sin descargar modelo) que _load_qwen soporta RAG_QWEN_4BIT."""
+    import inspect
+    from packages.rag_core.agent import _load_qwen
+    src = inspect.getsource(_load_qwen.__wrapped__ if hasattr(_load_qwen, "__wrapped__") else _load_qwen)
+    assert "RAG_QWEN_4BIT" in src
+    assert "load_in_4bit" in src or "BitsAndBytesConfig" in src
+
+
 def test_embedding_model_loaded_once(monkeypatch):
     """Dos llamadas a _load_model NO deben construir el modelo dos veces."""
     pytest.importorskip("sentence_transformers")

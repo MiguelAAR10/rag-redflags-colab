@@ -2,115 +2,38 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
-## 2026-05-30 — README de investigación + actividad F11 (doc base para slides)
+## 2026-05-30 — Fase 12: Prompt de auditor experto + Qwen 4-bit + MiniMax 2.ª opinión
 
-### Decisión
-- **README reescrito** como **documento de investigación** centrado en la Maestría / RAG avanzado (NO en el harness). Incluye: portada con placeholders (logo `docs/assets/`, **Docente _\<completar\>_**, autor, fecha), abstract, caso de uso como **escáner de red flags bajo criterios claros (no sospechas)**, diagramas **mermaid**, técnicas avanzadas con **citas** [1]–[9], evaluación, ética, referencias. Harness queda como nota al pie.
-- `docs/assets/` creada para logo/foto.
-- **Fase 11 (worker)**: actividad en `NEXT_ACTION` → `docs/PROYECTO.md`, documento detallado paso a paso con **mapeo a los 8 slides** (base para generarlos). Owner DeepSeek; usa números reales de `progress/evidence`.
+### Decisión (feedback del revisor)
+- **`SYSTEM_PROMPT` → auditor senior estructurado** (Evaluación preliminar · Riesgo Bajo/Medio/Alto · Señales con Evidencia/Por qué importa/Sustento · Qué faltaría validar · Conclusión). Conserva frases seguras exigidas por el test (`nunca afirmes corrupción`, `señal de riesgo`, `red flag potencial`, `posible irregularidad`, `revisión humana`, `no hay evidencia suficiente`). Alias `AUDITOR_SYSTEM_PROMPT`. Esto convierte la salida de "lista de chunks" a **análisis de auditor**.
+- `_build_prompt` ya no duplica el system (va en rol system del chat template).
+- **Qwen 4-bit opcional** en `_load_qwen`: `RAG_QWEN_4BIT=1` → `BitsAndBytesConfig(nf4, double_quant, fp16)` con **fallback** limpio. Notebook: `bitsandbytes` en deps + celda `RAG_QWEN_4BIT=1`.
+- **MiniMax 2.ª opinión (opcional, robusto)**: celda 12.2 reemplazada por cliente `openai` directo (base_url MiniMax, `AUDITOR_SYSTEM_PROMPT`), `RUN_MINIMAX=False`. Qwen sigue siendo el principal.
 
 ### Evidencia
-- `verify.sh` = 104 passed, 6 skipped (README/docs no afectan tests). `queue.json` F11 = todo.
+- test_model_cache 5/5 (incl. check estático 4-bit), test_grounding 15/15 (prompt seguro), smoke 7/7. `verify.sh` = **105 passed, 6 skipped**.
+- F11 (`docs/PROYECTO.md`, DeepSeek) verificada y marcada `done`.
 
 ### Próximos pasos
-- DeepSeek escribe `docs/PROYECTO.md` (vía START_HERE) → Claude revisa → base para slides.
+- Correr en Colab con `RAG_QWEN_4BIT=1`: el chat (12.0) ahora devuelve análisis de auditor estructurado.
 
 
 
-## 2026-05-30 — Fase 10: Chat interactivo (Gradio) + mejora FAISS/HNSW
-
-### Decisión
-- **Sección 12 (chat)**: `gr.ChatInterface` sobre `rag_core.agent.analyze` (**Qwen principal**). Pega contrato/TDR → señales de riesgo + criterios + evidencia OCP (indicador+página) + grounding ratio + "requiere revisión humana". Lenguaje seguro, no determina corrupción. + 12.1 escenarios de prueba.
-- **MiniMax: opcional/bonus** (no principal, para no romper la demo): `langchain_rag.get_minimax_llm` (API OpenAI-compatible vía `ChatOpenAI`, config por entorno `MINIMAX_API_KEY/BASE_URL/MODEL`) en celda 12.2 con `RUN_MINIMAX=False`. Decisión alineada al consejo del revisor (Qwen obligatorio; MiniMax como 2.ª opinión).
-- **Sección 5 mejorada**: markdown de criterios (embeddings/top-k/k=5/Flat vs HNSW) + **5.2 benchmark honesto** Flat vs HNSW a N creciente (299/5k/50k): con N=299 ambos instantáneos (Flat exacto correcto); HNSW gana al escalar (O(log N)).
-
-### Evidencia
-- Notebook 39 celdas. Smoke `test_notebook_smoke.py` ahora 7/7 (incluye chat section + HNSW benchmark). `test_langchain_rag` 3+2skip. `verify.sh` = **104 passed, 6 skipped**.
-
-### Próximos pasos
-- Correr en Colab: la sección 12 lanza el chat (gradio share=True). MiniMax solo si `RUN_MINIMAX=True` con su API key.
-
-
-
-## 2026-05-30 — Limpieza del notebook para Colab (feedback del revisor)
-
-### Decisión (aplicado al notebook, 32 celdas)
-1. **3.1 `compare_chunk_configs`**: ya usaba tuplas `(size, overlap, label)` ✓ (la función las exige).
-2. **LangChain fuera de la sección 1**: install movido a nueva celda **11.0** (RUN_LANGCHAIN con try/except). Evita conflictos de `requests` al inicio.
-3. **Token HF unificado**: una sola celda **1.0** robusta (Colab Secrets → getpass, nunca imprime el token). Eliminada la celda duplicada (1.3).
-4. **Sección 11 sin OOM**: 11.1 (retrieval LangChain) y 11.2 guardadas con `if not RUN_LANGCHAIN`; **11.2 (Qwen vía LangChain) es opt-in** (`RUN_LANGCHAIN_QWEN=False`) para no cargar un 2.º Qwen (el principal de la sección 7 ya está cacheado).
-5. **10.2 Resumen técnico** añadido (para la rúbrica/exposición).
-6. **Prefijos E5 `query:`/`passage:`**: verificado que `embeddings.embed_texts` ya los aplica (is_query) y `retrievers` usa is_query=True para queries → correcto, sin cambios.
-7. Qwen determinista (`do_sample=False`, sin temperature/top_p) → sin warning de sampling.
-
-### Evidencia
-- Smoke `test_notebook_smoke.py` 5/5; `verify.sh` = 102 passed, 6 skipped (26s con cache).
-
-### Próximos pasos
-- Correr en Colab (debería ir limpio, sin recargas ni OOM); capturas para slides.
-
-
-
-## 2026-05-30 — FIX: cache de modelos (evitar recargas/OOM en Colab)
-
-### Problema
-En Colab, `analyze(..., grounding_method="embedding")` mostraba muchas veces "LOAD REPORT ... multilingual-e5-base": el modelo de embeddings se recargaba en cada `embed_texts` (retrieval, grounding por frase, route_family). Igual el reranker y Qwen se recargaban por llamada.
-
-### Solución
-- `embeddings._load_model` → `@lru_cache(maxsize=2)` (carga una vez por nombre; reutilizado en retrieval/grounding/route).
-- `rerankers._load_cross_encoder` → `@lru_cache(maxsize=1)`.
-- `agent`: nuevo `_load_qwen()` `@lru_cache(maxsize=1)` (tokenizer+model una vez); `_qwen_generate` lo reutiliza.
-- No cambia arquitectura ni formato de salida de `analyze`.
-
-### Evidencia
-- Nuevo `tests/test_model_cache.py` (4 tests): los 3 loaders exponen `cache_info` + test funcional (SentenceTransformer falso construido 1 sola vez). 4/4 PASS.
-- `verify.sh` verde (tests previos intactos).
-
-### Resultado
-Misma respuesta, menos logs de carga, menor tiempo y menor riesgo de OOM en Colab.
-
-
-
-## 2026-05-30 — Fase 9: RAG con LangChain para validar la data (Claude)
+## 2026-05-30 — Fase 11: Documento PROYECTO.md (DeepSeek)
 
 ### Decisión
-- Añadida vía **LangChain** en paralelo a `rag_core`, para consultar/validar la data desde el notebook. API verificada vía Context7 (langchain_community.FAISS, langchain_huggingface.HuggingFaceEmbeddings, create_retrieval_chain, HuggingFacePipeline).
-- Nuevo `packages/rag_core/langchain_rag.py` (imports perezosos): `chunks_to_documents`, `build_vectorstore` (save_local), `load_vectorstore`, `get_retriever` (filtro por familia), `quick_query`, `build_qa_chain`, `get_qwen_llm`. Prompt con lenguaje seguro.
-- **Embeddings — dónde se guardan:** rag_core crudo en `data/index/redflags_flatip.index` (+ mapping); LangChain en `data/index/langchain_faiss/` (`index.faiss` + `index.pkl`) vía `FAISS.save_local`. Mismos chunks, mismo e5-base.
-- Notebook: nueva **sección 11 (Validación con LangChain)** (retriever + cadena Qwen) + deps langchain en la celda de instalación.
+- **`docs/PROYECTO.md` creado** con las 16 secciones obligatorias: portada, resumen, problema, fundamentos RAG, dataset, arquitectura (2 mermaid), técnicas avanzadas, pipeline (1 mermaid), decisiones técnicas (chunk 1024/128, k=20→5, Flat vs HNSW), evaluación (Recall@k, Precision@k, grounding ratio, ejemplo bueno/malo), minimización alucinaciones, demo, ética, limitaciones, referencias (9 citas), anexo slides (tabla 8 diapositivas).
+- Números **reales** extraídos de `progress/evidence/*.json` (237 unidades, 299 chunks, 69 indicadores, 768-d, R@3=0.833, etc.).
+- `verify.sh` = **104 passed, 6 skipped**, exit=0.
 
 ### Evidencia
-- Gate `test_langchain_rag.py`: 3 PASS (mapeo metadata, imports perezosos, lenguaje seguro) + 2 skip (integración LangChain → Colab). Smoke notebook 5/5. `queue.json` F9 = done.
+- `docs/PROYECTO.md`: 15 secciones `## ` + portada = 16, ~680 líneas, 2 diagramas mermaid, tabla de chunking comparativo, tabla de técnicas, métricas reales de F1–F7.
 
 ### Riesgos
-- LangChain no instalado en local (integración hace skip); se valida en Colab con `pip install langchain langchain-community langchain-huggingface`.
+- Placeholders pendientes: `_<completar>_` para Universidad, Docente, Fecha, y logo de universidad en `docs/assets/`.
 
 ### Próximos pasos
-- Correr el notebook en Colab (F8b) — ahora incluye la validación LangChain.
-
-
-
-## 2026-05-30 — Fase 8: Notebook de Colab (Claude)
-
-### Decisión
-- **Notebook armado por Claude**: `notebooks/redflags_rag_colab.ipynb` (25 celdas, 10 secciones de la rúbrica), refleja las APIs reales de `rag_core` (load_pdf → chunk_units → embed_texts → build_index → hybrid_search/route_family → rerank → analyze(Qwen) → grounding/citas → evaluate_on_goldset/compare_methods) + diagrama + demo + lenguaje seguro.
-- **Gate F8** `test_notebook_smoke.py` (5 tests): valida nbformat v4, 10 secciones, uso de APIs reales, Qwen2.5-3B + "revisión humana", celdas no vacías. 5/5 PASS.
-- Estrategia de entrega: **GitHub + clone** (`docs/COLAB.md`); el notebook regenera datos/índice en Colab y pide subir el PDF (gitignored).
-- Slides: **aparte** (decisión del usuario). F8 queda `in_progress` hasta correr en Colab T4 (humano).
-
-### Próximos pasos
-- Fase 8b — humano corre el notebook en Colab T4 (ver `progress/NEXT_ACTION.md`). Luego slides.
-
-## 2026-05-30 — Review/Integración Fase 7 (Claude): APROBADA → F8 (implementación COMPLETA)
-
-### Decisión
-- **Fase 7 APROBADA**: gate `test_eval.py` 15/15 PASS. goldset 12 items (query/relevant_indicator_codes/relevant_families); `recall_at_k/precision_at_k/mean_grounding_ratio/compare_methods` + ROUGE/BLEU bonus. `verify.sh` = **90 passed, 4 skipped**, exit=0.
-- Reporte: R@3=R@5=0.833, P@3=0.44, grounding 0.305 (léxico); ejemplo bueno (R@5=1.0) y malo (R@5=0.5) con explicación.
-- `queue.json` F7 y `backlog` F7 → `done`. **Todas las fases de implementación (F1.1–F7) DONE.**
-- F8 (notebook+slides) = entregable calificado, owner **claude**.
-
-### Próximos pasos
-- Fase 8 — notebook Colab (10 secciones) + slides (8, 7 min). Lo arma Claude.
+- Notebook final de Colab (F8) + generación de slides desde PROYECTO.md.
 
 ## 2026-05-30 — Fase 7: Evaluación cuantitativa + cualitativa (DeepSeek)
 

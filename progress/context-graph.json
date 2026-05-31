@@ -2,9 +2,9 @@
   "generated_by": "scripts/build_context_graph.py",
   "note": "Grafo determinista del harness. Regenerar tras cambios: bash scripts/build-context-graph.sh",
   "counts": {
-    "nodes": 64,
-    "edges": 229,
-    "orphans": 1
+    "nodes": 65,
+    "edges": 234,
+    "orphans": 0
   },
   "nodes": [
     {
@@ -35,7 +35,7 @@
       "id": "docs/CAVELOG.md",
       "title": "CAVELOG",
       "kind": "doc",
-      "lines": 509
+      "lines": 432
     },
     {
       "id": "docs/CAVEMAN.md",
@@ -53,7 +53,7 @@
       "id": "docs/CONTEXT_GRAPH.md",
       "title": "CONTEXT_GRAPH (generado)",
       "kind": "doc",
-      "lines": 299
+      "lines": 307
     },
     {
       "id": "docs/LOOP.md",
@@ -84,6 +84,12 @@
       "title": "MULTI_CLI_PROTOCOL — Coordinación Claude · Codex · OpenCode",
       "kind": "doc",
       "lines": 86
+    },
+    {
+      "id": "docs/PROYECTO.md",
+      "title": "&#x1F6A9; RAG-Scanner de *Red Flags* en Contratación Pública",
+      "kind": "doc",
+      "lines": 349
     },
     {
       "id": "docs/RUBRICA.md",
@@ -221,7 +227,7 @@
       "id": "tasks/queue.json",
       "title": "tasks/queue.json",
       "kind": "task",
-      "lines": 136
+      "lines": 149
     },
     {
       "id": "packages/evals/metrics.py",
@@ -233,7 +239,7 @@
       "id": "packages/rag_core/agent.py",
       "title": "packages/rag_core/agent.py",
       "kind": "code",
-      "lines": 224
+      "lines": 254
     },
     {
       "id": "packages/rag_core/chunkers.py",
@@ -353,7 +359,7 @@
       "id": "packages/rag_core/tests/test_model_cache.py",
       "title": "packages/rag_core/tests/test_model_cache.py",
       "kind": "code",
-      "lines": 47
+      "lines": 56
     },
     {
       "id": "packages/rag_core/tests/test_notebook_smoke.py",
@@ -495,10 +501,6 @@
     },
     {
       "from": "docs/CAVELOG.md",
-      "to": "docs/COLAB.md"
-    },
-    {
-      "from": "docs/CAVELOG.md",
       "to": "docs/CONTEXT_GRAPH.md"
     },
     {
@@ -512,6 +514,10 @@
     {
       "from": "docs/CAVELOG.md",
       "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "docs/PROYECTO.md"
     },
     {
       "from": "docs/CAVELOG.md",
@@ -548,10 +554,6 @@
     {
       "from": "docs/CAVELOG.md",
       "to": "packages/rag_core/indexing.py"
-    },
-    {
-      "from": "docs/CAVELOG.md",
-      "to": "packages/rag_core/langchain_rag.py"
     },
     {
       "from": "docs/CAVELOG.md",
@@ -827,6 +829,10 @@
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_model_cache.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
       "to": "packages/rag_core/tests/test_notebook_smoke.py"
     },
     {
@@ -1054,6 +1060,10 @@
       "to": "progress/NEXT_ACTION.md"
     },
     {
+      "from": "docs/PROYECTO.md",
+      "to": "packages/evals/metrics.py"
+    },
+    {
       "from": "docs/START_HERE.md",
       "to": "AGENTS.md"
     },
@@ -1147,6 +1157,10 @@
     },
     {
       "from": "progress/CURRENT_STATE.md",
+      "to": "docs/PROYECTO.md"
+    },
+    {
+      "from": "progress/CURRENT_STATE.md",
       "to": "docs/RUBRICA.md"
     },
     {
@@ -1188,6 +1202,10 @@
     {
       "from": "progress/NEXT_ACTION.md",
       "to": "docs/CAVELOG.md"
+    },
+    {
+      "from": "progress/NEXT_ACTION.md",
+      "to": "docs/PROYECTO.md"
     },
     {
       "from": "progress/NEXT_ACTION.md",
@@ -1271,6 +1289,10 @@
     },
     {
       "from": "tasks/queue.json",
+      "to": "docs/PROYECTO.md"
+    },
+    {
+      "from": "tasks/queue.json",
       "to": "packages/rag_core/tests/test_chunking.py"
     },
     {
@@ -1295,6 +1317,10 @@
     },
     {
       "from": "tasks/queue.json",
+      "to": "packages/rag_core/tests/test_model_cache.py"
+    },
+    {
+      "from": "tasks/queue.json",
       "to": "packages/rag_core/tests/test_notebook_smoke.py"
     },
     {
@@ -1310,7 +1336,5 @@
       "to": "packages/rag_core/loaders.py"
     }
   ],
-  "orphans": [
-    "packages/rag_core/tests/test_model_cache.py"
-  ]
+  "orphans": []
 }

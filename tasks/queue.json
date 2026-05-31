@@ -126,11 +126,24 @@
       "phase": "11",
       "title": "docs/PROYECTO.md: documento de investigacion detallado, base para slides",
       "owner_cli": "deepseek",
-      "status": "todo",
+      "status": "done",
       "depends_on": [
         "F10-chat"
       ],
-      "test_cmd": "test -f docs/PROYECTO.md && grep -q 'Mapeo' docs/PROYECTO.md"
+      "test_cmd": "test -f docs/PROYECTO.md && grep -q 'Mapeo' docs/PROYECTO.md",
+      "validated": "docs/PROYECTO.md presente con mapeo a 8 slides"
+    },
+    {
+      "id": "F12-auditor-prompt",
+      "phase": "12",
+      "title": "Auditor system prompt + Qwen 4-bit + MiniMax 2a opinion (openai)",
+      "owner_cli": "claude",
+      "status": "done",
+      "validated": "cache+4bit 5/5, grounding 15/15, smoke 7/7, verify 105 passed",
+      "depends_on": [
+        "F11-doc-slides"
+      ],
+      "test_cmd": "python -m pytest packages/rag_core/tests/test_model_cache.py packages/rag_core/tests/test_grounding.py -q"
     }
   ]
 }

@@ -17,7 +17,7 @@
 | **Curso** | IA Generativa I |
 | **Docente** | PhD. Lucy Choque |
 | **Autor** | Miguel Arias ([@MiguelAAR10](https://github.com/MiguelAAR10)) |
-| **Fecha** | _\<completar\>_ |
+| **Fecha** | 31/05/2026 |
 | **Repositorio** | https://github.com/MiguelAAR10/rag-redflags-colab |
 
 <!-- (Opcional) foto del autor o del equipo: docs/assets/autor.png -->

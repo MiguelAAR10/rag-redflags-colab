@@ -5,14 +5,16 @@
 # &#x1F6A9; RAG-Scanner de *Red Flags* en Contratación Pública
 ### Detección de patrones de riesgo en contratos del Estado mediante *Retrieval-Augmented Generation* avanzado con Qwen
 
-**Proyecto Final — Maestría en Generative AI**
+**Proyecto Final — Maestría en Ciencia de Datos (Data Science)**
 *Diseño e Implementación de un Sistema RAG en Google Colab*
 
 | | |
 |---|---|
-| **Universidad** | _\<completar\>_ |
-| **Curso / Módulo** | Generative AI |
-| **Docente** | _\<nombre del docente — completar\>_ |
+| **Universidad** | Universidad Nacional de Ingeniería (UNI), Perú |
+| **Unidad** | Unidad de Postgrado FIEECS |
+| **Maestría** | Ciencia de Datos (Data Science) |
+| **Curso** | IA Generativa I |
+| **Docente** | PhD. Lucy Choque |
 | **Autor** | Miguel Arias ([@MiguelAAR10](https://github.com/MiguelAAR10)) |
 | **Fecha** | _\<completar\>_ |
 | **Repositorio** | https://github.com/MiguelAAR10/rag-redflags-colab |

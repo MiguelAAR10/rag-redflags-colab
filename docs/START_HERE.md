@@ -15,6 +15,7 @@ Lee docs/START_HERE.md y ejecuta la actividad pendiente. No hagas nada más.
 
 1. **Carga solo el contexto mínimo** (nada más): `AGENTS.md`, `docs/MEMORY_INDEX.md`, `progress/CURRENT_STATE.md`, `progress/NEXT_ACTION.md`, `progress/HANDOFF.md`, la spec activa (`specs/004-redflags-rag.md`). Atajo: `bash scripts/context-pack.sh`.
 2. **Haz EXACTAMENTE la actividad** descrita en `progress/NEXT_ACTION.md`. Una sola. No expandas el alcance.
+   - Si la actividad referencia un `REQUEST.md` dentro de `progress/agent_io/`, léelo como input principal y guarda tu respuesta en el `RESPONSE.md` indicado.
 3. **Reglas (obligatorias):**
    - No cargues al chat: PDF, `.jsonl` grandes, índices FAISS, notebooks, logs. Trabaja **por código** y guarda reportes en `progress/evidence/`.
    - **Write-through:** escribe resultados a archivos *en el momento* ("si no está en un archivo, no existe").
@@ -31,4 +32,6 @@ Claude (coordinador) integra **solo** cuando existe tu handoff y `verify.sh` pas
 - Claude es caro → se usa solo para coordinar/integrar/revisar y razonamiento difícil.
 - Los workers (Kimi/Qwen/MiniMax/DeepSeek) hacen el trabajo pesado y repetitivo.
 - Todo va por **archivos**, no por chats largos: nadie re-explica el proyecto; se lee `START_HERE` + `NEXT_ACTION`.
+- Si el humano está coordinando prompts externos, el siguiente prompt vive en `progress/agent_io/QUEUE.md` y cada interacción conserva `REQUEST.md`/`RESPONSE.md`/`REVIEW.md`.
+- Para prompts externos, usa la frase: `Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.`
 - Para navegar el repo sin leerlo entero: `progress/context-graph.json` (mapa) y `docs/MEMORY_INDEX.md`.

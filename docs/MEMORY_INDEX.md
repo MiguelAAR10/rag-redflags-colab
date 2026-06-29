@@ -58,6 +58,7 @@ spec activa · módulos de `rag_core` (no duplicar lógica grande dentro del not
 | Ciclo humano (a quién le hablo) | `docs/LOOP.md` |
 | Memoria / no saturar contexto | `docs/MEMORY_PROTOCOL.md` |
 | Mapa navegable del repo (grafo) | `progress/context-graph.json` · `docs/CONTEXT_GRAPH.md` |
+| Prompts/respuestas de agentes externos | `progress/agent_io/START_HERE.md` · `progress/agent_io/QUEUE.md` · `progress/agent_io/INDEX.md` |
 | Qué exige la nota | `docs/RUBRICA.md` |
 | Verdad funcional del proyecto | `specs/004-redflags-rag.md` |
 | Estado actual | `progress/CURRENT_STATE.md` |
@@ -65,3 +66,7 @@ spec activa · módulos de `rag_core` (no duplicar lógica grande dentro del not
 | Cómo retomar | `progress/HANDOFF.md` |
 | Decisiones tomadas | `docs/CAVELOG.md` |
 | Seguridad / lenguaje seguro | `docs/SECURITY_MODEL.md`, `AGENTS.md` |
+
+## Interacciones externas con agentes
+
+Usa `progress/agent_io/` solo cuando necesites trazar un prompt/respuesta de un agente externo o chat multi-modelo. La frase unica para el agente es: `Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.` Para trabajo real del proyecto, la fuente sigue siendo `progress/NEXT_ACTION.md`.

@@ -3,7 +3,7 @@
   "note": "Grafo determinista del harness. Regenerar tras cambios: bash scripts/build-context-graph.sh",
   "counts": {
     "nodes": 65,
-    "edges": 234,
+    "edges": 235,
     "orphans": 0
   },
   "nodes": [
@@ -23,7 +23,7 @@
       "id": "README.md",
       "title": "🚩 RAG-Scanner de *Red Flags* en Contratación Pública",
       "kind": "root",
-      "lines": 200
+      "lines": 202
     },
     {
       "id": "docs/ARCHITECTURE.md",
@@ -35,7 +35,7 @@
       "id": "docs/CAVELOG.md",
       "title": "CAVELOG",
       "kind": "doc",
-      "lines": 432
+      "lines": 454
     },
     {
       "id": "docs/CAVEMAN.md",
@@ -53,7 +53,7 @@
       "id": "docs/CONTEXT_GRAPH.md",
       "title": "CONTEXT_GRAPH (generado)",
       "kind": "doc",
-      "lines": 307
+      "lines": 310
     },
     {
       "id": "docs/LOOP.md",
@@ -71,25 +71,25 @@
       "id": "docs/MEMORY_INDEX.md",
       "title": "MEMORY_INDEX — Mapa de lectura (qué abrir y qué NO)",
       "kind": "doc",
-      "lines": 68
+      "lines": 73
     },
     {
       "id": "docs/MEMORY_PROTOCOL.md",
       "title": "MEMORY_PROTOCOL — Memoria inteligente sin saturar contexto",
       "kind": "doc",
-      "lines": 85
+      "lines": 105
     },
     {
       "id": "docs/MULTI_CLI_PROTOCOL.md",
       "title": "MULTI_CLI_PROTOCOL — Coordinación Claude · Codex · OpenCode",
       "kind": "doc",
-      "lines": 86
+      "lines": 108
     },
     {
       "id": "docs/PROYECTO.md",
       "title": "&#x1F6A9; RAG-Scanner de *Red Flags* en Contratación Pública",
       "kind": "doc",
-      "lines": 349
+      "lines": 351
     },
     {
       "id": "docs/RUBRICA.md",
@@ -107,7 +107,7 @@
       "id": "docs/START_HERE.md",
       "title": "START_HERE — Arranque universal para cualquier worker",
       "kind": "doc",
-      "lines": 35
+      "lines": 38
     },
     {
       "id": "docs/TESTING.md",
@@ -155,7 +155,7 @@
       "id": "progress/CURRENT_STATE.md",
       "title": "CURRENT_STATE — Estado actual del proyecto",
       "kind": "state",
-      "lines": 44
+      "lines": 45
     },
     {
       "id": "progress/HANDOFF.md",
@@ -167,7 +167,7 @@
       "id": "progress/NEXT_ACTION.md",
       "title": "NEXT_ACTION — La siguiente tarea exacta (una sola)",
       "kind": "state",
-      "lines": 55
+      "lines": 63
     },
     {
       "id": ".claude/agents/coordinator.md",
@@ -493,6 +493,10 @@
     },
     {
       "from": "docs/CAVELOG.md",
+      "to": "README.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
       "to": "docs/ARCHITECTURE.md"
     },
     {
@@ -586,6 +590,10 @@
     {
       "from": "docs/CAVELOG.md",
       "to": "packages/rag_core/verifier.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "progress/CURRENT_STATE.md"
     },
     {
       "from": "docs/CAVELOG.md",
@@ -726,6 +734,10 @@
     {
       "from": "docs/CONTEXT_GRAPH.md",
       "to": "docs/MULTI_CLI_PROTOCOL.md"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "docs/PROYECTO.md"
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",
@@ -1032,6 +1044,10 @@
       "to": "tasks/backlog.json"
     },
     {
+      "from": "docs/MEMORY_PROTOCOL.md",
+      "to": "tasks/queue.json"
+    },
+    {
       "from": "docs/MULTI_CLI_PROTOCOL.md",
       "to": "AGENTS.md"
     },
@@ -1058,6 +1074,10 @@
     {
       "from": "docs/MULTI_CLI_PROTOCOL.md",
       "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "docs/MULTI_CLI_PROTOCOL.md",
+      "to": "tasks/queue.json"
     },
     {
       "from": "docs/PROYECTO.md",
@@ -1197,27 +1217,11 @@
     },
     {
       "from": "progress/NEXT_ACTION.md",
-      "to": "README.md"
-    },
-    {
-      "from": "progress/NEXT_ACTION.md",
       "to": "docs/CAVELOG.md"
     },
     {
       "from": "progress/NEXT_ACTION.md",
       "to": "docs/PROYECTO.md"
-    },
-    {
-      "from": "progress/NEXT_ACTION.md",
-      "to": "docs/RUBRICA.md"
-    },
-    {
-      "from": "progress/NEXT_ACTION.md",
-      "to": "specs/004-redflags-rag.md"
-    },
-    {
-      "from": "progress/NEXT_ACTION.md",
-      "to": "tasks/queue.json"
     },
     {
       "from": ".claude/agents/coordinator.md",

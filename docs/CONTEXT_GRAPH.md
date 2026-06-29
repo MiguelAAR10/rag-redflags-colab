@@ -1,7 +1,7 @@
 # CONTEXT_GRAPH (generado)
 
 > Generado por `scripts/build_context_graph.py`. **No editar a mano.**
-> Nodos: 65 · Aristas: 234 · Huérfanos: 0
+> Nodos: 65 · Aristas: 235 · Huérfanos: 0
 > Regenerar: `bash scripts/build-context-graph.sh`
 
 ```mermaid
@@ -94,6 +94,7 @@ graph LR
   n_docs_ARCHITECTURE_md --> n_specs_004_redflags_rag_md
   n_docs_CAVELOG_md --> n__opencode_agent_worker_md
   n_docs_CAVELOG_md --> n_AGENTS_md
+  n_docs_CAVELOG_md --> n_README_md
   n_docs_CAVELOG_md --> n_docs_ARCHITECTURE_md
   n_docs_CAVELOG_md --> n_docs_CAVEMAN_md
   n_docs_CAVELOG_md --> n_docs_CONTEXT_GRAPH_md
@@ -118,6 +119,7 @@ graph LR
   n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_embeddings_faiss_py
   n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_eval_py
   n_docs_CAVELOG_md --> n_packages_rag_core_verifier_py
+  n_docs_CAVELOG_md --> n_progress_CURRENT_STATE_md
   n_docs_CAVELOG_md --> n_progress_NEXT_ACTION_md
   n_docs_CAVELOG_md --> n_specs_004_redflags_rag_md
   n_docs_CAVELOG_md --> n_specs_005_multicli_orchestration_md
@@ -153,6 +155,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_docs_MEMORY_INDEX_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_MEMORY_PROTOCOL_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_MULTI_CLI_PROTOCOL_md
+  n_docs_CONTEXT_GRAPH_md --> n_docs_PROYECTO_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_RUBRICA_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_SECURITY_MODEL_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_START_HERE_md
@@ -229,6 +232,7 @@ graph LR
   n_docs_MEMORY_PROTOCOL_md --> n_progress_NEXT_ACTION_md
   n_docs_MEMORY_PROTOCOL_md --> n_specs_004_redflags_rag_md
   n_docs_MEMORY_PROTOCOL_md --> n_tasks_backlog_json
+  n_docs_MEMORY_PROTOCOL_md --> n_tasks_queue_json
   n_docs_MULTI_CLI_PROTOCOL_md --> n_AGENTS_md
   n_docs_MULTI_CLI_PROTOCOL_md --> n_docs_CAVELOG_md
   n_docs_MULTI_CLI_PROTOCOL_md --> n_docs_MEMORY_INDEX_md
@@ -236,6 +240,7 @@ graph LR
   n_docs_MULTI_CLI_PROTOCOL_md --> n_packages_rag_core_chunkers_py
   n_docs_MULTI_CLI_PROTOCOL_md --> n_packages_rag_core_loaders_py
   n_docs_MULTI_CLI_PROTOCOL_md --> n_progress_NEXT_ACTION_md
+  n_docs_MULTI_CLI_PROTOCOL_md --> n_tasks_queue_json
   n_docs_PROYECTO_md --> n_packages_evals_metrics_py
   n_docs_START_HERE_md --> n_AGENTS_md
   n_docs_START_HERE_md --> n_docs_MEMORY_INDEX_md
@@ -270,12 +275,8 @@ graph LR
   n_progress_HANDOFF_md --> n_AGENTS_md
   n_progress_HANDOFF_md --> n_progress_CURRENT_STATE_md
   n_progress_HANDOFF_md --> n_progress_NEXT_ACTION_md
-  n_progress_NEXT_ACTION_md --> n_README_md
   n_progress_NEXT_ACTION_md --> n_docs_CAVELOG_md
   n_progress_NEXT_ACTION_md --> n_docs_PROYECTO_md
-  n_progress_NEXT_ACTION_md --> n_docs_RUBRICA_md
-  n_progress_NEXT_ACTION_md --> n_specs_004_redflags_rag_md
-  n_progress_NEXT_ACTION_md --> n_tasks_queue_json
   n__claude_agents_coordinator_md --> n_AGENTS_md
   n__claude_agents_coordinator_md --> n_docs_CAVELOG_md
   n__claude_agents_coordinator_md --> n_docs_MEMORY_INDEX_md

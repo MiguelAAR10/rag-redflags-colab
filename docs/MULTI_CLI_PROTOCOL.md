@@ -4,6 +4,8 @@
 
 Los tres CLIs **no trabajan en el mismo chat**. Trabajan sobre el **mismo arnés del repo**: `AGENTS.md`, `docs/MEMORY_INDEX.md`, `specs/`, `progress/`, `docs/CAVELOG.md` y `scripts/`.
 
+Cuando una interacción con un modelo externo ocurre fuera del flujo normal de worker con acceso a archivos, el prompt y la respuesta se registran en `progress/agent_io/`.
+
 ## 1. Flota real y roles (sin GPT/Codex — cuidar tokens)
 
 Arranque universal de workers: **`docs/START_HERE.md`** (el humano solo pega *"Lee docs/START_HERE.md y ejecuta la actividad pendiente"*; la tarea vive en `progress/NEXT_ACTION.md`).
@@ -65,6 +67,25 @@ Cada CLI deja un archivo en `progress/runs/YYYY-MM-DD-HHMM-<cli>-<fase>.md` con 
 **Claude solo integra cuando existe ese handoff y `verify.sh` pasa.**
 Reviews independientes (Codex) van a `progress/reviews/`. Evidencia (métricas, tablas, screenshots) a `progress/evidence/`.
 
+## 4.bis Agent IO (prompts/respuestas externas)
+
+`progress/agent_io/` es la bitácora de prompts y outputs de agentes externos o sesiones multi-modelo. Sirve para MiniMax, Kimi, Qwen, Mimo, DeepSeek, Codex, Claude, OpenCode u otros modelos.
+
+- Para saber qué prompt externo ejecutar: `progress/agent_io/QUEUE.md`.
+- Para arrancar sin explicar rutas: `progress/agent_io/START_HERE.md`.
+- Prompt exacto: `progress/agent_io/runs/<run-id>/REQUEST.md`.
+- Respuesta del agente: `progress/agent_io/runs/<run-id>/RESPONSE.md`.
+- Decisión de DANTE-OS/Claude: `progress/agent_io/runs/<run-id>/REVIEW.md`.
+- Estado corto: `progress/agent_io/runs/<run-id>/STATUS.md`.
+
+No reemplaza `tasks/queue.json`, `progress/NEXT_ACTION.md` ni `progress/runs/`. Si la revisión del output deriva en trabajo real, Claude actualiza la cola o `NEXT_ACTION` y el worker vuelve al flujo normal.
+
+Frase unica para el humano:
+
+```text
+Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.
+```
+
 ## 5. Flujo diario
 
 ```
@@ -83,3 +104,4 @@ Reviews independientes (Codex) van a `progress/reviews/`. Evidencia (métricas, 
 - OpenCode tomando decisiones de arquitectura.
 - Varios agentes tocando `CAVELOG` simultáneamente.
 - Cerrar fase sin handoff ni `verify.sh`.
+- Tratar `RESPONSE.md` de `agent_io` como decisión final sin `REVIEW.md`.

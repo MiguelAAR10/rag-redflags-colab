@@ -2,6 +2,48 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-06-29 — Agent IO START_HERE dinámico
+
+### Decisión
+- Se agrega `progress/agent_io/START_HERE.md` como entrypoint universal para agentes externos.
+- El humano ya puede usar una sola frase: `Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.`
+- `progress/agent_io/QUEUE.md` ahora tiene una sección fija `## Active Run` con rutas parseables: `Request`, `Response`, `Review`.
+- Si `Run ID` es `none`, el agente debe responder `No hay interaccion pendiente.`
+- `README.md` de Agent IO y docs de memoria/multi-CLI referencian el nuevo arranque dinámico.
+
+### Evidencia
+- Archivos actualizados: `progress/agent_io/START_HERE.md`, `progress/agent_io/QUEUE.md`, `progress/agent_io/README.md`, `docs/MEMORY_INDEX.md`, `docs/MEMORY_PROTOCOL.md`, `docs/MULTI_CLI_PROTOCOL.md`, `docs/START_HERE.md`.
+- `bash scripts/build-context-graph.sh` = 65 nodos, 235 aristas, 0 huérfanos.
+- `bash scripts/verify.sh` = **105 passed, 6 skipped**, exit=0.
+
+### Riesgos
+- La cola está vacía (`Run ID: none`), por diseño. El próximo prompt externo debe crear/actualizar un run y apuntarlo en `QUEUE.md`.
+
+### Próximos pasos
+- La siguiente acción del proyecto sigue siendo ejecutar el notebook en Colab T4 y guardar evidencia final.
+
+## 2026-06-29 — Agent IO: trazabilidad de prompts/respuestas multiagente
+
+### Decisión
+- Se crea `progress/agent_io/` como capa modelo-agnóstica para registrar interacciones externas con agentes: `REQUEST.md` (prompt exacto), `RESPONSE.md` (salida del agente), `REVIEW.md` (decisión DANTE-OS/Claude) y `STATUS.md` (estado corto).
+- `progress/agent_io/QUEUE.md` queda como punto único para saber cuál es el siguiente prompt externo a ejecutar y dónde guardar el output.
+- La capa **no reemplaza** `tasks/queue.json`, `progress/NEXT_ACTION.md`, `progress/runs/`, `progress/evidence/` ni `docs/CAVELOG.md`; solo conserva inputs/outputs de agentes externos o chats multi-modelo.
+- Se registra la auditoría MiniMax existente como primer run trazable: `progress/agent_io/runs/2026-06-29-001-minimax-repo-audit/`.
+- Se sincroniza la memoria operacional: `progress/NEXT_ACTION.md` ya no apunta a F11 y pasa a la validación real en Colab T4; `progress/CURRENT_STATE.md` reconoce F11/F12 completadas y `agent_io` creado.
+- Se rellena el handoff F12 que antes era una plantilla vacía.
+
+### Evidencia
+- Archivos creados: `progress/agent_io/README.md`, `INDEX.md`, `QUEUE.md`, templates y run `2026-06-29-001-minimax-repo-audit`.
+- Docs integrados: `docs/MEMORY_INDEX.md`, `docs/MEMORY_PROTOCOL.md`, `docs/MULTI_CLI_PROTOCOL.md`, `docs/START_HERE.md`.
+- `bash scripts/verify.sh` = **105 passed, 6 skipped**, exit=0.
+
+### Riesgos
+- `RESPONSE.md` del primer run conserva una síntesis operacional de la auditoría MiniMax, no una transcripción literal completa. Si se requiere preservación literal, pegar el texto original completo en ese archivo.
+- La validación final del producto sigue pendiente en Colab T4.
+
+### Próximos pasos
+- Ejecutar notebook en Colab T4 con Qwen 4-bit, `rank_bm25`, evaluación final y evidencia en `progress/evidence/`.
+
 ## 2026-05-30 — Fase 12: Prompt de auditor experto + Qwen 4-bit + MiniMax 2.ª opinión
 
 ### Decisión (feedback del revisor)

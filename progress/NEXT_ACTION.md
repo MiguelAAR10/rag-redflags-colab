@@ -2,53 +2,61 @@
 
 ## Acción
 
-**Fase 11 — Escribir `docs/PROYECTO.md`: documento de investigación detallado, BASE para los slides.**
+**Validación final en Google Colab T4 del notebook `notebooks/redflags_rag_colab.ipynb` con Qwen real.**
 
-- **CLI:** DeepSeek (o MiniMax) — ver `tasks/queue.json` → `F11-doc-slides` · **Reviewer:** Claude
-- **Arranque:** `bash scripts/next-task.sh deepseek`
+- **Owner:** Humano en Colab · **Reviewer:** Claude/DANTE-OS
+- **No es tarea de código local:** no tocar `packages/`, `notebooks/`, `data/index/` ni `.env` desde el repo local.
 
 ## Objetivo
 
-Producir **`docs/PROYECTO.md`** en español, estilo **documento de investigación bonito** (mermaid, tablas, *callouts* `> [!NOTE]`, citas), que explique **todo el proyecto paso a paso** y sirva de **guion base para generar los slides** (8 secciones). NO es sobre el harness; el foco es el **sistema RAG avanzado** y el **caso de uso** (escáner de *red flags* bajo criterios claros, no sospechas).
+Ejecutar el notebook completo en un runtime limpio de **Google Colab T4**, con `RAG_QWEN_4BIT=1`, `HF_TOKEN`, `rank_bm25`, Qwen2.5-3B-Instruct real y el chat Gradio, para obtener evidencia final de que el entregable corre fuera del entorno local.
 
-## Fuentes a leer (para datos REALES, sin inventar)
+## Contexto confirmado
 
-- `README.md` (estructura y framing ya definidos) · `specs/004-redflags-rag.md` · `docs/RUBRICA.md`
-- **Números reales** desde `progress/evidence/*.json` (conteos y métricas): fase1 (unidades), fase2 (chunks/fragmentación), fase3 (dim, vectores), fase4 (retrieval), fase5 (rerank), fase6 (grounding), fase7 (Recall@k/Precision@k, ejemplos bueno/malo).
-- `docs/CAVELOG.md` (decisiones por fase). Firmas en `packages/rag_core/*.py` si hace falta.
-- **No** volcar PDF/JSONL/índices al contexto; usar los reportes.
+- F1.1-F7 ✅ pipeline RAG implementado y testeado localmente.
+- F8 ✅ notebook autorado y smoke gate local PASS; **pendiente ejecución real en Colab T4**.
+- F9 ✅ validación LangChain integrada.
+- F10 ✅ chat Gradio + MiniMax opcional integrado.
+- F11 ✅ `docs/PROYECTO.md` creado.
+- F12 ✅ prompt auditor senior + Qwen 4-bit opcional + MiniMax segunda opinión.
+- `progress/agent_io/` ✅ creado para prompts/respuestas trazables de agentes externos.
 
-## Estructura obligatoria de `docs/PROYECTO.md`
+## Pasos en Colab
 
-1. **Portada** (placeholders: logo `docs/assets/logo-universidad.png`, Universidad, Curso, **Docente _\<completar\>_**, Autor MiguelAAR10, Fecha).
-2. **Resumen / Abstract.**
-3. **Problema y caso de uso** (escáner de *red flags*; criterios definidos, no sospechas; "requiere revisión humana").
-4. **Fundamentos de RAG** (conceptos: retrieval, generación condicionada, grounding) con citas.
-5. **Dataset** (con números reales: unidades, chunks, familias, dificultades).
-6. **Arquitectura** (diagrama **mermaid**).
-7. **Técnicas avanzadas** (embeddings E5, FAISS, HNSW, hybrid BM25+FAISS, reranker, grounding, citation-per-sentence) — explicadas y **citadas**.
-8. **Pipeline paso a paso** (mermaid + narrativa).
-9. **Decisiones técnicas** (chunk 1024/128 y por qué; k=5; modelos elegidos; Flat vs HNSW honesto).
-10. **Evaluación y resultados** (Recall@k, Precision@k, grounding ratio, comparación de métodos, ejemplo bueno/malo) — **con los números de `progress/evidence`**.
-11. **Minimización de alucinaciones** (grounding, refusal, lenguaje seguro).
-12. **Demo (chat Gradio).**
-13. **Ética y límites.**
-14. **Limitaciones y trabajo futuro.**
-15. **Referencias** (reusar las del README).
-16. **Anexo — Mapeo a los 8 slides**: tabla `sección del doc → slide` (1 Título · 2 Problema · 3 Dataset · 4 Arquitectura · 5 Decisiones técnicas · 6 Demo · 7 Resultados · 8 Conclusiones), con 3–5 viñetas sugeridas por slide.
+1. Abrir `notebooks/redflags_rag_colab.ipynb` en Google Colab.
+2. Seleccionar runtime GPU T4.
+3. Configurar secret/env `HF_TOKEN`.
+4. Activar `RAG_QWEN_4BIT=1` según las celdas del notebook.
+5. Asegurar instalación de `rank_bm25` para retrieval híbrido real.
+6. Ejecutar `Run all`.
+7. Probar al menos un caso con señales de riesgo y un caso limpio/refusal.
+8. Ejecutar evaluación completa del gold set si el tiempo de Colab lo permite.
 
-## Criterios de aceptación (los revisa Claude)
+## Evidencia esperada
 
-- [ ] Cubre las 16 secciones; el **Anexo mapea a los 8 slides** con viñetas.
-- [ ] Usa **números reales** de `progress/evidence` (no inventados).
-- [ ] ≥ 2 diagramas **mermaid** + sección de **Referencias**.
-- [ ] **Lenguaje seguro** (señales de riesgo, no corrupción; revisión humana).
-- [ ] `bash scripts/verify.sh` sigue verde (el doc no rompe nada).
+Guardar un resumen en `progress/evidence/` o traer el output para que Claude/DANTE-OS lo registre:
+
+- runtime usado: T4 / Python / GPU visible;
+- instalación de dependencias clave;
+- Qwen cargado real o fallback usado, con causa;
+- `rank_bm25` activo o fallback documentado;
+- resultado de `analyze()` con lenguaje seguro;
+- grounding ratio con Qwen real si se pudo ejecutar;
+- resultados del gold set completo o explicación honesta si se ejecutó muestra;
+- screenshot/log mínimo del chat Gradio funcionando.
+
+## Criterios de aceptación
+
+- [ ] Notebook ejecuta de inicio a fin en Colab T4 o deja fallo reproducible con celda exacta.
+- [ ] Qwen real carga con 4-bit o se documenta el bloqueo concreto.
+- [ ] Retrieval híbrido usa BM25 real (`rank_bm25`) o se documenta fallback.
+- [ ] Salida mantiene lenguaje seguro: señales de riesgo, no corrupción, revisión humana.
+- [ ] Evidencia queda registrada en `progress/evidence/` y `docs/CAVELOG.md`.
+- [ ] `bash scripts/verify.sh` sigue verde localmente después de registrar evidencia.
 
 ## NO hacer
 
-- No tocar el pipeline ni el notebook. Solo crear `docs/PROYECTO.md`.
-
-## Verificación
-
-`grep -c "^## " docs/PROYECTO.md` (debe haber muchas secciones) + `bash scripts/verify.sh`. Cierra con `bash scripts/handoff.sh "fase11-doc-slides" deepseek`.
+- No modificar pipeline local mientras se valida Colab.
+- No reescribir notebook salvo que Colab revele un fallo concreto y reproducible.
+- No afirmar corrupción/ilegalidad; mantener lenguaje seguro.
+- No pegar tokens ni secretos en logs, prompts o docs.

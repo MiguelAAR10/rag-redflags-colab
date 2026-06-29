@@ -2,16 +2,17 @@
 
 _Actualizar al cerrar cada sesión._
 
-- **Fecha:** 2026-05-29
-- **Fase actual:** F0–F0.4 ✅ · F1.1–F7 ✅ · **F8 notebook autorado (Claude) + smoke gate 5/5** → `in_progress`. Falta: **correr en Colab T4** (humano, `docs/COLAB.md`) + slides aparte.
-- Entregable: `notebooks/redflags_rag_colab.ipynb` (10 secciones + **sección 11: validación con LangChain**, 28 celdas).
+- **Fecha:** 2026-06-29
+- **Fase actual:** F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅ · **pendiente real: correr en Colab T4** (humano, `docs/COLAB.md`).
+- Entregable: `notebooks/redflags_rag_colab.ipynb` (12 secciones: instalación, dataset, chunking, embeddings, FAISS/HNSW, retrieval, rerank, Qwen, evaluación, conclusiones, LangChain, chat Gradio/MiniMax opcional).
 - **F9 (LangChain) ✅**: `packages/rag_core/langchain_rag.py` + gate (3 PASS, 2 skip). Embeddings LangChain en `data/index/langchain_faiss/`.
 - **FIX cache de modelos ✅**: `lru_cache` en loaders (anti-recarga/OOM). Notebook limpiado para Colab (token único, LangChain en 11.0, 11.2 opt-in, 10.2 resumen).
 - **F10 chat (Gradio) ✅** sobre analyze() (Qwen); MiniMax opcional; FAISS/HNSW con benchmark honesto. `verify.sh` = **104 passed, 6 skipped**.
-- **README** reescrito como documento de investigación (foco RAG avanzado, no harness; logo/docente placeholders). **Próxima: F11** — worker escribe `docs/PROYECTO.md` (base para slides).
+- **README** reescrito como documento de investigación. **F11 completada:** `docs/PROYECTO.md` existe como base para slides.
+- **Agent IO ✅:** `progress/agent_io/` registra prompts/respuestas/reviews de agentes externos; primer run: auditoría MiniMax `2026-06-29-001-minimax-repo-audit`.
 - **Sistema multi-CLI por archivos FUNCIONA y se autovalida**: worker vía START_HERE → next-task → produce → `verify.sh` corre el **gate de pytest** (hoy **75 passed, 4 skipped**) → handoff → Claude integra. Cola: `tasks/queue.json` + `scripts/next-task.sh`. Ciclo humano: `docs/LOOP.md`.
 - **Modelos = HuggingFace**: e5-base (embeddings) + bge-reranker-v2-m3 (rerank) + Qwen2.5-3B (gen). Token en `.env`. Pendiente Colab: `pip install rank_bm25`.
-- **Pendiente Colab:** `pip install rank_bm25` (activa BM25 híbrido); el resto corre local.
+- **Pendiente Colab:** `pip install rank_bm25`, cargar Qwen real con `RAG_QWEN_4BIT=1`, ejecutar notebook completo en T4, correr gold set completo si el tiempo lo permite y guardar evidencia.
 - **Spec activa:** `specs/004-redflags-rag.md`
 
 ## Qué existe

@@ -20,6 +20,7 @@ Ventajas de archivos planos: deterministas, versionados en git (historia + diff)
 | **L1 · Spec (fuente de verdad)** | qué se construye y por qué | `specs/004-redflags-rag.md`, `docs/RUBRICA.md` | por decisión (con CAVELOG) |
 | **L2 · Estado** | dónde estamos y qué sigue | `progress/CURRENT_STATE.md`, `progress/NEXT_ACTION.md`, `progress/HANDOFF.md` | cada sesión |
 | **L3 · Historia** | qué pasó y por qué | `docs/CAVELOG.md`, `progress/runs/`, `progress/reviews/` | append-only |
+| **L3.b · Interacciones agenticas** | prompts, respuestas y reviews de agentes externos | `progress/agent_io/` | por interacción |
 | **L4 · Evidencia/Datos** | outputs reproducibles | `progress/evidence/`, `data/processed/`, `data/index/` | por fase |
 
 ## 3. Presupuesto de contexto (context budget)
@@ -40,6 +41,25 @@ Eso carga L0 + L1 + L2 (AGENTS, MEMORY_INDEX, CURRENT_STATE, NEXT_ACTION, HANDOF
 2. **Delegación = aislar contexto**: las lecturas pesadas (PDF, exploración amplia) se delegan a un **subagente**; su contexto se descarta al terminar y solo devuelve un **resumen estructurado** que se escribe a archivo. El coordinador nunca carga el material pesado.
 3. **Una actividad por sesión**: no mezclar fases. Si la ventana se llena → cerrar con handoff y abrir sesión nueva que reanuda **solo desde archivos**.
 4. **Reanudación desde archivos**: cualquier CLI retoma leyendo L2 (`CURRENT_STATE` → `NEXT_ACTION` → `HANDOFF`). El chat anterior es irrelevante.
+
+## 4.bis Agent IO — prompts y outputs trazables
+
+`progress/agent_io/` guarda interacciones externas con agentes cuando el trabajo ocurre fuera del flujo normal `START_HERE` → `NEXT_ACTION` → `progress/runs/`. Ejemplos: MiniMax en chat externo, comparación de respuestas entre modelos, segunda opinión read-only o prompts que el humano entrega manualmente.
+
+Reglas:
+
+1. `progress/agent_io/START_HERE.md` es el entrypoint universal para agentes externos.
+2. `progress/agent_io/QUEUE.md` indica el siguiente prompt externo pendiente en `## Active Run`.
+3. Cada interacción vive en `progress/agent_io/runs/<run-id>/` con `REQUEST.md`, `RESPONSE.md`, `REVIEW.md` y `STATUS.md`.
+4. `RESPONSE.md` no decide nada por sí solo; DANTE-OS/Claude registra la decisión en `REVIEW.md`.
+5. Si la revisión genera trabajo real, se actualiza `progress/NEXT_ACTION.md` o `tasks/queue.json`.
+6. Si hubo ejecución integrada en el repo, el cierre oficial sigue siendo `progress/runs/` + `CAVELOG` + `verify.sh`.
+
+Frase unica para el humano:
+
+```text
+Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.
+```
 
 ## 5. Ciclo de vida de una sesión
 

@@ -60,6 +60,7 @@ spec activa · módulos de `rag_core` (no duplicar lógica grande dentro del not
 | Mapa navegable del repo (grafo) | `progress/context-graph.json` · `docs/CONTEXT_GRAPH.md` |
 | Prompts/respuestas de agentes externos | `progress/agent_io/START_HERE.md` · `progress/agent_io/QUEUE.md` · `progress/agent_io/INDEX.md` |
 | Qué exige la nota | `docs/RUBRICA.md` |
+| Indicaciones finales UNI/RAGAS | `docs/proyecto-final-indicaciones/README.md` · `docs/proyecto-final-indicaciones/CHECKLIST.md` |
 | Verdad funcional del proyecto | `specs/004-redflags-rag.md` |
 | Estado actual | `progress/CURRENT_STATE.md` |
 | Qué hacer ahora | `progress/NEXT_ACTION.md` |

@@ -3,7 +3,7 @@
   "note": "Grafo determinista del harness. Regenerar tras cambios: bash scripts/build-context-graph.sh",
   "counts": {
     "nodes": 65,
-    "edges": 235,
+    "edges": 237,
     "orphans": 0
   },
   "nodes": [
@@ -35,7 +35,7 @@
       "id": "docs/CAVELOG.md",
       "title": "CAVELOG",
       "kind": "doc",
-      "lines": 454
+      "lines": 491
     },
     {
       "id": "docs/CAVEMAN.md",
@@ -71,7 +71,7 @@
       "id": "docs/MEMORY_INDEX.md",
       "title": "MEMORY_INDEX — Mapa de lectura (qué abrir y qué NO)",
       "kind": "doc",
-      "lines": 73
+      "lines": 74
     },
     {
       "id": "docs/MEMORY_PROTOCOL.md",
@@ -155,7 +155,7 @@
       "id": "progress/CURRENT_STATE.md",
       "title": "CURRENT_STATE — Estado actual del proyecto",
       "kind": "state",
-      "lines": 45
+      "lines": 47
     },
     {
       "id": "progress/HANDOFF.md",
@@ -167,7 +167,7 @@
       "id": "progress/NEXT_ACTION.md",
       "title": "NEXT_ACTION — La siguiente tarea exacta (una sola)",
       "kind": "state",
-      "lines": 63
+      "lines": 47
     },
     {
       "id": ".claude/agents/coordinator.md",
@@ -913,6 +913,10 @@
     },
     {
       "from": "docs/MEMORY_INDEX.md",
+      "to": "README.md"
+    },
+    {
+      "from": "docs/MEMORY_INDEX.md",
       "to": "docs/CAVELOG.md"
     },
     {
@@ -1153,10 +1157,6 @@
     },
     {
       "from": "progress/CURRENT_STATE.md",
-      "to": "docs/COLAB.md"
-    },
-    {
-      "from": "progress/CURRENT_STATE.md",
       "to": "docs/CONTEXT_GRAPH.md"
     },
     {
@@ -1217,11 +1217,19 @@
     },
     {
       "from": "progress/NEXT_ACTION.md",
+      "to": "README.md"
+    },
+    {
+      "from": "progress/NEXT_ACTION.md",
       "to": "docs/CAVELOG.md"
     },
     {
       "from": "progress/NEXT_ACTION.md",
       "to": "docs/PROYECTO.md"
+    },
+    {
+      "from": "progress/NEXT_ACTION.md",
+      "to": "packages/evals/metrics.py"
     },
     {
       "from": ".claude/agents/coordinator.md",

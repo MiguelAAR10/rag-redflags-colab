@@ -3,7 +3,9 @@
 _Actualizar al cerrar cada sesión._
 
 - **Fecha:** 2026-06-29
-- **Fase actual:** F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅ · **pendiente real: correr en Colab T4** (humano, `docs/COLAB.md`).
+- **Fase actual:** V1 estable marcado en `main` (commit `2852327`, tag local `v1-stable-agent-io`) · rama activa `feature/final-evaluation-ragas` para adaptar el proyecto a las indicaciones finales UNI/RAGAS.
+- Base funcional: F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅.
+- Nueva brecha principal según indicaciones finales: RAGAS obligatorio (faithfulness, answer relevance, context relevance), evaluación 10-15 preguntas con >=2 trampas, ficha técnica inicial y tabla de trazabilidad en notebook.
 - Entregable: `notebooks/redflags_rag_colab.ipynb` (12 secciones: instalación, dataset, chunking, embeddings, FAISS/HNSW, retrieval, rerank, Qwen, evaluación, conclusiones, LangChain, chat Gradio/MiniMax opcional).
 - **F9 (LangChain) ✅**: `packages/rag_core/langchain_rag.py` + gate (3 PASS, 2 skip). Embeddings LangChain en `data/index/langchain_faiss/`.
 - **FIX cache de modelos ✅**: `lru_cache` en loaders (anti-recarga/OOM). Notebook limpiado para Colab (token único, LangChain en 11.0, 11.2 opt-in, 10.2 resumen).

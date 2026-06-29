@@ -2,6 +2,25 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-06-29 — Rama de mejora final RAGAS + indicaciones oficiales
+
+### Decisión
+- Se marcó el estado previo como V1 estable mediante commit `2852327` (`chore: mark stable v1 with agent io`) y tag local `v1-stable-agent-io`.
+- Se creó la rama `feature/final-evaluation-ragas` para trabajar las mejoras exigidas por las nuevas indicaciones del trabajo final.
+- Se agregó `docs/proyecto-final-indicaciones/` con las indicaciones oficiales del entregable y un checklist accionable derivado del texto recibido.
+
+### Evidencia
+- `docs/proyecto-final-indicaciones/README.md` contiene la especificación del trabajo final: RAG vertical, técnicas avanzadas, RAGAS, notebook, slides, cronograma y rúbrica.
+- `docs/proyecto-final-indicaciones/CHECKLIST.md` resume los requisitos mínimos y prioridades de mejora.
+- `bash scripts/build-context-graph.sh` = 65 nodos, 237 aristas, 0 huérfanos.
+- `bash scripts/verify.sh` = **105 passed, 6 skipped**, exit=0.
+
+### Riesgos
+- La mayor brecha nueva frente a las indicaciones es RAGAS formal: faithfulness, answer relevance y context relevance sobre 10-15 preguntas con al menos 2 trampas.
+
+### Próximos pasos
+- Auditar el notebook y el pipeline contra el checklist de indicaciones finales antes de implementar cambios.
+
 ## 2026-06-29 — Agent IO START_HERE dinámico
 
 ### Decisión

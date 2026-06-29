@@ -2,61 +2,45 @@
 
 ## Acción
 
-**Validación final en Google Colab T4 del notebook `notebooks/redflags_rag_colab.ipynb` con Qwen real.**
+**Auditar el notebook y pipeline contra las indicaciones finales UNI/RAGAS antes de implementar cambios.**
 
-- **Owner:** Humano en Colab · **Reviewer:** Claude/DANTE-OS
-- **No es tarea de código local:** no tocar `packages/`, `notebooks/`, `data/index/` ni `.env` desde el repo local.
+- **Branch:** `feature/final-evaluation-ragas`
+- **Owner:** DANTE-OS / reviewer técnico
+- **Input principal:** `docs/proyecto-final-indicaciones/README.md` y `docs/proyecto-final-indicaciones/CHECKLIST.md`
 
 ## Objetivo
 
-Ejecutar el notebook completo en un runtime limpio de **Google Colab T4**, con `RAG_QWEN_4BIT=1`, `HF_TOKEN`, `rank_bm25`, Qwen2.5-3B-Instruct real y el chat Gradio, para obtener evidencia final de que el entregable corre fuera del entorno local.
+Comparar el estado actual del proyecto contra las indicaciones finales del curso y producir un plan mínimo de mejora para cumplir especialmente:
 
-## Contexto confirmado
+- notebook `Run all` en Colab;
+- ficha técnica como primera celda;
+- tabla de trazabilidad requisito/técnica -> celda;
+- set de evaluación de 10 a 15 preguntas con al menos 2 trampas;
+- métricas RAGAS: faithfulness, answer relevance y context relevance;
+- reporte de puntajes y comentario de resultados;
+- slides con resultados RAGAS y demo.
 
-- F1.1-F7 ✅ pipeline RAG implementado y testeado localmente.
-- F8 ✅ notebook autorado y smoke gate local PASS; **pendiente ejecución real en Colab T4**.
-- F9 ✅ validación LangChain integrada.
-- F10 ✅ chat Gradio + MiniMax opcional integrado.
-- F11 ✅ `docs/PROYECTO.md` creado.
-- F12 ✅ prompt auditor senior + Qwen 4-bit opcional + MiniMax segunda opinión.
-- `progress/agent_io/` ✅ creado para prompts/respuestas trazables de agentes externos.
+## Fuentes a leer
 
-## Pasos en Colab
-
-1. Abrir `notebooks/redflags_rag_colab.ipynb` en Google Colab.
-2. Seleccionar runtime GPU T4.
-3. Configurar secret/env `HF_TOKEN`.
-4. Activar `RAG_QWEN_4BIT=1` según las celdas del notebook.
-5. Asegurar instalación de `rank_bm25` para retrieval híbrido real.
-6. Ejecutar `Run all`.
-7. Probar al menos un caso con señales de riesgo y un caso limpio/refusal.
-8. Ejecutar evaluación completa del gold set si el tiempo de Colab lo permite.
-
-## Evidencia esperada
-
-Guardar un resumen en `progress/evidence/` o traer el output para que Claude/DANTE-OS lo registre:
-
-- runtime usado: T4 / Python / GPU visible;
-- instalación de dependencias clave;
-- Qwen cargado real o fallback usado, con causa;
-- `rank_bm25` activo o fallback documentado;
-- resultado de `analyze()` con lenguaje seguro;
-- grounding ratio con Qwen real si se pudo ejecutar;
-- resultados del gold set completo o explicación honesta si se ejecutó muestra;
-- screenshot/log mínimo del chat Gradio funcionando.
+1. `docs/proyecto-final-indicaciones/README.md`
+2. `docs/proyecto-final-indicaciones/CHECKLIST.md`
+3. `notebooks/redflags_rag_colab.ipynb` solo inspección estructural, no cargar outputs pesados.
+4. `packages/evals/metrics.py`
+5. `data/eval/goldset.jsonl` por muestra, no completo si no hace falta.
+6. `docs/PROYECTO.md`
+7. `progress/evidence/fase7-eval-report.json`
+8. `docs/CAVELOG.md`
 
 ## Criterios de aceptación
 
-- [ ] Notebook ejecuta de inicio a fin en Colab T4 o deja fallo reproducible con celda exacta.
-- [ ] Qwen real carga con 4-bit o se documenta el bloqueo concreto.
-- [ ] Retrieval híbrido usa BM25 real (`rank_bm25`) o se documenta fallback.
-- [ ] Salida mantiene lenguaje seguro: señales de riesgo, no corrupción, revisión humana.
-- [ ] Evidencia queda registrada en `progress/evidence/` y `docs/CAVELOG.md`.
-- [ ] `bash scripts/verify.sh` sigue verde localmente después de registrar evidencia.
+- [ ] Matriz requisito -> estado actual -> brecha -> archivo afectado.
+- [ ] Identificar exactamente qué celdas del notebook deben agregarse o modificarse.
+- [ ] Definir si se usará librería `ragas` o implementación local compatible con el paper.
+- [ ] No implementar todavía cambios grandes sin plan.
+- [ ] Mantener lenguaje seguro del dominio anticorrupción.
 
 ## NO hacer
 
-- No modificar pipeline local mientras se valida Colab.
-- No reescribir notebook salvo que Colab revele un fallo concreto y reproducible.
-- No afirmar corrupción/ilegalidad; mantener lenguaje seguro.
-- No pegar tokens ni secretos en logs, prompts o docs.
+- No modificar pipeline hasta cerrar auditoría.
+- No cambiar el corpus ni regenerar índices.
+- No pegar tokens ni credenciales.

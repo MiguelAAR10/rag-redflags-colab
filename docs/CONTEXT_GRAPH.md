@@ -1,7 +1,7 @@
 # CONTEXT_GRAPH (generado)
 
 > Generado por `scripts/build_context_graph.py`. **No editar a mano.**
-> Nodos: 65 · Aristas: 235 · Huérfanos: 0
+> Nodos: 65 · Aristas: 237 · Huérfanos: 0
 > Regenerar: `bash scripts/build-context-graph.sh`
 
 ```mermaid
@@ -199,6 +199,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_tasks_queue_json
   n_docs_LOOP_md --> n_docs_START_HERE_md
   n_docs_MEMORY_INDEX_md --> n_AGENTS_md
+  n_docs_MEMORY_INDEX_md --> n_README_md
   n_docs_MEMORY_INDEX_md --> n_docs_CAVELOG_md
   n_docs_MEMORY_INDEX_md --> n_docs_CAVEMAN_md
   n_docs_MEMORY_INDEX_md --> n_docs_CONTEXT_GRAPH_md
@@ -259,7 +260,6 @@ graph LR
   n_specs__TEMPLATE_feature_md --> n_tasks_backlog_json
   n_progress_CURRENT_STATE_md --> n_AGENTS_md
   n_progress_CURRENT_STATE_md --> n_docs_CAVEMAN_md
-  n_progress_CURRENT_STATE_md --> n_docs_COLAB_md
   n_progress_CURRENT_STATE_md --> n_docs_CONTEXT_GRAPH_md
   n_progress_CURRENT_STATE_md --> n_docs_LOOP_md
   n_progress_CURRENT_STATE_md --> n_docs_MEMORY_INDEX_md
@@ -275,8 +275,10 @@ graph LR
   n_progress_HANDOFF_md --> n_AGENTS_md
   n_progress_HANDOFF_md --> n_progress_CURRENT_STATE_md
   n_progress_HANDOFF_md --> n_progress_NEXT_ACTION_md
+  n_progress_NEXT_ACTION_md --> n_README_md
   n_progress_NEXT_ACTION_md --> n_docs_CAVELOG_md
   n_progress_NEXT_ACTION_md --> n_docs_PROYECTO_md
+  n_progress_NEXT_ACTION_md --> n_packages_evals_metrics_py
   n__claude_agents_coordinator_md --> n_AGENTS_md
   n__claude_agents_coordinator_md --> n_docs_CAVELOG_md
   n__claude_agents_coordinator_md --> n_docs_MEMORY_INDEX_md

@@ -33,5 +33,5 @@ Claude (coordinador) integra **solo** cuando existe tu handoff y `verify.sh` pas
 - Los workers (Kimi/Qwen/MiniMax/DeepSeek) hacen el trabajo pesado y repetitivo.
 - Todo va por **archivos**, no por chats largos: nadie re-explica el proyecto; se lee `START_HERE` + `NEXT_ACTION`.
 - Si el humano está coordinando prompts externos, el siguiente prompt vive en `progress/agent_io/QUEUE.md` y cada interacción conserva `REQUEST.md`/`RESPONSE.md`/`REVIEW.md`.
-- Para prompts externos, usa la frase: `Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.`
+- Para prompts externos, usa la frase: `Read progress/agent_io/START_HERE.md and execute the active interaction. Do nothing else.`
 - Para navegar el repo sin leerlo entero: `progress/context-graph.json` (mapa) y `docs/MEMORY_INDEX.md`.

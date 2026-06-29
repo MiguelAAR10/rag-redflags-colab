@@ -80,11 +80,13 @@ Reviews independientes (Codex) van a `progress/reviews/`. Evidencia (métricas, 
 
 No reemplaza `tasks/queue.json`, `progress/NEXT_ACTION.md` ni `progress/runs/`. Si la revisión del output deriva en trabajo real, Claude actualiza la cola o `NEXT_ACTION` y el worker vuelve al flujo normal.
 
-Frase unica para el humano:
+Frase única para el humano:
 
 ```text
-Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.
+Read progress/agent_io/START_HERE.md and execute the active interaction. Do nothing else.
 ```
+
+Para análisis/auditorías, el output debe quedar en `RESPONSE.md`. El chat no es memoria final.
 
 ## 5. Flujo diario
 

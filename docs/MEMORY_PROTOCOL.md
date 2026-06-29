@@ -55,11 +55,13 @@ Reglas:
 5. Si la revisión genera trabajo real, se actualiza `progress/NEXT_ACTION.md` o `tasks/queue.json`.
 6. Si hubo ejecución integrada en el repo, el cierre oficial sigue siendo `progress/runs/` + `CAVELOG` + `verify.sh`.
 
-Frase unica para el humano:
+Frase única para el humano:
 
 ```text
-Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.
+Read progress/agent_io/START_HERE.md and execute the active interaction. Do nothing else.
 ```
+
+Para ahorrar tokens, los agentes deben escribir salidas concisas y path-based en `RESPONSE.md`; no repetir contexto largo si ya está referenciado por ruta.
 
 ## 5. Ciclo de vida de una sesión
 

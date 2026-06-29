@@ -1,7 +1,7 @@
 # CONTEXT_GRAPH (generado)
 
 > Generado por `scripts/build_context_graph.py`. **No editar a mano.**
-> Nodos: 65 · Aristas: 237 · Huérfanos: 0
+> Nodos: 66 · Aristas: 241 · Huérfanos: 0
 > Regenerar: `bash scripts/build-context-graph.sh`
 
 ```mermaid
@@ -58,6 +58,7 @@ graph LR
   n_packages_rag_core_run_phase5_py["packages/rag_core/run_phase5.py"]
   n_packages_rag_core_run_phase6_py["packages/rag_core/run_phase6.py"]
   n_packages_rag_core_run_phase7_py["packages/rag_core/run_phase7.py"]
+  n_packages_rag_core_tests_test_agent_io_script_py["packages/rag_core/tests/test_agent_io_script.py"]
   n_packages_rag_core_tests_test_chunking_py["packages/rag_core/tests/test_chunking.py"]
   n_packages_rag_core_tests_test_dataset_contract_py["packages/rag_core/tests/test_dataset_contract.py"]
   n_packages_rag_core_tests_test_embeddings_faiss_py["packages/rag_core/tests/test_embeddings_faiss.py"]
@@ -92,8 +93,10 @@ graph LR
   n_CLAUDE_md --> n_specs_004_redflags_rag_md
   n_README_md --> n_docs_COLAB_md
   n_docs_ARCHITECTURE_md --> n_specs_004_redflags_rag_md
+  n_docs_CAVELOG_md --> n__codex_skills_rag_agentic_harness_SKILL_md
   n_docs_CAVELOG_md --> n__opencode_agent_worker_md
   n_docs_CAVELOG_md --> n_AGENTS_md
+  n_docs_CAVELOG_md --> n_CLAUDE_md
   n_docs_CAVELOG_md --> n_README_md
   n_docs_CAVELOG_md --> n_docs_ARCHITECTURE_md
   n_docs_CAVELOG_md --> n_docs_CAVEMAN_md
@@ -114,6 +117,7 @@ graph LR
   n_docs_CAVELOG_md --> n_packages_rag_core_loaders_py
   n_docs_CAVELOG_md --> n_packages_rag_core_rerankers_py
   n_docs_CAVELOG_md --> n_packages_rag_core_retrievers_py
+  n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_agent_io_script_py
   n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_chunking_py
   n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_dataset_contract_py
   n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_embeddings_faiss_py
@@ -175,6 +179,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_run_phase5_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_run_phase6_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_run_phase7_py
+  n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_agent_io_script_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_chunking_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_dataset_contract_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_embeddings_faiss_py

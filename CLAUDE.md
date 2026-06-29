@@ -45,3 +45,20 @@ Debe incluir:
 - resultados
 - problemas
 - próximos pasos
+
+## Agent IO obligatorio para auditorías y análisis
+
+Cuando el usuario pida analizar, auditar, revisar, comparar o dar una segunda opinión sin implementar directamente, usa `progress/agent_io/`.
+
+Si existe un `Active Run` en `progress/agent_io/QUEUE.md`:
+1. Lee `progress/agent_io/START_HERE.md`.
+2. Ejecuta solo el `REQUEST.md` activo.
+3. Guarda el resultado completo en el `RESPONSE.md` indicado si tienes write access.
+4. Si estás en modo plan/read-only y no puedes escribir, devuelve el contenido listo para pegar en `RESPONSE.md`.
+5. No escribas `REVIEW.md`; eso lo hace DANTE-OS/Claude integrador.
+
+Frase universal para agentes externos:
+
+```text
+Read progress/agent_io/START_HERE.md and execute the active interaction. Do nothing else.
+```

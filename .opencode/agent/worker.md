@@ -20,3 +20,5 @@ Lee solo: `AGENTS.md`, `docs/MEMORY_INDEX.md`, la spec activa y el archivo objet
 Tareas válidas: crear esqueletos de archivos, mejorar README/docstrings, crear test skeletons, generar tablas/reportes markdown, scripts simples no destructivos.
 
 Reglas: no toques más de ~3 archivos sin autorización; no modifiques arquitectura; no instales dependencias; no toques el notebook final salvo que se pida. Termina ejecutando `bash scripts/init.sh` y `bash scripts/verify.sh`, y deja handoff en `progress/runs/` (CLI = opencode). Usa lenguaje seguro.
+
+Para auditorías, análisis o segundas opiniones, usa `progress/agent_io/`: lee `progress/agent_io/START_HERE.md`, ejecuta el `REQUEST.md` activo desde `QUEUE.md` y guarda la salida en el `RESPONSE.md` indicado. No escribas `REVIEW.md`.

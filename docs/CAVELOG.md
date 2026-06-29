@@ -2,6 +2,25 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-06-29 — Agent IO CLI-proof + active run automation
+
+### Decisión
+- Se agrega `scripts/agent-io-new.sh` para crear runs de Agent IO y actualizar automáticamente `progress/agent_io/QUEUE.md` con `## Active Run`.
+- Agent IO queda estandarizado en inglés para prompts, inputs y outputs.
+- `CLAUDE.md`, `.codex/skills/rag-agentic-harness/SKILL.md` y `.opencode/agent/worker.md` ahora indican que análisis/auditorías/segundas opiniones deben usar `progress/agent_io/` y guardar output en `RESPONSE.md` cuando exista un run activo.
+- Se crea un run activo de prueba real para Claude: `progress/agent_io/runs/2026-06-29-1220-claude-final-ragas-audit/REQUEST.md`.
+
+### Evidencia
+- Test nuevo: `packages/rag_core/tests/test_agent_io_script.py` valida que `scripts/agent-io-new.sh` cree `REQUEST.md`, `RESPONSE.md`, `REVIEW.md`, `STATUS.md` y actualice `QUEUE.md`.
+- `python3 -m pytest packages/rag_core/tests/test_agent_io_script.py -q` = 1 passed.
+- `bash scripts/verify.sh` = **106 passed, 6 skipped**, exit=0.
+
+### Riesgos
+- El run activo apunta a Claude Code; si Claude está en modo plan/read-only, debe devolver contenido listo para pegar en `RESPONSE.md`.
+
+### Próximos pasos
+- Probar en Claude Code con la frase: `Read progress/agent_io/START_HERE.md and execute the active interaction. Do nothing else.`
+
 ## 2026-06-29 — Rama de mejora final RAGAS + indicaciones oficiales
 
 ### Decisión

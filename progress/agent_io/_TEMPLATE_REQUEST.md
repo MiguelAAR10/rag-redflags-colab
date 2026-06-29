@@ -1,10 +1,10 @@
 ---
-run_id: YYYY-MM-DD-NNN-agent-topic
+run_id: RUN_ID
 created_at: YYYY-MM-DDTHH:MM:SS
-agent: minimax|kimi|qwen|mimo|deepseek|codex|claude|opencode|other
-model: MODEL_NAME
-role: read-only auditor|builder|reviewer|librarian|other
-mode: read-only|write-enabled
+agent: AGENT
+model: MODEL
+role: ROLE
+mode: read-only
 status: draft
 source: dante-os
 related_task: none
@@ -13,34 +13,45 @@ related_spec: specs/004-redflags-rag.md
 
 # REQUEST
 
-## Objetivo
+## Goal
 
-Describe una sola actividad verificable.
+State one verifiable task.
 
-## Contexto minimo a leer
+## Read First
 
 1. `AGENTS.md`
 2. `docs/MEMORY_INDEX.md`
 3. `progress/CURRENT_STATE.md`
 4. `progress/NEXT_ACTION.md`
 5. `progress/HANDOFF.md`
-6. spec activa
+6. Active spec
 
-## No leer completo
+## Do Not Read Fully
 
 - `data/raw/*.pdf`
 - `data/processed/*.jsonl`
 - `data/index/*`
-- notebooks grandes completos
+- large notebooks or logs unless explicitly required
 
-## Reglas
+## Rules
 
-- No inventar estado.
-- Separar confirmado, inferido, desconocido y bloqueante.
-- Citar rutas exactas.
-- No imprimir secretos.
-- Respetar lenguaje seguro del dominio.
+- Do not invent state.
+- Separate confirmed, inferred, unknown, and blocking facts.
+- Cite exact file paths.
+- Do not print secrets.
+- Keep domain-safe language.
+- If write access is not explicitly allowed, do not modify files.
 
-## Formato esperado
+## Output Format
 
-Define la estructura exacta de salida.
+Use concise Markdown:
+
+```markdown
+## Result
+
+## Evidence
+
+## Gaps
+
+## Next Single Action
+```

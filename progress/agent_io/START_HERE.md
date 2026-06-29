@@ -1,44 +1,44 @@
-# Agent IO START_HERE — Arranque universal para interacciones externas
+# Agent IO START_HERE
 
-> Para MiniMax, Kimi, Qwen, Mimo, DeepSeek, Codex, Claude, OpenCode o cualquier agente usado como chat externo / segunda opinion / auditor read-only.
+> Universal entrypoint for Claude Code, Codex, OpenCode, MiniMax, Kimi, Qwen, Mimo, DeepSeek, or any external agent used for audits, reviews, second opinions, or prompt-based work.
 
-## Frase unica que pega el humano
+## Single Human Instruction
 
 ```text
-Lee progress/agent_io/START_HERE.md y ejecuta la interaccion pendiente. No hagas nada mas.
+Read progress/agent_io/START_HERE.md and execute the active interaction. Do nothing else.
 ```
 
-Si tu entorno no puede leer archivos, pide al humano el contenido de `progress/agent_io/QUEUE.md` y del `REQUEST.md` indicado.
+If you cannot read files, ask the human for `progress/agent_io/QUEUE.md` and the active `REQUEST.md` content.
 
-## Pasos obligatorios del agente
+## Required Agent Steps
 
-1. Lee `progress/agent_io/QUEUE.md`.
-2. Ubica la seccion `## Active Run`.
-3. Si `Run ID` es `none`, responde exactamente: `No hay interaccion pendiente.`
-4. Si `Run ID` no es `none`, abre el path indicado en `Request`.
-5. Ejecuta solo el `REQUEST.md` indicado. No expandas alcance.
-6. Respeta `agent`, `model`, `role`, `mode`, `status`, `related_task` y `related_spec` del frontmatter.
-7. No leas archivos fuera de los indicados en el request, salvo que el request lo autorice.
-8. No modifiques archivos salvo autorizacion explicita en el request.
-9. Si tienes write access y el request lo permite, guarda la respuesta en el path `Response` indicado en `QUEUE.md`.
-10. Si no tienes write access, devuelve la respuesta completa al humano para que la guarde en `Response`.
-11. No escribas `REVIEW.md`; eso lo hace DANTE-OS/Claude.
-12. No actualices `progress/NEXT_ACTION.md`, `tasks/queue.json`, `docs/CAVELOG.md` ni `progress/runs/`; eso lo hace DANTE-OS/Claude al integrar.
+1. Read `progress/agent_io/QUEUE.md`.
+2. Find `## Active Run`.
+3. If `Run ID` is `none`, answer exactly: `No active interaction.`
+4. If `Run ID` is not `none`, open the `Request` path.
+5. Execute only that `REQUEST.md`. Do not expand scope.
+6. Respect the request frontmatter: `agent`, `model`, `role`, `mode`, `status`, `related_task`, and `related_spec`.
+7. Do not read files outside the request unless the request explicitly allows it.
+8. Do not modify files unless the request explicitly allows write access.
+9. If you have write access and the request allows it, save the complete answer to the `Response` path in `QUEUE.md`.
+10. If you cannot write files, return the complete answer and clearly say it must be saved to the `Response` path.
+11. Do not write `REVIEW.md`; DANTE-OS/Claude does that.
+12. Do not update `progress/NEXT_ACTION.md`, `tasks/queue.json`, `docs/CAVELOG.md`, or `progress/runs/`; DANTE-OS/Claude does that during integration.
 
-## Regla de oro
+## Golden Rule
 
-`REQUEST.md` manda. `RESPONSE.md` informa. `REVIEW.md` decide.
+`REQUEST.md` instructs. `RESPONSE.md` records. `REVIEW.md` decides.
 
-## Salida esperada
+## Default Output Format
 
-Responde siguiendo exactamente el formato pedido en `REQUEST.md`. Si el request no define formato, usa:
+Follow the exact output format required by `REQUEST.md`. If the request does not define a format, use:
 
 ```markdown
-## Resultado
+## Result
 
-## Evidencia
+## Evidence
 
-## Riesgos
+## Risks
 
-## Limites
+## Limits
 ```

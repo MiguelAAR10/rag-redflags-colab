@@ -2,8 +2,8 @@
   "generated_by": "scripts/build_context_graph.py",
   "note": "Grafo determinista del harness. Regenerar tras cambios: bash scripts/build-context-graph.sh",
   "counts": {
-    "nodes": 65,
-    "edges": 237,
+    "nodes": 66,
+    "edges": 241,
     "orphans": 0
   },
   "nodes": [
@@ -17,7 +17,7 @@
       "id": "CLAUDE.md",
       "title": "CLAUDE.md",
       "kind": "root",
-      "lines": 48
+      "lines": 65
     },
     {
       "id": "README.md",
@@ -35,7 +35,7 @@
       "id": "docs/CAVELOG.md",
       "title": "CAVELOG",
       "kind": "doc",
-      "lines": 491
+      "lines": 512
     },
     {
       "id": "docs/CAVEMAN.md",
@@ -53,7 +53,7 @@
       "id": "docs/CONTEXT_GRAPH.md",
       "title": "CONTEXT_GRAPH (generado)",
       "kind": "doc",
-      "lines": 310
+      "lines": 317
     },
     {
       "id": "docs/LOOP.md",
@@ -77,13 +77,13 @@
       "id": "docs/MEMORY_PROTOCOL.md",
       "title": "MEMORY_PROTOCOL — Memoria inteligente sin saturar contexto",
       "kind": "doc",
-      "lines": 105
+      "lines": 107
     },
     {
       "id": "docs/MULTI_CLI_PROTOCOL.md",
       "title": "MULTI_CLI_PROTOCOL — Coordinación Claude · Codex · OpenCode",
       "kind": "doc",
-      "lines": 108
+      "lines": 110
     },
     {
       "id": "docs/PROYECTO.md",
@@ -209,13 +209,13 @@
       "id": ".opencode/agent/worker.md",
       "title": ".opencode/agent/worker.md",
       "kind": "agent",
-      "lines": 23
+      "lines": 25
     },
     {
       "id": ".codex/skills/rag-agentic-harness/SKILL.md",
       "title": "RAG Agentic Harness Skill",
       "kind": "skill",
-      "lines": 24
+      "lines": 36
     },
     {
       "id": "tasks/backlog.json",
@@ -318,6 +318,12 @@
       "title": "packages/rag_core/run_phase7.py",
       "kind": "code",
       "lines": 217
+    },
+    {
+      "id": "packages/rag_core/tests/test_agent_io_script.py",
+      "title": "packages/rag_core/tests/test_agent_io_script.py",
+      "kind": "code",
+      "lines": 62
     },
     {
       "id": "packages/rag_core/tests/test_chunking.py",
@@ -485,11 +491,19 @@
     },
     {
       "from": "docs/CAVELOG.md",
+      "to": ".codex/skills/rag-agentic-harness/SKILL.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
       "to": ".opencode/agent/worker.md"
     },
     {
       "from": "docs/CAVELOG.md",
       "to": "AGENTS.md"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "CLAUDE.md"
     },
     {
       "from": "docs/CAVELOG.md",
@@ -570,6 +584,10 @@
     {
       "from": "docs/CAVELOG.md",
       "to": "packages/rag_core/retrievers.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/tests/test_agent_io_script.py"
     },
     {
       "from": "docs/CAVELOG.md",
@@ -814,6 +832,10 @@
     {
       "from": "docs/CONTEXT_GRAPH.md",
       "to": "packages/rag_core/run_phase7.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_agent_io_script.py"
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",

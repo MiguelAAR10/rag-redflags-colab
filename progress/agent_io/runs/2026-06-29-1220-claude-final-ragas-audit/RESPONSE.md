@@ -1,8 +1,8 @@
 ---
-run_id: RUN_ID
+run_id: 2026-06-29-1220-claude-final-ragas-audit
 received_at: YYYY-MM-DDTHH:MM:SS
-agent: AGENT
-model: MODEL
+agent: claude
+model: Opus-4.8
 duration: unknown
 write_access_used: false
 ---

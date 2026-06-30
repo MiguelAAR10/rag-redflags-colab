@@ -2,6 +2,8 @@
 
 Objetivo: gastar el mínimo de contexto. **No cargues el repo entero.** Abre solo lo que la fase necesita.
 
+> 🚀 **Roadmap V2 (vigilancia activa + CDC + deploy web):** `docs/V2_VIGILANCIA_ACTIVA.md` (branch `v2`). Empezar por su Fase 0.
+
 ## Para iniciar CUALQUIER sesión (siempre)
 
 1. `AGENTS.md`
@@ -62,6 +64,7 @@ spec activa · módulos de `rag_core` (no duplicar lógica grande dentro del not
 | Qué exige la nota | `docs/RUBRICA.md` |
 | Indicaciones finales UNI/RAGAS | `docs/proyecto-final-indicaciones/README.md` · `docs/proyecto-final-indicaciones/CHECKLIST.md` |
 | Verdad funcional del proyecto | `specs/004-redflags-rag.md` |
+| Roadmap V2 (ingesta/CDC/deploy) | `docs/V2_VIGILANCIA_ACTIVA.md` |
 | Estado actual | `progress/CURRENT_STATE.md` |
 | Qué hacer ahora | `progress/NEXT_ACTION.md` |
 | Cómo retomar | `progress/HANDOFF.md` |

@@ -120,7 +120,13 @@ class TestGoldSet:
             assert "query" in item, f"Falta 'query' en {item}"
             assert "relevant_indicator_codes" in item, f"Falta 'relevant_indicator_codes' en {item}"
             assert isinstance(item["relevant_indicator_codes"], list)
-            assert len(item["relevant_indicator_codes"]) >= 1
+            # Las preguntas trampa (fuera del corpus, Fase 14) no tienen códigos
+            # relevantes por diseño: su comportamiento esperado es refusal.
+            if item.get("trap") is True:
+                assert len(item["relevant_indicator_codes"]) == 0
+                assert item.get("expected_answer"), "trampa sin expected_answer"
+            else:
+                assert len(item["relevant_indicator_codes"]) >= 1
 
     def test_goldset_indicator_codes_valid(self, gold_items):
         import json

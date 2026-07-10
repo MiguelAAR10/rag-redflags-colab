@@ -10,3 +10,6 @@
 {"query": "Multiple direct awards were made just below the competitive threshold value.", "relevant_indicator_codes": ["R011", "R012", "R054"], "relevant_families": ["adjudicacion"]}
 {"query": "The winning bidder is on a sanctions list and was debarred in another country.", "relevant_indicator_codes": ["R046", "R045"], "relevant_families": ["competencia/licitacion"]}
 {"query": "Technical specifications in the tender were tailored to a specific supplier brand.", "relevant_indicator_codes": ["R006", "R021"], "relevant_families": ["competencia/licitacion"]}
+{"query": "The winning bid price was almost identical to the buyer's secret cost estimate.", "relevant_indicator_codes": ["R031", "R024"], "relevant_families": ["adjudicacion"], "trap": false}
+{"query": "What is the best recipe for chocolate chip cookies?", "relevant_indicator_codes": [], "relevant_families": [], "trap": true, "expected_answer": "No hay evidencia suficiente en la guía OCP recuperada para responder esta consulta; requiere revisión humana."}
+{"query": "Who won the 2022 FIFA World Cup final?", "relevant_indicator_codes": [], "relevant_families": [], "trap": true, "expected_answer": "No hay evidencia suficiente en la guía OCP recuperada para responder esta consulta; requiere revisión humana."}

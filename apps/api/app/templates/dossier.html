@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Dossier · {{ dossier.filename }}{% endblock %}
+{% block content %}
+<section class="bg-white shadow-sm rounded-lg border border-slate-200 p-6">
+  <div class="flex items-start justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">{{ dossier.filename }}</h1>
+      <p class="text-xs text-slate-500 mt-1">SHA-256: <code>{{ dossier.sha256 }}</code></p>
+      <p class="text-xs text-slate-500">Modelo: <code>{{ dossier.model_name }}</code></p>
+    </div>
+    <a href="/tdrs/{{ tdr.id }}" class="text-sm text-emerald-700 hover:underline">← detalle</a>
+  </div>
+
+  <div class="mt-6 grid md:grid-cols-3 gap-4">
+    <div class="bg-slate-50 border border-slate-200 rounded p-4">
+      <div class="text-xs uppercase text-slate-500">Riesgo preliminar</div>
+      <div class="mt-1">
+        {% set lvl = dossier.risk_level %}
+        {% if lvl == 'Alto' %}<span class="px-3 py-1 text-sm rounded badge-high">Alto</span>
+        {% elif lvl == 'Medio' %}<span class="px-3 py-1 text-sm rounded badge-medium">Medio</span>
+        {% elif lvl == 'Bajo' %}<span class="px-3 py-1 text-sm rounded badge-low">Bajo</span>
+        {% else %}<span class="px-3 py-1 text-sm rounded badge-insufficient">{{ lvl }}</span>{% endif %}
+      </div>
+      <p class="mt-2 text-xs text-slate-600">{{ dossier.risk_reason }}</p>
+    </div>
+    <div class="bg-slate-50 border border-slate-200 rounded p-4">
+      <div class="text-xs uppercase text-slate-500">Estado de evidencia</div>
+      <div class="mt-1">
+        {% set es = dossier.evidence.status %}
+        {% if es == 'sufficient' %}<span class="px-3 py-1 text-sm rounded badge-completed">Suficiente</span>
+        {% elif es == 'weak' %}<span class="px-3 py-1 text-sm rounded badge-medium">Débil</span>
+        {% else %}<span class="px-3 py-1 text-sm rounded badge-insufficient">Insuficiente</span>{% endif %}
+      </div>
+      <p class="mt-2 text-xs text-slate-600">{{ dossier.evidence.notes }}</p>
+    </div>
+    <div class="bg-slate-50 border border-slate-200 rounded p-4">
+      <div class="text-xs uppercase text-slate-500">Grounding</div>
+      <div class="mt-1 text-2xl font-bold text-slate-900">{{ '%.2f'|format(dossier.grounding_ratio) }}</div>
+      <div class="w-full bg-slate-200 rounded-full h-2 mt-2">
+        <div class="bg-emerald-500 h-2 rounded-full" style="width: {{ (dossier.grounding_ratio * 100)|round(1) }}%"></div>
+      </div>
+      <p class="mt-2 text-xs text-slate-600">
+        {{ dossier.evidence.accepted_count }} aceptadas · {{ dossier.evidence.rejected_count }} rechazadas
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-6 bg-slate-50 border border-slate-200 rounded p-4">
+    <h2 class="font-semibold text-slate-900 mb-1">Resumen ejecutivo</h2>
+    <p class="text-sm text-slate-700">{{ dossier.summary }}</p>
+  </div>
+</section>
+
+{% if dossier.findings %}
+<section class="mt-6 bg-white shadow-sm rounded-lg border border-slate-200 p-6">
+  <h2 class="text-lg font-semibold text-slate-900 mb-3">Señales aceptadas (con evidencia)</h2>
+  <div class="space-y-3">
+    {% for f in dossier.findings %}
+    <div class="border-l-4 {% if f.severity == 'Alto' %}border-rose-500 bg-rose-50{% elif f.severity == 'Medio' %}border-amber-500 bg-amber-50{% else %}border-emerald-500 bg-emerald-50{% endif %} rounded p-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-semibold text-slate-900">{{ f.title }}</h3>
+        <span class="text-xs px-2 py-0.5 rounded {% if f.severity == 'Alto' %}badge-high{% elif f.severity == 'Medio' %}badge-medium{% else %}badge-low{% endif %}">{{ f.severity }}</span>
+      </div>
+      {% if f.evidence_quote %}
+        <blockquote class="mt-2 text-sm italic text-slate-700 border-l-2 border-slate-300 pl-3">
+          "{{ f.evidence_quote }}"
+        </blockquote>
+      {% endif %}
+      {% if f.citation %}
+        <p class="mt-2 text-xs text-slate-600"><strong>Indicador:</strong> {{ f.citation }}</p>
+      {% endif %}
+      {% if f.explanation %}
+        <p class="mt-2 text-sm text-slate-700">{{ f.explanation }}</p>
+      {% endif %}
+      <p class="mt-2 text-xs text-slate-500">Requiere revisión humana.</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if dossier.rejected_findings %}
+<section class="mt-6 bg-white shadow-sm rounded-lg border border-slate-200 p-6">
+  <details>
+    <summary class="text-sm font-semibold text-slate-900 cursor-pointer">
+      Señales rechazadas por evidencia insuficiente ({{ dossier.rejected_findings|length }})
+    </summary>
+    <div class="space-y-2 mt-3">
+      {% for f in dossier.rejected_findings %}
+      <div class="border-l-4 border-rose-300 bg-rose-50 rounded p-3 opacity-80">
+        <h3 class="text-sm font-medium text-slate-800">{{ f.title }}</h3>
+        <p class="text-xs text-rose-700 mt-1">Razón: {{ f.rejection_reason or 'Sin cita literal.' }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </details>
+</section>
+{% endif %}
+
+<section class="mt-6 bg-white shadow-sm rounded-lg border border-slate-200 p-6">
+  <h2 class="text-lg font-semibold text-slate-900 mb-2">Incertidumbre</h2>
+  <ul class="list-disc list-inside text-sm text-slate-700 space-y-1">
+    {% for item in dossier.uncertainty %}<li>{{ item }}</li>{% endfor %}
+  </ul>
+</section>
+
+<section class="mt-6 bg-white shadow-sm rounded-lg border border-slate-200 p-6">
+  <h2 class="text-lg font-semibold text-slate-900 mb-2">Próximos pasos</h2>
+  <ol class="list-decimal list-inside text-sm text-slate-700 space-y-1">
+    {% for step in dossier.next_steps %}<li>{{ step }}</li>{% endfor %}
+  </ol>
+</section>
+
+<section class="mt-6 bg-rose-50 border border-rose-200 rounded p-4 text-sm text-rose-800">
+  <strong>Disclaimer:</strong> {{ dossier.disclaimer }}
+</section>
+{% endblock %}

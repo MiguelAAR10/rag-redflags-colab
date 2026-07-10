@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Subir TDR{% endblock %}
+{% block content %}
+<section class="bg-white shadow-sm rounded-lg p-8 border border-slate-200">
+  <h1 class="text-2xl font-bold text-slate-900 mb-4">Subir un TDR</h1>
+  <form method="post" enctype="multipart/form-data" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">Archivo PDF o TXT</label>
+      <input type="file" name="file" accept=".pdf,.txt,.md"
+             class="block w-full text-sm text-slate-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-slate-200 file:text-slate-800 hover:file:bg-slate-300" />
+      <p class="text-xs text-slate-500 mt-1">Tamaño máximo recomendado: 20MB. PDF basado en texto preferido.</p>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">…o pega el texto directamente</label>
+      <textarea name="pasted_text" rows="8" maxlength="{{ max_text_chars }}"
+                placeholder="Pega aquí el contenido del TDR si el PDF es escaneado o no tienes archivo."
+                class="w-full text-sm border border-slate-300 rounded p-2"></textarea>
+      <p class="text-xs text-slate-500 mt-1">Mínimo 200 caracteres.</p>
+    </div>
+
+    <div class="flex items-center">
+      <input id="auto_analyze" name="auto_analyze" type="checkbox" value="true" checked
+             class="h-4 w-4 rounded border-slate-300 text-emerald-600" />
+      <label for="auto_analyze" class="ml-2 text-sm text-slate-700">Analizar automáticamente al subir</label>
+    </div>
+
+    <button type="submit"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded font-medium">
+      Subir y analizar
+    </button>
+  </form>
+</section>
+
+<section class="mt-6 bg-white border border-slate-200 rounded p-4 text-sm text-slate-700">
+  El documento se almacena localmente en <code>data/uploads/</code> y no se comparte con terceros.
+  El texto extraído se conserva bajo un SHA-256 que identifica la versión analizada.
+</section>
+{% endblock %}

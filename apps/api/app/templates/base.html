@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}TDR Risk Review{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .badge-low { background: #d1fae5; color: #065f46; }
+    .badge-medium { background: #fef3c7; color: #92400e; }
+    .badge-high { background: #fee2e2; color: #991b1b; }
+    .badge-insufficient { background: #e2e8f0; color: #334155; }
+    .badge-queued { background: #fde68a; color: #92400e; }
+    .badge-running { background: #dbeafe; color: #1e40af; }
+    .badge-completed { background: #d1fae5; color: #065f46; }
+    .badge-failed { background: #fee2e2; color: #991b1b; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <header class="bg-slate-900 text-white">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="text-lg font-semibold">TDR Risk Review</a>
+      <nav class="space-x-4 text-sm">
+        <a href="/" class="hover:underline">Inicio</a>
+        <a href="/tdrs/upload" class="hover:underline">Subir TDR</a>
+        <a href="/tdrs" class="hover:underline">Mis revisiones</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-8">
+    <p class="mb-6 text-xs text-slate-500 border-l-4 border-amber-400 bg-amber-50 px-3 py-2">
+      Esta plataforma identifica señales de riesgo potenciales en TDR de contratación
+      pública. No determina corrupción, fraude ni ilegalidad. Todo resultado requiere
+      revisión humana.
+    </p>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="max-w-5xl mx-auto px-6 py-6 text-xs text-slate-500 border-t border-slate-200 mt-12">
+    TDR Risk Review MVP · LangSafe · {{ settings.rag_gemini_model }}
+    {% if not settings.google_api_key %}
+      <span class="ml-2 px-2 py-1 bg-slate-200 text-slate-700 rounded">GOOGLE_API_KEY no configurada (modo demo offline)</span>
+    {% endif %}
+  </footer>
+</body>
+</html>

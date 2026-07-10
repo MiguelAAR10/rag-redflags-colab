@@ -1,0 +1,82 @@
+run_id: f15-notebook-traceability
+agent: subagent-coder
+orchestration_profile: single-writer-inspector
+role: single-writer-notebook-integrator
+mode: write
+source: dante-os
+related_task: F15
+related_spec: specs/004-redflags-rag.md
+
+goal: >-
+  Insert one new Markdown cell at final notebook index 0 (technical sheet)
+  and append one new Markdown traceability cell at the end of
+  notebooks/redflags_rag_colab.ipynb. Preserve every pre-existing cell
+  without semantic changes.
+
+read_first:
+  - progress/NEXT_ACTION.md
+  - notebooks/redflags_rag_colab.ipynb
+  - docs/proyecto-final-indicaciones/CHECKLIST.md
+  - progress/runs/2026-06-29-1449-claude-fase14-notebook-ragas.md
+  - AGENTS.md
+
+do_not_read:
+  - data/raw/*.pdf
+  - data/processed/*.jsonl
+  - data/index/*
+  - large notebooks or logs unless explicitly required
+
+subagent:
+  name: NotebookTraceabilityInspector
+  role: read-only
+  objective: >-
+    Map the current notebook structure and produce an evidence-grounded
+    insertion contract without modifying files. Identify cell indexes,
+    types, IDs, first meaningful line, and which cells implement
+    retrieval, reranking, citations, RAGAS local, refusal safety and
+    goldset evaluation.
+
+allowed_writes:
+  - notebooks/redflags_rag_colab.ipynb
+  - progress/evidence/f15-notebook-traceability.json
+  - progress/runs/<stamp>-<cli>-f15-notebook-traceability.md
+  - docs/CAVELOG.md
+
+forbidden_writes:
+  - packages/rag_core/*.py
+  - packages/evals/ragas_metrics.py
+  - packages/rag_core/tests/*
+  - data/eval/goldset.jsonl
+  - data/processed/*
+  - data/index/*
+  - .env
+  - specs/*
+  - progress/agent_io/runs/f15-notebook-traceability/REVIEW.md
+
+acceptance:
+  - Original notebook is readable and contains N cells.
+  - Exactly one Markdown cell inserted at final index 0 (technical sheet).
+  - Exactly one Markdown cell appended at the end (traceability table).
+  - Final cell count equals original count plus 2.
+  - Every original cell fingerprint matches at shifted index i + 1.
+  - Cell 0 contains project title, author, date, architecture summary, data sources, LLM used, and safe-language warning.
+  - Final cell contains a markdown table mapping Retrieval, Reranking, Citations, RAGAS local, Refusal safety, Goldset evaluation to final zero-based cell indexes and evidence paths.
+  - All RAGAS mentions use exactly "RAGAS local".
+  - progress/evidence/f15-notebook-traceability.json is valid JSON and contains original/final SHA-256, cell counts, inserted/appended indexes, preservation result.
+  - bash scripts/verify.sh passes.
+  - python3 -m pytest packages/rag_core/tests/test_notebook_smoke.py -q passes.
+
+rules:
+  - Principal is the only writer; subagent is read-only.
+  - Use nbformat for notebook edits; do not edit raw JSON or use regex.
+  - Do not change the RAG architecture or Qwen pipeline.
+  - Do not invent author, model or version numbers; use only verified project artifacts.
+  - Use date 2026-06-29 unless project instructions explicitly require another format.
+  - Label RAGAS metrics as "RAGAS local" in every mention.
+  - Use safe anti-corruption language ("red flags", "potential irregularities", "requires human review").
+  - If blocked, document the gap in RESPONSE.md and continue with what you can.
+  - Run verify.sh before declaring success.
+
+output:
+  response: progress/agent_io/runs/f15-notebook-traceability/RESPONSE.md
+  evidence: progress/evidence/f15-notebook-traceability.json

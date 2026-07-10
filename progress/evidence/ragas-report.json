@@ -1,0 +1,188 @@
+{
+  "n": 15,
+  "mean_faithfulness": 0.8650406504065041,
+  "mean_answer_relevance": 0.33694805194805194,
+  "mean_context_relevance": 0.2044293240805589,
+  "items": [
+    {
+      "question": "The procurement planning documents were not published to the public.",
+      "answer": "Definition\nUnit of analysis\nType of red flag\nLow transparency\nStage\nR001 Planning documents not available\nBuyer\nSource\nBased on OECD’s Principles for Integrity in Public \nProcurement",
+      "contexts": [
+        "Definition\nUnit of analysis\nType of red flag\nLow transparency\nStage\nR001 Planning documents not available\nBuyer\nSource\nBased on OECD’s Principles for Integrity in Public \nProcurement"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.625,
+      "context_relevance": 0.3,
+      "trap": false
+    },
+    {
+      "question": "A single bidder submitted a proposal for this contract.",
+      "answer": "Definition\nWhy is this a red flag? Definition\nWhy is this a red flag?",
+      "contexts": [
+        "Definition\nWhy is this a red flag?",
+        "Definition\nWhy is this a red flag?"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.14285714285714285,
+      "context_relevance": 0.5,
+      "trap": false
+    },
+    {
+      "question": "The tender was advertised only 2 days before the submission deadline.",
+      "answer": "Definition\nWhy is this a red flag? Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “Shortened time span for bidding process” \nin Corruption in Public Procurement: Finding the Ri",
+      "contexts": [
+        "Definition\nWhy is this a red flag?",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “Shortened time span for bidd"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.4444444444444444,
+      "context_relevance": 0.16,
+      "trap": false
+    },
+    {
+      "question": "Several bidders submitted identical bid prices in the tender.",
+      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Bidders having the same bid price” in Assessing the potential for detecting \ncollusion in Swedish public procurement ",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Bidders having th",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.75,
+      "context_relevance": 0.2222222222222222,
+      "trap": false
+    },
+    {
+      "question": "The winning bid was disqualified after being the lowest price.",
+      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “The lowest bid is rejected almost inexplicably” in Fraud in Public \nProcurement: A collection of Red Flags and Best Practices, “",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “The lowest bid is rejected a",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “Excluding qualified bidders”"
+      ],
+      "faithfulness": 0.975609756097561,
+      "answer_relevance": 0.3333333333333333,
+      "context_relevance": 0.18,
+      "trap": false
+    },
+    {
+      "question": "The buyer used a non-competitive procedure without justification.",
+      "answer": "Definition\nWhy is this a red flag? Definition\nWhy is this a red flag?",
+      "contexts": [
+        "Definition\nWhy is this a red flag?",
+        "Definition\nWhy is this a red flag?"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.0,
+      "context_relevance": 0.0,
+      "trap": false
+    },
+    {
+      "question": "The contract delivery is delayed by 12 months and no penalty was applied.",
+      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nSource\nBased on “Failure to Meet Contract Specifications” in Guide to Combating Corruption \n& Fraud in Development Projects and “Contract share with sizeable delivery delays” in \nGovernance Risk Ass",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nSource\nBased on “Failure to Meet Contract Specifications” in Guide to Combating Corruption \n& Frau"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.3333333333333333,
+      "context_relevance": 0.26666666666666666,
+      "trap": false
+    },
+    {
+      "question": "Bidders used the same physical address and shared contact information.",
+      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Common partners” in A decision support system for fraud detection in \npublic procurement and “Detecting shared owners",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Common partners” ",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Analysis of the s",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Contractor’s address "
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.7,
+      "context_relevance": 0.19696969696969696,
+      "trap": false
+    },
+    {
+      "question": "The contract price increased by 40 percent after award through amendments.",
+      "answer": "Definition\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nContracting \nProcess\nWhy is this a red flag? Source\nBased on “Difference between contract award and final \ncontract amount” in ‘Red Flags of Corruption’ in World \nBank Projects An Analysis of Infrastructure Contracts Definition\nWhy is th",
+      "contexts": [
+        "Definition\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nContracting \nProcess\nWhy is this a red flag?\nSource\nBased on “Difference between contract award and final \ncontract amount” in ‘Red Flags",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nR068\nSource\nBased on “Inflated invoices” in Guide to Combating \nCorruption & Fraud in Development ",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nSource\nBased on “Changes in contract terms and value” in Warning signs of fraud and \ncorruption in"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.3333333333333333,
+      "context_relevance": 0.2549019607843137,
+      "trap": false
+    },
+    {
+      "question": "Multiple direct awards were made just below the competitive threshold value.",
+      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nStage\nSupplier receives more than 1 direct award from the \nsame buyer in period t just below the competitive \nthreshold. Definition\nWhy is this a red flag? Definition\nWhy is this a red flag? Unit of analysis\nType of red",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nSupplier receives more than 1 direct award from the \nsame buyer in period t just below the competitive \nthreshold",
+        "Definition\nWhy is this a red flag?",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nBidder\nContracting \nProcess\nSource\nBased on Questionable Contract Amendments in Guide to Combating Corruption & F"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.5454545454545454,
+      "context_relevance": 0.3488372093023256,
+      "trap": false
+    },
+    {
+      "question": "The winning bidder is on a sanctions list and was debarred in another country.",
+      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nFraud\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nFraud\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracti",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Fictitious contractor” in G"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.2,
+      "context_relevance": 0.16666666666666666,
+      "trap": false
+    },
+    {
+      "question": "Technical specifications in the tender were tailored to a specific supplier brand.",
+      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on OECD’s Principles for Integrity in Public Procurement (p 53), “Vague, Ambiguous or Incomplete \nSpecifications” in Guide to Combat",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on OECD’s Principles for Integri",
+        "Unit of analysis\nContracting \nProcess\nBid-rigging\nType of red flag\nStage\nContract \nImplementation\nPlanning\nTender\nAward"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.5555555555555556,
+      "context_relevance": 0.23684210526315788,
+      "trap": false
+    },
+    {
+      "question": "The winning bid price was almost identical to the buyer's secret cost estimate.",
+      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nStage\nContracting \nProcess\nSource\nBased on “Relative contract value” in Toolkit for detecting collusive bidding in \npublic procurement and “Contract share with very high relative contract value” in \nGovernance Risk Asse",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nContracting \nProcess\nSource\nBased on “Relative contract value” in Toolkit for detecting collusive bidding in \npub",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nStage\nBidder\nContracting \nProcess"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.09090909090909091,
+      "context_relevance": 0.23333333333333334,
+      "trap": false
+    },
+    {
+      "question": "What is the best recipe for chocolate chip cookies?",
+      "answer": "No hay evidencia suficiente en la guía OCP recuperada para responder esta consulta; requiere revisión humana.",
+      "contexts": [],
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
+      "context_relevance": 0.0,
+      "trap": true
+    },
+    {
+      "question": "Who won the 2022 FIFA World Cup final?",
+      "answer": "No hay evidencia suficiente en la guía OCP recuperada para responder esta consulta; requiere revisión humana.",
+      "contexts": [],
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
+      "context_relevance": 0.0,
+      "trap": true
+    }
+  ],
+  "phase": "fase14-ragas-local",
+  "metric_set": "RAGAS local (léxico determinista, sin LLM/embeddings externos)",
+  "paper_ref": "Es et al. 2025, arXiv:2309.15217 (faithfulness, answer relevance, context relevance)",
+  "note": "Reporte representativo OFFLINE: contexts = chunks gold-relevantes por indicator_code; answer = baseline extractivo (lead sentences) o refusal para trampas. El notebook regenera estos puntajes con Qwen2.5-3B + retrieval real en Colab (Run all).",
+  "traps": 2
+}

@@ -1,7 +1,7 @@
 # CONTEXT_GRAPH (generado)
 
 > Generado por `scripts/build_context_graph.py`. **No editar a mano.**
-> Nodos: 66 · Aristas: 241 · Huérfanos: 0
+> Nodos: 68 · Aristas: 248 · Huérfanos: 0
 > Regenerar: `bash scripts/build-context-graph.sh`
 
 ```mermaid
@@ -44,6 +44,7 @@ graph LR
   n_tasks_backlog_json["tasks/backlog.json"]
   n_tasks_queue_json["tasks/queue.json"]
   n_packages_evals_metrics_py["packages/evals/metrics.py"]
+  n_packages_evals_ragas_metrics_py["packages/evals/ragas_metrics.py"]
   n_packages_rag_core_agent_py["packages/rag_core/agent.py"]
   n_packages_rag_core_chunkers_py["packages/rag_core/chunkers.py"]
   n_packages_rag_core_citations_py["packages/rag_core/citations.py"]
@@ -67,6 +68,7 @@ graph LR
   n_packages_rag_core_tests_test_langchain_rag_py["packages/rag_core/tests/test_langchain_rag.py"]
   n_packages_rag_core_tests_test_model_cache_py["packages/rag_core/tests/test_model_cache.py"]
   n_packages_rag_core_tests_test_notebook_smoke_py["packages/rag_core/tests/test_notebook_smoke.py"]
+  n_packages_rag_core_tests_test_ragas_metrics_py["packages/rag_core/tests/test_ragas_metrics.py"]
   n_packages_rag_core_tests_test_reranker_py["packages/rag_core/tests/test_reranker.py"]
   n_packages_rag_core_tests_test_retrieval_router_py["packages/rag_core/tests/test_retrieval_router.py"]
   n_packages_rag_core_verifier_py["packages/rag_core/verifier.py"]
@@ -109,6 +111,7 @@ graph LR
   n_docs_CAVELOG_md --> n_docs_START_HERE_md
   n_docs_CAVELOG_md --> n_docs_TESTING_md
   n_docs_CAVELOG_md --> n_packages_evals_metrics_py
+  n_docs_CAVELOG_md --> n_packages_evals_ragas_metrics_py
   n_docs_CAVELOG_md --> n_packages_rag_core_agent_py
   n_docs_CAVELOG_md --> n_packages_rag_core_chunkers_py
   n_docs_CAVELOG_md --> n_packages_rag_core_citations_py
@@ -122,6 +125,8 @@ graph LR
   n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_dataset_contract_py
   n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_embeddings_faiss_py
   n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_eval_py
+  n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_notebook_smoke_py
+  n_docs_CAVELOG_md --> n_packages_rag_core_tests_test_ragas_metrics_py
   n_docs_CAVELOG_md --> n_packages_rag_core_verifier_py
   n_docs_CAVELOG_md --> n_progress_CURRENT_STATE_md
   n_docs_CAVELOG_md --> n_progress_NEXT_ACTION_md
@@ -165,6 +170,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_docs_START_HERE_md
   n_docs_CONTEXT_GRAPH_md --> n_docs_TESTING_md
   n_docs_CONTEXT_GRAPH_md --> n_packages_evals_metrics_py
+  n_docs_CONTEXT_GRAPH_md --> n_packages_evals_ragas_metrics_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_agent_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_chunkers_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_citations_py
@@ -188,6 +194,7 @@ graph LR
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_langchain_rag_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_model_cache_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_notebook_smoke_py
+  n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_ragas_metrics_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_reranker_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_tests_test_retrieval_router_py
   n_docs_CONTEXT_GRAPH_md --> n_packages_rag_core_verifier_py
@@ -280,10 +287,9 @@ graph LR
   n_progress_HANDOFF_md --> n_AGENTS_md
   n_progress_HANDOFF_md --> n_progress_CURRENT_STATE_md
   n_progress_HANDOFF_md --> n_progress_NEXT_ACTION_md
-  n_progress_NEXT_ACTION_md --> n_README_md
   n_progress_NEXT_ACTION_md --> n_docs_CAVELOG_md
   n_progress_NEXT_ACTION_md --> n_docs_PROYECTO_md
-  n_progress_NEXT_ACTION_md --> n_packages_evals_metrics_py
+  n_progress_NEXT_ACTION_md --> n_packages_evals_ragas_metrics_py
   n__claude_agents_coordinator_md --> n_AGENTS_md
   n__claude_agents_coordinator_md --> n_docs_CAVELOG_md
   n__claude_agents_coordinator_md --> n_docs_MEMORY_INDEX_md
@@ -312,5 +318,8 @@ graph LR
   n_tasks_queue_json --> n_packages_rag_core_tests_test_notebook_smoke_py
   n_tasks_queue_json --> n_packages_rag_core_tests_test_reranker_py
   n_tasks_queue_json --> n_packages_rag_core_tests_test_retrieval_router_py
+  n_packages_evals_ragas_metrics_py --> n_progress_NEXT_ACTION_md
   n_packages_rag_core_tests_test_dataset_contract_py --> n_packages_rag_core_loaders_py
+  n_packages_rag_core_tests_test_ragas_metrics_py --> n_progress_NEXT_ACTION_md
+  n_packages_rag_core_tests_test_ragas_metrics_py --> n_specs_004_redflags_rag_md
 ```

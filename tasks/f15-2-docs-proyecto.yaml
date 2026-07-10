@@ -1,0 +1,58 @@
+run_id: f15-2-docs-proyecto
+agent: subagent-coder
+orchestration_profile: parallel-sectioning
+role: implementer
+mode: write
+source: dante-os
+related_task: F15.2
+related_spec: specs/004-redflags-rag.md
+
+goal: >-
+  Update docs/PROYECTO.md to label RAGAS metrics as "RAGAS local" everywhere,
+  add a scores table from progress/evidence/ragas-report.json, and cite
+  Es et al. 2025 (arXiv:2309.15217). Keep language safe and anti-corruption.
+
+read_first:
+  - progress/NEXT_ACTION.md
+  - docs/PROYECTO.md
+  - progress/evidence/ragas-report.json
+  - docs/proyecto-final-indicaciones/CHECKLIST.md
+  - progress/runs/2026-06-29-2252-opencode-f15-notebook-traceability.md
+
+do_not_read:
+  - data/raw/*.pdf
+  - data/processed/*.jsonl
+  - data/index/*
+  - notebooks/redflags_rag_colab.ipynb
+
+allowed_writes:
+  - docs/PROYECTO.md
+  - progress/runs/<stamp>-<cli>-fase15-2-docs-proyecto.md
+  - docs/CAVELOG.md
+
+forbidden_writes:
+  - notebooks/redflags_rag_colab.ipynb
+  - packages/rag_core/*.py
+  - packages/evals/ragas_metrics.py
+  - data/eval/goldset.jsonl
+  - data/processed/*
+  - data/index/*
+  - .env
+  - specs/*
+
+acceptance:
+  - docs/PROYECTO.md uses "RAGAS local" in every RAGAS mention.
+  - A scores table is present with mean_faithfulness, mean_answer_relevance, mean_context_relevance from ragas-report.json.
+  - Es et al. 2025 / arXiv:2309.15217 is cited as the basis for the local lexical approximation.
+  - Safe anti-corruption language is used ("red flags", "potential irregularities", "requires human review").
+  - bash scripts/verify.sh passes.
+
+rules:
+  - Only edit docs/PROYECTO.md; do not touch architecture or notebook.
+  - Do not invent scores; use values from progress/evidence/ragas-report.json.
+  - If a section is unclear, document the gap and continue.
+  - Run verify.sh before declaring success.
+
+output:
+  response: progress/agent_io/runs/f15-2-docs-proyecto/RESPONSE.md
+  evidence: progress/evidence/f15-2-docs-proyecto.json

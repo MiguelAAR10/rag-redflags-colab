@@ -13,3 +13,5 @@ data/processed/*
 !data/processed/.gitkeep
 data/index/*
 !data/index/.gitkeep
+data/tdr_review.db
+data/uploads/

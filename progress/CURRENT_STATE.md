@@ -2,11 +2,12 @@
 
 _Actualizar al cerrar cada sesión._
 
-- **Fecha:** 2026-06-29
-- **Fase actual:** V1 estable marcado en `main` (commit `2852327`, tag local `v1-stable-agent-io`) · rama activa `feature/final-evaluation-ragas` para adaptar el proyecto a las indicaciones finales UNI/RAGAS.
-- Base funcional: F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅.
-- Nueva brecha principal según indicaciones finales: RAGAS obligatorio (faithfulness, answer relevance, context relevance), evaluación 10-15 preguntas con >=2 trampas, ficha técnica inicial y tabla de trazabilidad en notebook.
-- Entregable: `notebooks/redflags_rag_colab.ipynb` (12 secciones: instalación, dataset, chunking, embeddings, FAISS/HNSW, retrieval, rerank, Qwen, evaluación, conclusiones, LangChain, chat Gradio/MiniMax opcional).
+- **Fecha:** 2026-06-30
+- **Fase actual:** F16 implementado en rama `feature/final-evaluation-ragas`; siguiente acción única: F16.2 validar el flujo end-to-end con `GOOGLE_API_KEY` real y un TDR del corpus OCP.
+- Base funcional: F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅ · F13/F14/F15 evaluación + RAGAS local + trazabilidad ✅.
+- **F16 ✅**: TDR Risk Review MVP web desplegado localmente con FastAPI + SQLModel + Jinja2 + Tailwind CDN + Gemini. Contratos multiagente (intake/analysis/evidence/scoring/dossier) reutilizan `packages.rag_core.agent.analyze` con `generate_fn` inyectable. `bash scripts/verify.sh` → **169 passed, 6 skipped**.
+- Brecha restante: F15.3 Colab Run all + `ragas-report.json` neural del notebook académico.
+- Entregable: `notebooks/redflags_rag_colab.ipynb` con ficha técnica inicial, sección 9 de **RAGAS local**, tabla final de trazabilidad y secciones de instalación, dataset, chunking, embeddings, FAISS/HNSW, retrieval, rerank, Qwen, evaluación, conclusiones, LangChain, chat Gradio/MiniMax opcional.
 - **F9 (LangChain) ✅**: `packages/rag_core/langchain_rag.py` + gate (3 PASS, 2 skip). Embeddings LangChain en `data/index/langchain_faiss/`.
 - **FIX cache de modelos ✅**: `lru_cache` en loaders (anti-recarga/OOM). Notebook limpiado para Colab (token único, LangChain en 11.0, 11.2 opt-in, 10.2 resumen).
 - **F10 chat (Gradio) ✅** sobre analyze() (Qwen); MiniMax opcional; FAISS/HNSW con benchmark honesto. `verify.sh` = **104 passed, 6 skipped**.
@@ -14,8 +15,8 @@ _Actualizar al cerrar cada sesión._
 - **Agent IO ✅:** `progress/agent_io/` registra prompts/respuestas/reviews de agentes externos; primer run: auditoría MiniMax `2026-06-29-001-minimax-repo-audit`.
 - **Sistema multi-CLI por archivos FUNCIONA y se autovalida**: worker vía START_HERE → next-task → produce → `verify.sh` corre el **gate de pytest** (hoy **75 passed, 4 skipped**) → handoff → Claude integra. Cola: `tasks/queue.json` + `scripts/next-task.sh`. Ciclo humano: `docs/LOOP.md`.
 - **Modelos = HuggingFace**: e5-base (embeddings) + bge-reranker-v2-m3 (rerank) + Qwen2.5-3B (gen). Token en `.env`. Pendiente Colab: `pip install rank_bm25`.
-- **Pendiente Colab:** `pip install rank_bm25`, cargar Qwen real con `RAG_QWEN_4BIT=1`, ejecutar notebook completo en T4, correr gold set completo si el tiempo lo permite y guardar evidencia.
-- **Spec activa:** `specs/004-redflags-rag.md`
+- **Pendiente Colab:** cargar Qwen real con `RAG_QWEN_4BIT=1`, ejecutar notebook completo en T4, regenerar `progress/evidence/ragas-report.json` con `n=15`, `traps=2` y promedios en `[0,1]`, y guardar evidencia.
+- **Spec activa:** `specs/006-tdr-upload-review-mvp.md` (producto web); `specs/004-redflags-rag.md` sigue siendo la fuente del núcleo RAG.
 
 ## Qué existe
 
@@ -43,4 +44,4 @@ _Actualizar al cerrar cada sesión._
 
 ## Foco actual
 
-Dejar el arnés listo para desarrollar por fases sin saturar contexto. **No** implementar el pipeline todavía.
+F16.2: validar el flujo end-to-end del MVP web con un TDR real usando Gemini y guardar el dossier en `progress/evidence/`. No desarrollar slides; el usuario se encarga.

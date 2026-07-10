@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}TDR #{{ tdr.id }}{% endblock %}
+{% block content %}
+<section class="bg-white shadow-sm rounded-lg border border-slate-200 p-6">
+  <div class="flex items-start justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">{{ tdr.filename }}</h1>
+      <p class="text-xs text-slate-500 mt-1">SHA-256: <code>{{ tdr.sha256 }}</code></p>
+      <p class="text-xs text-slate-500">{{ tdr.char_count }} caracteres extraídos</p>
+    </div>
+    <a href="/tdrs" class="text-sm text-emerald-700 hover:underline">← volver</a>
+  </div>
+
+  {% if tdr.parser_notes %}
+    <div class="mt-4 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded p-3">
+      {{ tdr.parser_notes }}
+    </div>
+  {% endif %}
+
+  <div class="mt-6">
+    <h2 class="font-semibold text-slate-900 mb-2">Estado del análisis</h2>
+    {% set st = (tdr.latest_run.status if tdr.latest_run else tdr.status) %}
+    <span class="px-2 py-1 text-xs rounded badge-{{ st }}">{{ st }}</span>
+
+    {% if not tdr.latest_run or tdr.latest_run.status in ('failed', 'queued', 'running') %}
+      <form method="post" action="/tdrs/{{ tdr.id }}/analyze" class="mt-3">
+        <button type="submit"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded text-sm font-medium">
+          {{ 'Reintentar análisis' if tdr.latest_run and tdr.latest_run.status == 'failed' else 'Iniciar análisis' }}
+        </button>
+      </form>
+    {% endif %}
+
+    {% if tdr.latest_run and tdr.latest_run.status == 'completed' %}
+      <div class="mt-3">
+        <a href="/tdrs/{{ tdr.id }}/dossier" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded text-sm font-medium">
+          Ver dossier completo
+        </a>
+      </div>
+    {% endif %}
+
+    {% if tdr.latest_run and tdr.latest_run.status == 'running' %}
+      <p class="mt-3 text-sm text-blue-700">Análisis en curso. Esta página se puede recargar.</p>
+    {% endif %}
+  </div>
+
+  {% if tdr.latest_run and tdr.latest_run.error_message %}
+    <div class="mt-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded p-3">
+      Error: {{ tdr.latest_run.error_message[:400] }}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

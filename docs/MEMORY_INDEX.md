@@ -11,7 +11,7 @@ Objetivo: gastar el mínimo de contexto. **No cargues el repo entero.** Abre sol
 3. `progress/NEXT_ACTION.md`
 4. `progress/HANDOFF.md`
 5. `docs/CAVELOG.md` (solo la última entrada)
-6. spec activa: `specs/004-redflags-rag.md`
+6. spec activa: `specs/006-tdr-upload-review-mvp.md` (producto web) + `specs/004-redflags-rag.md` (núcleo RAG)
 
 ## Nunca cargar completo (salvo necesidad puntual y justificada)
 
@@ -63,7 +63,8 @@ spec activa · módulos de `rag_core` (no duplicar lógica grande dentro del not
 | Prompts/respuestas de agentes externos | `progress/agent_io/START_HERE.md` · `progress/agent_io/QUEUE.md` · `progress/agent_io/INDEX.md` |
 | Qué exige la nota | `docs/RUBRICA.md` |
 | Indicaciones finales UNI/RAGAS | `docs/proyecto-final-indicaciones/README.md` · `docs/proyecto-final-indicaciones/CHECKLIST.md` |
-| Verdad funcional del proyecto | `specs/004-redflags-rag.md` |
+| Verdad funcional del RAG | `specs/004-redflags-rag.md` |
+| Spec activa del MVP web TDR | `specs/006-tdr-upload-review-mvp.md` |
 | Roadmap V2 (ingesta/CDC/deploy) | `docs/V2_VIGILANCIA_ACTIVA.md` |
 | Estado actual | `progress/CURRENT_STATE.md` |
 | Qué hacer ahora | `progress/NEXT_ACTION.md` |

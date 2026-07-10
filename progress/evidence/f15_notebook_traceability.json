@@ -1,0 +1,146 @@
+{
+  "run_id": "f15-notebook-traceability",
+  "notebook": "notebooks/redflags_rag_colab.ipynb",
+  "original_sha256": "f9f745b7c2a3c3dc3de2192749cff3fa90285fc289928e5e6cdcedd673fdb716",
+  "final_sha256": "9bd55cf360bce27a251a8de573a1e5960c31b0da6efae4ce41800ba1c4b3de67",
+  "original_cell_count": 43,
+  "final_cell_count": 45,
+  "original_cells_sequence_hash": "6a2a4cc905acaaaadeb5e830ec3b08de8a3da438f94180153403f4a01e85c273",
+  "preserved_middle_cells_sequence_hash": "6a2a4cc905acaaaadeb5e830ec3b08de8a3da438f94180153403f4a01e85c273",
+  "original_cells_deep_equal": true,
+  "notebook_metadata_unchanged": true,
+  "nbformat_unchanged": true,
+  "nbformat_minor_unchanged": true,
+  "inserted_cells": {
+    "technical_sheet_index": 0,
+    "traceability_index": 44
+  },
+  "requirements": [
+    {
+      "requirement": "retrieval",
+      "status": "IMPLEMENTED",
+      "cell_indexes": [
+        20,
+        21
+      ],
+      "cell_headings_or_signatures": [
+        "## 6. Retrieval top-k (híbrido BM25 + FAISS + router de familias)",
+        "# 6.1 Demo de retrieval híbrido + router"
+      ],
+      "evidence_paths": [
+        "notebooks/redflags_rag_colab.ipynb",
+        "packages/rag_core/retrievers.py",
+        "packages/rag_core/tests/test_retrievers.py",
+        "progress/evidence/fase4-retrieval-report.json"
+      ],
+      "notes": "hybrid_search + route_family; router detecta familia planeación/competencia/adjudicación/ejecución."
+    },
+    {
+      "requirement": "reranking",
+      "status": "IMPLEMENTED",
+      "cell_indexes": [
+        22,
+        23
+      ],
+      "cell_headings_or_signatures": [
+        "## 7. Integración con el LLM (Qwen2.5-3B) + reranker",
+        "# 7.1 Pipeline completo sobre un contrato (Qwen real en GPU)"
+      ],
+      "evidence_paths": [
+        "notebooks/redflags_rag_colab.ipynb",
+        "packages/rag_core/rerankers.py",
+        "packages/rag_core/tests/test_rerankers.py",
+        "progress/evidence/fase5-reranker-report.json"
+      ],
+      "notes": "rerank con cross-encoder BAAI/bge-reranker-v2-m3 dentro de analyze()."
+    },
+    {
+      "requirement": "citations",
+      "status": "IMPLEMENTED",
+      "cell_indexes": [
+        24,
+        25
+      ],
+      "cell_headings_or_signatures": [
+        "## 8. Grounding básico + citación por frase",
+        "# 8.1 Grounding ratio + citas por frase"
+      ],
+      "evidence_paths": [
+        "notebooks/redflags_rag_colab.ipynb",
+        "packages/rag_core/citations.py",
+        "packages/rag_core/verifier.py",
+        "progress/evidence/fase6-grounding-report.json"
+      ],
+      "notes": "grounding_ratio + citations por frase; trazabilidad de fuente obligatoria."
+    },
+    {
+      "requirement": "ragas_local",
+      "status": "IMPLEMENTED",
+      "cell_indexes": [
+        27,
+        29,
+        30
+      ],
+      "cell_headings_or_signatures": [
+        "## 9. Evaluación",
+        "# 9.2 RAGAS local (faithfulness / answer relevance / context relevance) sobre el gold set completo",
+        "### 9.3 Lectura de los resultados RAGAS local"
+      ],
+      "evidence_paths": [
+        "notebooks/redflags_rag_colab.ipynb",
+        "packages/evals/ragas_metrics.py",
+        "packages/rag_core/tests/test_ragas_metrics.py",
+        "progress/evidence/ragas-report.json"
+      ],
+      "notes": "evaluate_ragas sobre 15 ítems; etiqueta RAGAS local explícita; sin librería ragas."
+    },
+    {
+      "requirement": "refusal_safety",
+      "status": "IMPLEMENTED",
+      "cell_indexes": [
+        26
+      ],
+      "cell_headings_or_signatures": [
+        "# 8.2 Refusal: consulta fuera de dominio -> no inventa"
+      ],
+      "evidence_paths": [
+        "notebooks/redflags_rag_colab.ipynb",
+        "packages/rag_core/agent.py",
+        "progress/evidence/ragas-report.json"
+      ],
+      "notes": "Consulta fuera de dominio -> refusal seguro; trampas del gold set caen a 0.000 en RAGAS local."
+    },
+    {
+      "requirement": "goldset_evaluation",
+      "status": "IMPLEMENTED",
+      "cell_indexes": [
+        27,
+        28
+      ],
+      "cell_headings_or_signatures": [
+        "## 9. Evaluación",
+        "# 9.1 Recall@k / Precision@k sobre el gold set + comparación de métodos"
+      ],
+      "evidence_paths": [
+        "notebooks/redflags_rag_colab.ipynb",
+        "packages/evals/metrics.py",
+        "packages/rag_core/tests/test_eval.py",
+        "data/eval/goldset.jsonl",
+        "progress/evidence/fase7-eval-report.json"
+      ],
+      "notes": "15 ítems, 2 trampas; comparación FAISS vs híbrido vs +rerank."
+    }
+  ],
+  "inherited_terminology_gaps": [
+    {
+      "post_insertion_cell_index": 43,
+      "original_cell_index": 42,
+      "description": "Existing §13 traceability table (markdown) uses 4 standalone 'RAGAS' tokens (e.g. 'Las métricas RAGAS se etiquetan...'). Per preservation contract, this cell was not modified. The cell consistently qualifies these mentions with '**RAGAS local**' (the canonical label) on the same or following line, so the lexical gap is purely stylistic and does not change semantics.",
+      "mitigation_in_new_cells": "All RAGAS mentions introduced by this run use 'RAGAS local' exclusively (15 'RAGAS local' occurrences in the two new cells; 0 standalone 'RAGAS')."
+    }
+  ],
+  "validation": {
+    "verify_sh": null,
+    "notebook_smoke": null
+  }
+}

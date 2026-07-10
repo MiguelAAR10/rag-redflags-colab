@@ -2,8 +2,8 @@
   "generated_by": "scripts/build_context_graph.py",
   "note": "Grafo determinista del harness. Regenerar tras cambios: bash scripts/build-context-graph.sh",
   "counts": {
-    "nodes": 66,
-    "edges": 241,
+    "nodes": 68,
+    "edges": 248,
     "orphans": 0
   },
   "nodes": [
@@ -35,7 +35,7 @@
       "id": "docs/CAVELOG.md",
       "title": "CAVELOG",
       "kind": "doc",
-      "lines": 512
+      "lines": 646
     },
     {
       "id": "docs/CAVEMAN.md",
@@ -53,7 +53,7 @@
       "id": "docs/CONTEXT_GRAPH.md",
       "title": "CONTEXT_GRAPH (generado)",
       "kind": "doc",
-      "lines": 317
+      "lines": 324
     },
     {
       "id": "docs/LOOP.md",
@@ -167,7 +167,7 @@
       "id": "progress/NEXT_ACTION.md",
       "title": "NEXT_ACTION — La siguiente tarea exacta (una sola)",
       "kind": "state",
-      "lines": 47
+      "lines": 58
     },
     {
       "id": ".claude/agents/coordinator.md",
@@ -234,6 +234,12 @@
       "title": "packages/evals/metrics.py",
       "kind": "code",
       "lines": 188
+    },
+    {
+      "id": "packages/evals/ragas_metrics.py",
+      "title": "packages/evals/ragas_metrics.py",
+      "kind": "code",
+      "lines": 332
     },
     {
       "id": "packages/rag_core/agent.py",
@@ -347,7 +353,7 @@
       "id": "packages/rag_core/tests/test_eval.py",
       "title": "packages/rag_core/tests/test_eval.py",
       "kind": "code",
-      "lines": 184
+      "lines": 190
     },
     {
       "id": "packages/rag_core/tests/test_grounding.py",
@@ -372,6 +378,12 @@
       "title": "packages/rag_core/tests/test_notebook_smoke.py",
       "kind": "code",
       "lines": 81
+    },
+    {
+      "id": "packages/rag_core/tests/test_ragas_metrics.py",
+      "title": "packages/rag_core/tests/test_ragas_metrics.py",
+      "kind": "code",
+      "lines": 520
     },
     {
       "id": "packages/rag_core/tests/test_reranker.py",
@@ -555,6 +567,10 @@
     },
     {
       "from": "docs/CAVELOG.md",
+      "to": "packages/evals/ragas_metrics.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
       "to": "packages/rag_core/agent.py"
     },
     {
@@ -604,6 +620,14 @@
     {
       "from": "docs/CAVELOG.md",
       "to": "packages/rag_core/tests/test_eval.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/tests/test_notebook_smoke.py"
+    },
+    {
+      "from": "docs/CAVELOG.md",
+      "to": "packages/rag_core/tests/test_ragas_metrics.py"
     },
     {
       "from": "docs/CAVELOG.md",
@@ -779,6 +803,10 @@
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/evals/ragas_metrics.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
       "to": "packages/rag_core/agent.py"
     },
     {
@@ -868,6 +896,10 @@
     {
       "from": "docs/CONTEXT_GRAPH.md",
       "to": "packages/rag_core/tests/test_notebook_smoke.py"
+    },
+    {
+      "from": "docs/CONTEXT_GRAPH.md",
+      "to": "packages/rag_core/tests/test_ragas_metrics.py"
     },
     {
       "from": "docs/CONTEXT_GRAPH.md",
@@ -1239,10 +1271,6 @@
     },
     {
       "from": "progress/NEXT_ACTION.md",
-      "to": "README.md"
-    },
-    {
-      "from": "progress/NEXT_ACTION.md",
       "to": "docs/CAVELOG.md"
     },
     {
@@ -1251,7 +1279,7 @@
     },
     {
       "from": "progress/NEXT_ACTION.md",
-      "to": "packages/evals/metrics.py"
+      "to": "packages/evals/ragas_metrics.py"
     },
     {
       "from": ".claude/agents/coordinator.md",
@@ -1366,8 +1394,20 @@
       "to": "packages/rag_core/tests/test_retrieval_router.py"
     },
     {
+      "from": "packages/evals/ragas_metrics.py",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
       "from": "packages/rag_core/tests/test_dataset_contract.py",
       "to": "packages/rag_core/loaders.py"
+    },
+    {
+      "from": "packages/rag_core/tests/test_ragas_metrics.py",
+      "to": "progress/NEXT_ACTION.md"
+    },
+    {
+      "from": "packages/rag_core/tests/test_ragas_metrics.py",
+      "to": "specs/004-redflags-rag.md"
     }
   ],
   "orphans": []

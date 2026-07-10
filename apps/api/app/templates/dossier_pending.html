@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Dossier en preparación{% endblock %}
+{% block content %}
+<section class="bg-white shadow-sm rounded-lg border border-slate-200 p-6">
+  <h1 class="text-xl font-semibold text-slate-900">{{ tdr.filename }}</h1>
+  <p class="mt-2 text-sm text-slate-700">
+    El dossier aún no está disponible. Estado actual:
+    <span class="px-2 py-0.5 text-xs rounded badge-{{ tdr.status }}">{{ tdr.status }}</span>
+  </p>
+  {% if tdr.latest_run and tdr.latest_run.status in ('queued', 'running') %}
+    <meta http-equiv="refresh" content="3" />
+    <p class="text-xs text-slate-500 mt-3">Esta página se actualiza automáticamente.</p>
+  {% endif %}
+  <a href="/tdrs/{{ tdr_id }}" class="inline-block mt-4 text-emerald-700 hover:underline text-sm">← volver al detalle</a>
+</section>
+{% endblock %}

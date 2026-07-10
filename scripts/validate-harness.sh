@@ -72,6 +72,18 @@ if [ -d .codex/skills ]; then
 fi
 [ "$found_skill" -eq 0 ] && echo "  [info] no hay SKILL.md de Codex (opcional)"
 
+# 5b) OpenCode skills (si existen) -----------------------------------------
+echo "-- .opencode/skills/**/SKILL.md --"
+found_oc_skill=0
+if [ -d .opencode/skills ]; then
+  while IFS= read -r f; do
+    [ -f "$f" ] || continue
+    found_oc_skill=1
+    [ -s "$f" ] && ok "$f existe y no está vacío" || fail "$f vacío"
+  done < <(find .opencode/skills -name SKILL.md | sort -u)
+fi
+[ "$found_oc_skill" -eq 0 ] && echo "  [info] no hay SKILL.md de OpenCode (opcional)"
+
 # 6) backlog.json válido ---------------------------------------------------
 echo "-- backlog --"
 if [ -n "$PY" ]; then

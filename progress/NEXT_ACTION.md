@@ -2,45 +2,41 @@
 
 ## Acción
 
-**Auditar el notebook y pipeline contra las indicaciones finales UNI/RAGAS antes de implementar cambios.**
+**Fase 16.2 — Desplegar TDR Risk Review MVP con `GOOGLE_API_KEY` real y validar un TDR del corpus OCP.**
 
 - **Branch:** `feature/final-evaluation-ragas`
-- **Owner:** DANTE-OS / reviewer técnico
-- **Input principal:** `docs/proyecto-final-indicaciones/README.md` y `docs/proyecto-final-indicaciones/CHECKLIST.md`
+- **Owner:** Humano + DANTE-OS
+- **Base:** `specs/006-tdr-upload-review-mvp.md` aceptada; código F16 implementado en `apps/api/`.
 
 ## Objetivo
 
-Comparar el estado actual del proyecto contra las indicaciones finales del curso y producir un plan mínimo de mejora para cumplir especialmente:
+Levantar el servidor con `GOOGLE_API_KEY` real, subir un TDR de prueba (texto de los TDR que usa el notebook), capturar el dossier JSON final y documentar el resultado en `progress/evidence/f16_real_gemini_dossier.json`. Confirmar que el flujo `intake → analysis → critic → scoring → dossier` produce señales aceptadas/rechazadas con grounding_ratio > 0.
 
-- notebook `Run all` en Colab;
-- ficha técnica como primera celda;
-- tabla de trazabilidad requisito/técnica -> celda;
-- set de evaluación de 10 a 15 preguntas con al menos 2 trampas;
-- métricas RAGAS: faithfulness, answer relevance y context relevance;
-- reporte de puntajes y comentario de resultados;
-- slides con resultados RAGAS y demo.
+## Archivos a tocar
 
-## Fuentes a leer
+- `apps/api/` solo si se necesita un ajuste mínimo por Gemini real.
+- `progress/evidence/f16_real_gemini_dossier.json` (evidencia del dossier real).
+- `progress/runs/<stamp>-<cli>-fase16-2-real-gemini.md` (handoff).
+- `docs/CAVELOG.md` (append cierre de F16.2).
 
-1. `docs/proyecto-final-indicaciones/README.md`
-2. `docs/proyecto-final-indicaciones/CHECKLIST.md`
-3. `notebooks/redflags_rag_colab.ipynb` solo inspección estructural, no cargar outputs pesados.
-4. `packages/evals/metrics.py`
-5. `data/eval/goldset.jsonl` por muestra, no completo si no hace falta.
-6. `docs/PROYECTO.md`
-7. `progress/evidence/fase7-eval-report.json`
-8. `docs/CAVELOG.md`
+## Archivos protegidos
+
+- `notebooks/redflags_rag_colab.ipynb`
+- `data/processed/*`, `data/index/*`, `.env`
+- `packages/rag_core/*.py`
+- `progress/evidence/ragas-report.json` salvo que sea F15.3 Colab explícito.
 
 ## Criterios de aceptación
 
-- [ ] Matriz requisito -> estado actual -> brecha -> archivo afectado.
-- [ ] Identificar exactamente qué celdas del notebook deben agregarse o modificarse.
-- [ ] Definir si se usará librería `ragas` o implementación local compatible con el paper.
-- [ ] No implementar todavía cambios grandes sin plan.
-- [ ] Mantener lenguaje seguro del dominio anticorrupción.
+- [ ] Servidor uvicorn corriendo con `GOOGLE_API_KEY` configurada.
+- [ ] Upload de un fragmento real del corpus OCP/OCDS genera dossier con al menos una señal aceptada.
+- [ ] `grounding_ratio > 0` y `evidence.status` consistente con la evidencia recuperada.
+- [ ] `progress/evidence/f16_real_gemini_dossier.json` registrado.
+- [ ] `bash scripts/verify.sh` sigue verde.
 
 ## NO hacer
 
-- No modificar pipeline hasta cerrar auditoría.
-- No cambiar el corpus ni regenerar índices.
-- No pegar tokens ni credenciales.
+- No desplegar a Cloud Run / Render todavía (eso es F16.3).
+- No añadir OCR ni SEACE.
+- No introducir otra LLM distinta a Gemini.
+- No afirmar corrupción ni ilegalidad; mantener lenguaje seguro.

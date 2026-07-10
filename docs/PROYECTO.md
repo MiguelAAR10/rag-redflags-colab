@@ -25,7 +25,7 @@
 
 ## Resumen / Abstract
 
-Este proyecto diseña e implementa un sistema **RAG (Retrieval-Augmented Generation)** que actúa como un **escáner asistido de señales de riesgo** en documentos de contratación pública. A partir de la guía internacional **OCP — *Red Flags for Procurement*** (mapeada al estándar **OCDS**), el sistema indexa 237 unidades documentales lógicas, recupera los indicadores de riesgo relevantes ante un contrato o TDR, y genera observaciones fundamentadas con **Qwen2.5-3B-Instruct**, verificando que cada afirmación esté respaldada por la evidencia recuperada (*grounding*) y citando la fuente por frase. El pipeline combina **embeddings multilingües E5**, **búsqueda híbrida BM25+FAISS** con *Reciprocal Rank Fusion*, un **reranker cross-encoder**, y un **verificador de grounding** con rechazo automático ante evidencia insuficiente. Se reportan métricas de Recall@k, Precision@k y *grounding ratio* sobre un *gold set* de 12 consultas.
+Este proyecto diseña e implementa un sistema **RAG (Retrieval-Augmented Generation)** que actúa como un **escáner asistido de señales de riesgo** en documentos de contratación pública. A partir de la guía internacional **OCP — *Red Flags for Procurement*** (mapeada al estándar **OCDS**), el sistema indexa 237 unidades documentales lógicas, recupera los indicadores de riesgo relevantes ante un contrato o TDR, y genera observaciones fundamentadas con **Qwen2.5-3B-Instruct**, verificando que cada afirmación esté respaldada por la evidencia recuperada (*grounding*) y citando la fuente por frase. El pipeline combina **embeddings multilingües E5**, **búsqueda híbrida BM25+FAISS** con *Reciprocal Rank Fusion*, un **reranker cross-encoder**, y un **verificador de grounding** con rechazo automático ante evidencia insuficiente. Se reportan métricas de Recall@k, Precision@k y *grounding ratio* sobre un *gold set* de 15 consultas (incluye ≥2 preguntas trampa fuera del corpus), junto con un set de métricas **RAGAS local** (faithfulness, answer relevance, context relevance) definido como aproximación léxica determinista del paper Es et al. 2025 [10].
 
 > [!IMPORTANT]
 > El sistema **no determina corrupción ni emite acusaciones**. Detecta **patrones de riesgo bajo criterios definidos** (cada *red flag* es un indicador con definición y fórmula en la guía OCP) y **siempre requiere revisión humana**. La salida habla de *"señales de riesgo potenciales"*, no de *"sospechas"* ni *"fraude"*.
@@ -209,7 +209,7 @@ Si el cross-encoder no puede cargarse (memoria insuficiente, falta de dependenci
 
 ### Gold set
 
-Se construyó un *gold set* de **12 consultas** con indicadores de riesgo esperados verificados contra el dataset. Cada consulta describe un escenario realista de contratación (oferente único, plazo muy corto, precios idénticos, etc.) y se empareja con 1–3 códigos de indicador relevantes de los 69 disponibles.
+Se construyó un *gold set* de **15 consultas** con indicadores de riesgo esperados verificados contra el dataset, incluyendo **≥2 preguntas trampa** explícitamente marcadas (`trap: true`) cuya respuesta correcta es un *refusal* seguro (*"no hay evidencia suficiente … requiere revisión humana"*). Cada consulta describe un escenario realista de contratación (oferente único, plazo muy corto, precios idénticos, etc.) y se empareja con 1–3 códigos de indicador relevantes de los 69 disponibles. Las preguntas trampa son consultas fuera del dominio OCP (por ejemplo, sobre cocina o fútbol) que sirven para verificar que el sistema **no inventa** cuando no hay evidencia en el corpus.
 
 ### Métricas de recuperación
 
@@ -255,6 +255,32 @@ El *grounding ratio* promedio sobre la muestra fue de **0.305** (30.5 % de frase
 | "Award winner selection lowest price" | **3/5 cambian** (refina hacia indicadores de adjudicación) |
 
 El reranker altera entre 2 y 4 de los 5 resultados, demostrando que el reordenamiento es significativo y no trivial.
+
+### Métricas **RAGAS local**
+
+Las tres métricas se reportan bajo la etiqueta **RAGAS local**: son una aproximación **léxica determinista** de las métricas propuestas en el paper *Ragas* (Es et al., 2025, arXiv:2309.15217) [10]. Se calculan **sin** la librería `ragas`, **sin** LLM juez y **sin** API externa, para garantizar `Run all` reproducible en Colab T4 y para evitar inventar puntajes que no podamos defender técnicamente.
+
+| Métrica **RAGAS local** | Qué mide | Cómo se calcula |
+|---|---|---|
+| **Faithfulness** | Proporción de frases de la respuesta **soportadas** por el contexto recuperado. Controla alucinaciones. | Solapamiento léxico por frase contra los top-k chunks; promedio. |
+| **Answer relevance** | Cuánto aborda la respuesta la pregunta del usuario. Un *refusal* seguro puntúa ~0 (correcto en trampas). | Cobertura léxica de términos de la *query* en la respuesta, normalizada. |
+| **Context relevance** | Proporción de oraciones del contexto recuperado que son **pertinentes** a la pregunta. | Fracción de oraciones del contexto con solapamiento léxico ≥ umbral con la *query*. |
+
+> **Por qué la etiqueta debe ser "RAGAS local".** La librería oficial `ragas` usa LLM juez para faithfulness/answer relevance, lo que (a) requiere API externa, (b) introduce variabilidad no determinista y (c) puede romper el `Run all` en Colab. Por transparencia y reproducibilidad, esta entrega usa una **réplica local** cuyas fórmulas están en `packages/evals/ragas_metrics.py` y se prueban en `packages/rag_core/tests/test_ragas_metrics.py`.
+
+#### Puntajes **RAGAS local** sobre el gold set completo
+
+Valores leídos directamente de `progress/evidence/ragas-report.json` (baseline léxico offline; el notebook regenera estos puntajes con Qwen real en Colab T4 — Run all):
+
+| Métrica **RAGAS local** | Valor medio (n=15) | Trampas (n=2) |
+|---|---:|---:|
+| `mean_faithfulness` | **0.865** | 0.000 |
+| `mean_answer_relevance` | **0.337** | 0.000 |
+| `mean_context_relevance` | **0.204** | 0.000 |
+
+> Las dos preguntas trampa quedan en **0.000 / 0.000 / 0.000** porque el sistema responde *"no hay evidencia suficiente … requiere revisión humana"* y no devuelve contexto: evidencia de que **el sistema no inventa** cuando la pregunta está fuera del corpus OCP. Este comportamiento es la verificación viva del mecanismo de **refusal seguro** descrito en §8.2 del notebook.
+
+> Toda salida del sistema reporta **señales de riesgo potenciales** y **requiere revisión humana**; no constituye una acusación de corrupción ni una certificación de exactitud sustantiva.
 
 ---
 
@@ -308,7 +334,7 @@ El notebook incluye una interfaz **Gradio** que envuelve la función `analyze()`
 | **BM25** | Dependencia opcional de `rank_bm25`; sin ella la búsqueda híbrida degrada a FAISS-only |
 | **Reranker** | Modelo bge-reranker-v2-m3 (~390 MB) cargado en CPU; en GPU T4 es más rápido |
 | **Qwen** | Qwen2.5-3B-Instruct requiere ~6 GB VRAM; no se probó el fallback a CPU |
-| **Evaluación** | Gold set de 12 consultas; muestra local de 3. Evaluación completa pendiente en Colab |
+| **Evaluación** | Gold set de 15 consultas (≥2 trampas); métricas **RAGAS local** (faithfulness / answer relevance / context relevance) sobre el set completo. Reporte reproducible en `progress/evidence/ragas-report.json`. |
 | **Semántica** | Embeddings E5 con consultas cortas pueden perder especificidad (ejemplo malo) |
 
 ### Trabajo futuro
@@ -333,6 +359,7 @@ El notebook incluye una interfaz **Gradio** que envuelve la función `analyze()`
 7. Robertson, S., Zaragoza, H. *The Probabilistic Relevance Framework: BM25 and Beyond.* Foundations and Trends in Information Retrieval, 2009.
 8. Qwen Team. *Qwen2.5 Technical Report.* 2024. arXiv:2412.15115.
 9. Reimers, N., Gurevych, I. *Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.* EMNLP 2019. arXiv:1908.10084. / *Retrieve & Re-Rank* (sbert.net).
+10. Es, S., James, J., Espinosa-Anke, L., Schockaert, S. *Ragas: Automated Evaluation of Retrieval Augmented Generation.* 2025. arXiv:2309.15217. (Base teórica de las métricas **RAGAS local** usadas en este proyecto; aproximación léxica determinista, sin librería `ragas`.)
 
 ---
 

@@ -7,9 +7,22 @@ dependencies = [
   "fastapi",
   "uvicorn",
   "pytest",
+  "httpx",
+  "jinja2",
+  "python-multipart",
+  "pydantic",
+  "pydantic-settings",
+  "sqlmodel",
+  "google-generativeai"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
   "httpx"
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["apps/api/tests", "packages"]
-pythonpath = ["apps/api"]
+pythonpath = ["apps/api", "apps/api/app", "."]
+addopts = "-ra"

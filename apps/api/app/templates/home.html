@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}TDR Risk Review · Inicio{% endblock %}
+{% block content %}
+<section class="bg-white shadow-sm rounded-lg p-8 border border-slate-200">
+  <h1 class="text-3xl font-bold text-slate-900 mb-3">Revisión preliminar de TDR con RAG</h1>
+  <p class="text-slate-700 mb-6">
+    Sube un documento (TDR / bases / anexos) y obtén un dossier de
+    señales de riesgo potenciales fundamentadas con citas a la guía
+    OCP/OCDS. El sistema trabaja en español, evalúa evidencia y separa
+    señales aceptadas de rechazadas.
+  </p>
+
+  <a href="/tdrs/upload"
+     class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded font-medium">
+    Subir TDR
+  </a>
+  <a href="/tdrs"
+     class="inline-block ml-3 bg-slate-200 hover:bg-slate-300 text-slate-800 px-5 py-2 rounded font-medium">
+    Ver mis revisiones ({{ tdrs_count }})
+  </a>
+</section>
+
+<section class="mt-8 grid md:grid-cols-3 gap-4">
+  <div class="bg-white border border-slate-200 rounded p-4">
+    <h3 class="font-semibold text-slate-900 mb-1">1. Subir</h3>
+    <p class="text-sm text-slate-600">PDF basado en texto o texto pegado. Calculamos un hash por versión.</p>
+  </div>
+  <div class="bg-white border border-slate-200 rounded p-4">
+    <h3 class="font-semibold text-slate-900 mb-1">2. Analizar</h3>
+    <p class="text-sm text-slate-600">Recuperación contra la guía OCP/OCDS, generación con Gemini, grounding y citas.</p>
+  </div>
+  <div class="bg-white border border-slate-200 rounded p-4">
+    <h3 class="font-semibold text-slate-900 mb-1">3. Revisar</h3>
+    <p class="text-sm text-slate-600">Dossier con señales aceptadas/rechazadas, riesgo preliminar y próximos pasos.</p>
+  </div>
+</section>
+
+<section class="mt-8 bg-white border border-slate-200 rounded p-6">
+  <h2 class="font-semibold text-slate-900 mb-2">Lenguaje seguro</h2>
+  <p class="text-sm text-slate-700">
+    El sistema nunca afirma corrupción ni ilegalidad. Hablamos de
+    <strong>señales de riesgo potenciales</strong> y <strong>posibles
+    irregularidades a revisar</strong>. Todo dossier cierra con
+    <em>"Requiere revisión humana"</em>.
+  </p>
+</section>
+
+<section class="mt-6 bg-amber-50 border border-amber-200 rounded p-4 text-sm text-amber-800">
+  Esta demo funciona mejor con PDFs basados en texto. Los documentos
+  escaneados pueden requerir OCR y revisión manual.
+</section>
+{% endblock %}

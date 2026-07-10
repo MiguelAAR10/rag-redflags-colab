@@ -1,0 +1,154 @@
+{
+  "run_id": "f15-2-docs-proyecto",
+  "status": "PASS",
+  "repository": {
+    "branch": "feature/final-evaluation-ragas",
+    "starting_head": "0ff409c9e4ee6d5a6e167c9400b036aa70aaf93a"
+  },
+  "target": {
+    "path": "docs/PROYECTO.md",
+    "original_sha256": "b9a9de7821a4bc90c279990238ee184de889a08994ee1f803a3d73071ac2ac46",
+    "final_sha256": "65dc63afa76df69d809ad3e0a5fd61a212a13fd752ccbe64050ba546858c6076",
+    "original_element_count": 0,
+    "final_element_count": 0,
+    "inserted_indexes": [],
+    "appended_indexes": [],
+    "original_elements_preserved": true
+  },
+  "metadata_sources": {
+    "scores_mean_faithfulness": {
+      "value": 0.865,
+      "evidence": "progress/evidence/ragas-report.json (mean_faithfulness)"
+    },
+    "scores_mean_answer_relevance": {
+      "value": 0.337,
+      "evidence": "progress/evidence/ragas-report.json (mean_answer_relevance)"
+    },
+    "scores_mean_context_relevance": {
+      "value": 0.204,
+      "evidence": "progress/evidence/ragas-report.json (mean_context_relevance)"
+    },
+    "scores_n": {
+      "value": 15,
+      "evidence": "progress/evidence/ragas-report.json (n)"
+    },
+    "scores_traps": {
+      "value": 2,
+      "evidence": "progress/evidence/ragas-report.json (traps)"
+    },
+    "goldset_count": {
+      "value": 15,
+      "evidence": "data/eval/goldset.jsonl (referenced but not read row-by-row per do_not_read); progress/evidence/ragas-report.json (n=15)"
+    },
+    "paper_citation": {
+      "value": "Es et al., 2025, arXiv:2309.15217",
+      "evidence": "paper reference provided in task spec; matches arXiv ID"
+    },
+    "ragas_label": {
+      "value": "RAGAS local",
+      "evidence": "task rule; matches notebook §9.2/§9.3 and existing traceability cell"
+    },
+    "author": {
+      "value": "Miguel Arias (@MiguelAAR10)",
+      "evidence": "docs/PROYECTO.md line 18 (existing; not modified)"
+    },
+    "models": {
+      "value": "Qwen2.5-3B-Instruct + E5 + bge-reranker-v2-m3",
+      "evidence": "docs/PROYECTO.md line 113-117 (existing)"
+    }
+  },
+  "ragas_label_audit": {
+    "standalone_ragas_tokens_total": 0,
+    "ragas_local_occurrences": 9,
+    "non_local_mentions_explanation": [],
+    "all_proper_mentions_use_label": true
+  },
+  "scores_table": {
+    "rows": [
+      {
+        "metric": "mean_faithfulness",
+        "value_n15": 0.865,
+        "value_traps_n2": 0.0
+      },
+      {
+        "metric": "mean_answer_relevance",
+        "value_n15": 0.337,
+        "value_traps_n2": 0.0
+      },
+      {
+        "metric": "mean_context_relevance",
+        "value_n15": 0.204,
+        "value_traps_n2": 0.0
+      }
+    ],
+    "source_file": "progress/evidence/ragas-report.json"
+  },
+  "citation_added": {
+    "ref_number": 10,
+    "author_line": "Es, S., James, J., Espinosa-Anke, L., Schockaert, S.",
+    "year": 2025,
+    "title": "Ragas: Automated Evaluation of Retrieval Augmented Generation",
+    "arxiv_id": "2309.15217"
+  },
+  "edits_to_target": [
+    {
+      "section": "Resumen / Abstract",
+      "change": "Updated gold set mention from '12 consultas' to '15 consultas (incluye ≥2 preguntas trampa fuera del corpus)' and added RAGAS local + Es et al. 2025 mention."
+    },
+    {
+      "section": "Evaluación y resultados → Gold set",
+      "change": "Updated '12 consultas' to '15 consultas' with explicit trap explanation."
+    },
+    {
+      "section": "Evaluación y resultados → NEW subsection: Métricas RAGAS local",
+      "change": "Added full subsection with: definition, methodology table (3 metrics), why-local-not-ragas explanation, scores table from ragas-report.json, traps behavior note, safe-language closing."
+    },
+    {
+      "section": "Limitaciones y trabajo futuro → Limitaciones actuales → Evaluación",
+      "change": "Updated from 'Gold set de 12 consultas; muestra local de 3' to 'Gold set de 15 consultas (≥2 trampas); métricas RAGAS local ... Reporte reproducible en progress/evidence/ragas-report.json'."
+    },
+    {
+      "section": "Referencias",
+      "change": "Added reference [10] (Es et al., 2025, arXiv:2309.15217)."
+    }
+  ],
+  "validation": [
+    {
+      "command": "python3 -m pytest packages/rag_core/tests/test_notebook_smoke.py -q",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "7 passed"
+    },
+    {
+      "command": "bash scripts/verify.sh",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "148 passed, 6 skipped"
+    },
+    {
+      "command": "git diff --check docs/PROYECTO.md",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python3 -c 'import json; json.load(open(\"progress/evidence/f15-2-docs-proyecto.json\"))'",
+      "exit_code": 0,
+      "result": "PASS"
+    }
+  ],
+  "skills_used": [],
+  "subagent": null,
+  "files_modified": [
+    "docs/PROYECTO.md"
+  ],
+  "forbidden_paths_untouched": [
+    "notebooks/redflags_rag_colab.ipynb",
+    "packages/rag_core/*.py",
+    "packages/evals/ragas_metrics.py",
+    "data/eval/goldset.jsonl",
+    "data/processed/*",
+    "data/index/*",
+    ".env",
+    "specs/*"
+  ]
+}

@@ -2,6 +2,217 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-06-30 — Fase 16: TDR Risk Review MVP multiagent-ready, desplegado end-to-end
+
+### Decisión
+- Implementación completa del MVP web basado en `specs/006-tdr-upload-review-mvp.md`.
+- Stack: FastAPI + SQLModel (SQLite) + Jinja2 + Tailwind CDN + Google Gemini (`gemini-1.5-flash`) como LLM por API.
+- Arquitectura por contratos de agentes reemplazables: `TdrIntakeAgent` → `AnalysisAgent` (envoltorio de `packages.rag_core.agent.analyze` con `generate_fn` inyectable) → `EvidenceCriticAgent` V1 → `RiskScoringAgent` V1 → `DossierAgent`.
+- `generate_fn` por defecto resuelve a Gemini (`google.generativeai`) cuando hay `GOOGLE_API_KEY`; cae a un fake determinista cuando falta (sigue siendo útil para CI y modo demo).
+- Reuso del RAG core existente: `packages/rag_core/agent.analyze` con retrieval híbrido FAISS+BM25, grounding lexical y citas. El RAG del notebook académico queda intacto.
+- Frontend server-rendered con HTML/Tailwind CDN, sin build step. Endpoints `/`, `/tdrs/upload`, `/tdrs`, `/tdrs/{id}`, `/tdrs/{id}/analyze`, `/tdrs/{id}/dossier`, `/runs/{run_id}` y equivalentes JSON `/api/...`.
+- EvidenceCritic es la feature visible del dossier: separa señales aceptadas de rechazadas por evidencia insuficiente, expone grounding ratio y estado (sufficient/weak/insufficient).
+
+### Evidencia
+- `bash scripts/verify.sh` → **169 passed, 6 skipped** (gate de pytest verde).
+- Smoke real con uvicorn local: upload de TDR pegado → análisis → dossier JSON con `risk_level`, `grounding_ratio`, `refusal`, `uncertainty`, `next_steps`, `disclaimer`. Endpoints `/`, `/tdrs/upload`, `/tdrs/{id}/dossier` retornan HTTP 200 con HTML renderizado.
+- Tests nuevos:
+  - `apps/api/tests/test_intake.py` (intake y normalización).
+  - `apps/api/tests/test_evidence_scoring.py` (reglas deterministas del critic y scorer).
+  - `apps/api/tests/test_pipeline.py` (pipeline end-to-end con fake determinista, home, list, upload form, health).
+- Endpoints API documentados con respuestas JSON y HTML.
+
+### Riesgos
+- Demo-web no incluye OCR para PDFs escaneados; el intake devuelve mensaje claro y sugiere pegar el texto.
+- Sin segundo integrante confirmado en la ficha técnica del notebook (riesgo heredado de F15).
+- El despliegue real (Cloud Run, Render, etc.) requiere configurar `GOOGLE_API_KEY` y `UPLOAD_DIR`; mientras no haya key, el fallback fake funciona para que la app no rompa.
+
+### Próximos pasos
+- F15.3 Colab Run all (evidencia neural del notebook) sigue pendiente como entregable paralelo de la UNI.
+- Conectar un Google Gemini key real y correr un TDR real del corpus para validar el dossier end-to-end con LLM real.
+- Documentar el deploy en README (Cloud Run o Render) para el portafolio/X.
+
+## 2026-06-30 — Fase 16: Spec TDR Upload Review MVP multiagent-ready
+
+### Decisión
+- Se abre `specs/006-tdr-upload-review-mvp.md` como spec activa de producto web para el final de curso.
+- Alcance aprobado: plataforma web desplegable donde el usuario sube un TDR PDF/texto y recibe un dossier de señales de riesgo potenciales con evidencia, citas, grounding, rechazo por evidencia insuficiente y revisión humana.
+- El MVP será **multiagent-ready**, pero no multi-LLM desde el inicio: contratos `TdrIntakeAgent`, `AnalysisAgent`, `EvidenceCriticAgent`, `RiskScoringAgent`, `DossierAgent` implementados primero como servicios/funciones.
+- Se incorpora feedback CTO: decidir LLM de deploy desde F16.1; demo-web usa `generate_fn` por API/fake y no intenta correr Qwen-3B/e5/reranker en tier gratis CPU.
+- `EvidenceCritic` pasa a ser feature visible del dossier, no detalle interno: aceptar/rechazar señales según citas, `grounding_ratio` y `refusal`.
+- El análisis debe modelarse como asíncrono con estados desde el data model, aunque V1 use FastAPI `BackgroundTasks` o ejecución simple.
+- F16 soporta PDFs basados en texto y texto pegado; OCR queda diferido.
+
+### Evidencia
+- Nueva spec: `specs/006-tdr-upload-review-mvp.md`.
+- `progress/NEXT_ACTION.md` actualizado a F16.1 con una sola acción.
+- `docs/MEMORY_INDEX.md` actualizado para apuntar a `006` como spec activa de producto y `004` como núcleo RAG.
+
+### Riesgos
+- F15.3 Colab Run all sigue pendiente como evidencia neural del notebook.
+- El deploy puede fallar si se intenta cargar modelos locales pesados; por eso la decisión de LLM por API/fake se adelanta a F16.1.
+- OCR y PDFs escaneados quedan fuera de alcance para no romper el plazo del curso.
+
+### Próximos pasos
+- Implementar F16.1: contrato demo-web sin GPU usando `agent.analyze(..., generate_fn=...)`, tests con fake determinista y estados de análisis.
+
+## 2026-06-30 — Fase 15.2: `docs/PROYECTO.md` con RAGAS local y cierre Agent IO
+
+### Decisión
+- Aceptado el run Agent IO `f15-2-docs-proyecto` con verdict `accepted`.
+- `docs/PROYECTO.md` queda actualizado con la etiqueta estricta **"RAGAS local"**, tabla de puntajes desde `progress/evidence/ragas-report.json`, referencia Es et al. 2025 / `arXiv:2309.15217`, ficha técnica/trazabilidad del notebook y lenguaje seguro.
+- Se eliminó la única mención uppercase `RAGAS` sin `local` que quedaba en un subtítulo explicativo.
+- `progress/agent_io/QUEUE.md` queda sin run activo (`Run ID: none`).
+- Slides quedan fuera de scope por instrucción del usuario; la siguiente fase es Colab Run all.
+
+### Evidencia
+- Auditoría de etiqueta: `RAGAS local count=9`, `standalone/non-local RAGAS count=0`.
+- `progress/evidence/f15-2-docs-proyecto.json` parsea como JSON válido.
+- `python3 -m pytest packages/rag_core/tests/test_notebook_smoke.py -q` → **7 passed**.
+- `bash scripts/verify.sh` → **148 passed, 6 skipped**, exit 0.
+- `git diff --check docs/PROYECTO.md progress/evidence/f15-2-docs-proyecto.json progress/agent_io/runs/f15-2-docs-proyecto/RESPONSE.md` → exit 0.
+
+### Riesgos
+- `progress/evidence/ragas-report.json` sigue siendo baseline/offline; falta regenerarlo con Qwen real en Colab T4.
+- No se ejecutó Colab en esta fase.
+
+### Próximos pasos
+- Ejecutar `Run all` en Google Colab T4, traer `progress/evidence/ragas-report.json` neural definitivo y verificar localmente con `bash scripts/verify.sh`.
+
+## 2026-06-29 — Fase 15: Ficha técnica (cell 0) + tabla de trazabilidad (Claude)
+
+### Decisión
+- Reescrita la **celda 0** del notebook `notebooks/redflags_rag_colab.ipynb` como **Ficha técnica** completa: título, autor (Miguel Arias / @MiguelAAR10), universidad/curso/docente, fecha (junio 2026), dominio, objetivo, corpus y fuentes de datos, modelos HuggingFace, técnicas avanzadas + bonus, y resumen de evaluación. Conserva el diagrama de arquitectura y la advertencia de lenguaje seguro.
+- Añadida la **sección §13 — Tabla de trazabilidad** (última celda markdown): mapea cada requisito/técnica de la rúbrica UNI a su sección·celda y a su archivo de evidencia (retrieval, reranking, citación/grounding, refusal, RAGAS local, gold set, y bonus LangChain/Gradio/MiniMax).
+- Métricas siempre etiquetadas como **"RAGAS local"**; lenguaje anticorrupción seguro ("señales de riesgo potenciales", "requiere revisión humana").
+- Todas las celdas previas se conservan intactas (solo se editó el contenido de cell 0 y se anexó la §13).
+
+### Evidencia
+- Notebook: 42 → **43 celdas**, nbformat v4 válido. Cell 0 contiene ficha técnica/autor/fecha/arquitectura/corpus/Qwen2.5-3B/revisión humana (verificado).
+- `python3 -m pytest packages/rag_core/tests/test_notebook_smoke.py -q` → **7 passed**.
+- `bash scripts/verify.sh` → **148 passed, 6 skipped**, exit 0.
+
+### Riesgos
+- La rúbrica menciona parejas de 2 integrantes; la ficha lista un solo autor según `docs/PROYECTO.md`/`README.md`. Ajustar si se confirma el segundo integrante.
+- Los números de celda en la trazabilidad se expresan por etiqueta de sección (§6.1, §9.2…), estables ante reordenamientos, no por índice crudo.
+
+### Próximos pasos
+- Reflejar "RAGAS local" + tabla de puntajes en `docs/PROYECTO.md` / slides.
+- Correr `Run all` en Colab T4 limpio y guardar el `ragas-report.json` neural definitivo.
+
+## 2026-06-29 — Mejora profunda del skill de subagentes: perfiles de orquestación
+
+### Decisión
+- Reescribir `.opencode/skills/subagent-coder/SKILL.md` para soportar **tres perfiles de orquestación**: `single-writer-inspector`, `parallel-sectioning`, `evaluator-optimizer`.
+- Crear `.opencode/skills/subagent-coder/patterns/single-writer-inspector.md` con contrato de preservación por fingerprints SHA-256, política de metadatos (no inventar autor/LLM), edición segura con `nbformat`, archivo de evidencia JSON y response contract estructurado.
+- Crear `.opencode/skills/subagent-coder/patterns/parallel-sectioning.md` para trabajos independientes en archivos separados.
+- Actualizar `scripts/subagent-run.sh` para leer `orchestration_profile` del YAML e **inyectar el patrón completo** en el `REQUEST.md`, siguiendo el feedback de la maestría.
+- Reescribir `tasks/f15-notebook.yaml` con `orchestration_profile: single-writer-inspector` y subagente `NotebookTraceabilityInspector` read-only.
+- Regenerar `progress/agent_io/runs/f15-notebook-traceability/REQUEST.md` con el patrón correcto.
+
+### Evidencia
+- `bash scripts/verify.sh` → **148 passed, 6 skipped**, exit 0.
+- `progress/agent_io/runs/f15-notebook-traceability/REQUEST.md` contiene goal, acceptance, rules y el patrón `single-writer-inspector` completo inyectado (411 líneas).
+- El helper imprime el perfil usado y genera los archivos del run correctamente.
+
+### Riesgos
+- El REQUEST.md de `single-writer-inspector` es largo (~400 líneas) pero es preciso; el subagente sigue recibiendo el prompt de una línea.
+- Si el subagente no sabe usar `nbformat`, puede fallar; mitigación: el patrón incluye procedimiento paso a paso.
+
+## 2026-06-29 — Fase 14: Integración RAGAS — REVIEW y cierre (DANTE-OS)
+
+### Decisión
+- Aceptada la entrega de Claude Code (Opus 4.8) del run Agent IO `2026-06-29-1449-fase14-notebook-ragas-integration-implementer` con verdict `accepted`.
+- Cierre del run: `QUEUE.md` rotado a `Run ID: none`.
+- Apertura de Fase 15: ficha técnica rotulada en cell 0 + tabla de trazabilidad requisito→celda + Run all Colab T4 + etiqueta "RAGAS local" + tabla de puntajes en `docs/PROYECTO.md` / slides.
+- `ragas-report.json` committed al repo es baseline offline (contexts = chunks gold-relevantes, answer = extractivo/refusal). El reporte definitivo lo genera el notebook con Qwen en Colab `Run all`. Esto queda explícito en CAVELOG y en la sección 9.3 del notebook.
+
+### Gaps aceptados
+- `test_eval.py` modificado fuera del `Allowed Writes` literal: justificado. Es test, no arquitectura, y el ajuste era necesario porque las trampas rompen el contrato previo (sin `relevant_indicator_codes`).
+- `docs/PROYECTO.md` no tocado en F14 por restricción del REQUEST. Pendiente para F15/docs.
+
+### Verificación integrator
+- `python3 -m pytest packages/rag_core/tests/test_ragas_metrics.py -q` → 42 passed.
+- `bash scripts/verify.sh` → 148 passed, 6 skipped, exit 0.
+- `data/eval/goldset.jsonl`: `wc -l` = 15, `total=15 traps=2`.
+- Notebook: 42 celdas, `evaluate_ragas` referenciado en celda 28, "RAGAS local" en celdas 28 y 29.
+- `progress/evidence/ragas-report.json`: `n=15 traps=2`, medias en `[0, 1]`.
+
+## 2026-06-29 — Fase 14: RAGAS local en notebook + gold set con trampas (Claude)
+
+### Decisión
+- Integradas las métricas **RAGAS local** (Fase 13) en la **sección 9** del notebook `notebooks/redflags_rag_colab.ipynb`:
+  - Nueva celda `9.2` (código): carga el gold set, ejecuta `analyze()` (retrieval + rerank + Qwen + grounding) por consulta, arma `{question, answer, contexts}`, llama `evaluate_ragas`, imprime tabla por ítem + agregados y guarda `progress/evidence/ragas-report.json`.
+  - Nueva celda `9.3` (markdown): lectura de resultados; define faithfulness/answer relevance/context relevance y el comportamiento esperado en trampas (refusal → métricas ~0).
+- Gold set ampliado de **12 → 15** ítems (append-only, sin tocar los 12 previos): +1 red flag in-corpus (`R031`, `R024`) y **2 preguntas trampa** fuera del corpus (`trap: true`) con `expected_answer` de refusal seguro.
+- Etiqueta explícita **"RAGAS local"** (aproximación léxica determinista del paper Es et al. 2025, arXiv:2309.15217); **sin** librería `ragas` ni API externa, para garantizar `Run all` en Colab.
+
+### Evidencia
+- `data/eval/goldset.jsonl`: `n=15`, 2 ítems `trap: true` (cookies / FIFA 2022) con refusal esperado.
+- `progress/evidence/ragas-report.json` (representativo offline; el notebook lo regenera con Qwen en Colab): `mean_faithfulness=0.865`, `mean_answer_relevance=0.337`, `mean_context_relevance=0.204`; las 2 trampas puntúan `0.000 / 0.000 / 0.000` en las tres métricas.
+- Tests: `test_ragas_metrics.py` 37 → **42** (+5 sobre el gold set: tamaño, rango 10–15, ≥2 trampas, refusal esperado, `query` presente).
+- `test_eval.py::test_goldset_format` actualizado para eximir a las trampas del mínimo de ≥1 código (no tienen códigos in-corpus por diseño).
+- `bash scripts/verify.sh` → **148 passed, 6 skipped**, exit 0.
+
+### Riesgos
+- `ragas-report.json` del repo es un baseline léxico offline (contexts = chunks gold-relevantes, answer = extractivo/refusal); los puntajes reales (Qwen) se obtienen al correr `Run all` en Colab.
+- Mantener la etiqueta "RAGAS local" en slides para no prometer equivalencia con la librería oficial.
+
+### Próximos pasos
+- Reflejar "RAGAS local" y la tabla de puntajes en `docs/PROYECTO.md` / slides (fuera del alcance de este run por `Allowed Writes`).
+- Probar `Run all` en sesión limpia de Colab (T4) y guardar el `ragas-report.json` neural definitivo.
+- Cerrar las brechas restantes de la auditoría: ficha técnica rotulada y tabla de trazabilidad requisito→celda.
+
+## 2026-06-29 — Fase 13: Métricas RAGAS locales deterministas (DeepSeek)
+
+### Decisión
+- Implementadas las 4 funciones RAGAS locales exigidas por `progress/NEXT_ACTION.md`:
+  - `packages/evals/ragas_metrics.py` con `faithfulness`, `answer_relevance`, `context_relevance`, `evaluate_ragas`.
+  - `packages/rag_core/tests/test_ragas_metrics.py` con 37 tests (gate de Fase 13).
+- **Aproximación determinista local** (sin APIs externas, sin dependencias pesadas):
+  - `faithfulness`: divide la respuesta en frases y cuenta las soportadas por el contexto vía solapamiento léxico de tokens (`>=3` caracteres), umbral `FAITHFULNESS_THRESHOLD=0.25` (alineado con `verifier.DEFAULT_GROUNDING_THRESHOLD`).
+  - `answer_relevance`: proxy léxico del original RAGAS (que regenera preguntas con LLM): fracción de tokens informativos de la pregunta presentes en la respuesta. Devuelve `0.0` ante refusal seguro (marcadores `"no hay evidencia suficiente"` / `"insufficient evidence"` / `"requires human review"`).
+  - `context_relevance`: proxy local que divide cada contexto en frases y cuenta las que comparten tokens con la pregunta.
+  - `evaluate_ragas`: agrega medias y métricas por item sobre `list[dict]`.
+- Robustez: todas las funciones clampean a `[0, 1]`, manejan `None`/vacíos, devuelven `0.0` si no hay evidencia; pruebas cubren respuesta vacía, contexto vacío, refusal, pregunta trampa y casos parciales.
+- Cero impacto en archivos protegidos: no se tocó `notebooks/`, `data/eval/goldset.jsonl`, `data/processed/*`, `data/index/*` ni `.env`.
+
+### Evidencia
+- `python3 -m pytest packages/rag_core/tests/test_ragas_metrics.py -q` → **37 passed** en 0.06 s.
+- `bash scripts/verify.sh` → **143 passed, 6 skipped** (antes 106, +37 nuevos), exit 0, `validate-harness` OK.
+- Mismas 4 funciones públicas, mismas firmas que `progress/NEXT_ACTION.md`.
+
+### Riesgos
+- Las métricas son aproximaciones léxicas locales, no la versión RAGAS oficial con LLM/embeddings semánticos. Son aceptables como "RAGAS local para Colab" según el contrato, pero conviene etiquetarlas como "RAGAS local" en notebook y slides para no sugerir equivalencia total con la librería.
+- `faithfulness` puede subestimar soporte semántico cuando la paráfrasis no comparte tokens (caso esperado: cuando llegue el LLM real en Colab, conviene exponer `method="embedding"`).
+- No se integró aún al notebook (`Run all` pendiente) ni al gold set: queda para la próxima fase.
+
+### Próximos pasos
+- Cablear RAGAS al gold set real + sección "Evaluación" del notebook (sección 9 del `redflags_rag_colab.ipynb`).
+- Añadir ejemplo de uso en `docs/PROYECTO.md` y reflejarlo en las slides.
+
+## 2026-06-29 — Review Agent IO: final-ragas-audit
+
+### Decisión
+- Claude Code ejecutó correctamente el flujo Agent IO: leyó `QUEUE.md`, abrió el `REQUEST.md` activo, guardó el resultado en `RESPONSE.md` y no escribió `REVIEW.md` ni archivos de estado.
+- DANTE-OS revisó el output y lo marcó como `partially_accepted` en `progress/agent_io/runs/2026-06-29-1220-claude-final-ragas-audit/REVIEW.md`.
+- Se acepta la brecha principal: faltan métricas RAGAS formales, puntajes RAGAS reportados, preguntas trampa y tabla de trazabilidad.
+- Se corrige una afirmación del auditor: no contar ingesta multiformato como técnica implementada, porque el loader real es PDF-only.
+- La siguiente acción pasa a implementar métricas RAGAS locales con tests, sin tocar notebook ni corpus todavía.
+
+### Evidencia
+- `progress/agent_io/runs/2026-06-29-1220-claude-final-ragas-audit/RESPONSE.md` contiene la auditoría.
+- `progress/agent_io/runs/2026-06-29-1220-claude-final-ragas-audit/REVIEW.md` contiene la decisión integradora.
+- `progress/agent_io/QUEUE.md` vuelve a `Run ID: none` y registra el último run revisado.
+- `bash scripts/verify.sh` = **106 passed, 6 skipped**, exit=0.
+
+### Riesgos
+- `Run all` en Colab limpio sigue sin verificación empírica.
+- La implementación RAGAS debe mantenerse local/reproducible para no introducir API keys externas.
+
+### Próximos pasos
+- Implementar `packages/evals/ragas_metrics.py` y `packages/rag_core/tests/test_ragas_metrics.py` con TDD.
+
 ## 2026-06-29 — Agent IO CLI-proof + active run automation
 
 ### Decisión

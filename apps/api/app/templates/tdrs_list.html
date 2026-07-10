@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Mis revisiones{% endblock %}
+{% block content %}
+<section class="bg-white shadow-sm rounded-lg border border-slate-200">
+  <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+    <h1 class="text-xl font-semibold text-slate-900">Mis revisiones</h1>
+    <a href="/tdrs/upload" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded text-sm">Subir nuevo</a>
+  </div>
+  {% if tdrs %}
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 text-slate-600 text-left">
+        <tr>
+          <th class="px-6 py-2">#</th>
+          <th class="px-6 py-2">Archivo</th>
+          <th class="px-6 py-2">Estado</th>
+          <th class="px-6 py-2">Riesgo</th>
+          <th class="px-6 py-2">Subido</th>
+          <th class="px-6 py-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in tdrs %}
+        <tr class="border-t border-slate-100">
+          <td class="px-6 py-2 text-slate-500">{{ t.id }}</td>
+          <td class="px-6 py-2 font-medium">{{ t.filename }}</td>
+          <td class="px-6 py-2">
+            {% set st = t.latest_run_status or t.status %}
+            <span class="px-2 py-0.5 text-xs rounded badge-{{ st }}">{{ st or 'pending' }}</span>
+          </td>
+          <td class="px-6 py-2">
+            {% if t.risk_level == 'Alto' %}<span class="px-2 py-0.5 text-xs rounded badge-high">Alto</span>
+            {% elif t.risk_level == 'Medio' %}<span class="px-2 py-0.5 text-xs rounded badge-medium">Medio</span>
+            {% elif t.risk_level == 'Bajo' %}<span class="px-2 py-0.5 text-xs rounded badge-low">Bajo</span>
+            {% elif t.risk_level %}<span class="px-2 py-0.5 text-xs rounded badge-insufficient">{{ t.risk_level }}</span>
+            {% else %}<span class="text-slate-400">—</span>{% endif %}
+          </td>
+          <td class="px-6 py-2 text-slate-500">{{ t.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td class="px-6 py-2 text-right">
+            <a href="/tdrs/{{ t.id }}" class="text-emerald-700 hover:underline">Ver detalle</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="px-6 py-10 text-center text-slate-500">
+      Aún no has subido ningún TDR. <a href="/tdrs/upload" class="text-emerald-700 hover:underline">Sube el primero</a>.
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

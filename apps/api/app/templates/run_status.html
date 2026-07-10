@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Run #{{ run_id }}{% endblock %}
+{% block content %}
+<section class="bg-white shadow-sm rounded-lg border border-slate-200 p-6">
+  <h1 class="text-xl font-semibold text-slate-900">Run #{{ run_id }}</h1>
+  <p class="mt-2 text-sm text-slate-700">Estado actual:
+    <span class="px-2 py-0.5 text-xs rounded badge-{{ status.status }}">{{ status.status }}</span>
+  </p>
+
+  {% if status.status == 'completed' and dossier_url %}
+    <a href="{{ dossier_url }}" class="inline-block mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded text-sm">
+      Ver dossier
+    </a>
+  {% endif %}
+
+  {% if status.status in ('queued', 'running') %}
+    <meta http-equiv="refresh" content="3" />
+    <p class="text-xs text-slate-500 mt-3">Esta página se actualiza automáticamente.</p>
+  {% endif %}
+
+  {% if status.error_message %}
+    <div class="mt-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded p-3">
+      {{ status.error_message[:400] }}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

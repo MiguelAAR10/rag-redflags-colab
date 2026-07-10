@@ -52,7 +52,11 @@ def make_google_generate_fn(
     or the API key is missing. The stub lets the API surface a clear
     "API no configurada" error message during analysis.
     """
-    api_key = api_key or os.environ.get("GOOGLE_API_KEY", "")
+    api_key = (
+        api_key
+        or os.environ.get("GOOGLE_API_KEY", "")
+        or os.environ.get("GEMINI_API_KEY", "")
+    )
 
     try:
         from google import genai  # type: ignore

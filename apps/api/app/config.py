@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -34,13 +35,22 @@ class Settings(BaseSettings):
     )
 
     # LLM provider for the deployed web demo
-    google_api_key: str = ""
+    # Acepta GOOGLE_API_KEY o GEMINI_API_KEY (nombre usado por Google AI Studio)
+    google_api_key: str = Field(
+        "", validation_alias=AliasChoices("GOOGLE_API_KEY", "GEMINI_API_KEY")
+    )
     rag_use_google_llm: bool = True
     rag_gemini_model: str = "gemini-2.5-flash"
     rag_qwen_4bit: bool = False
 
     # Embeddings
     rag_embeddings_backend: str = "cpu-e5"
+
+    # Vector store V2 (Qdrant Cloud). Acepta QDRANT_URL o QDRANT_ENDPOINT.
+    qdrant_url: str = Field(
+        "", validation_alias=AliasChoices("QDRANT_URL", "QDRANT_ENDPOINT")
+    )
+    qdrant_api_key: str = ""
 
     # Persistence
     database_url: str = os.environ.get("DATABASE_URL") or _default_database_url()

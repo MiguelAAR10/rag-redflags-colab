@@ -39,24 +39,40 @@ def _build_user_prompt(query: str, chunks: List[Dict]) -> str:
     )
 
 
+def _truthy(value: str) -> bool:
+    return value.strip().lower() in ("1", "true", "yes", "on")
+
+
 def make_google_generate_fn(
     *,
     api_key: Optional[str] = None,
     model_name: str = "gemini-2.5-flash",
     max_output_tokens: int = 2048,
     temperature: float = 0.0,
+    use_vertex: Optional[bool] = None,
+    project: str = "",
+    location: str = "",
 ) -> Callable[[str, List[Dict], str], str]:
     """Build a generate_fn backed by Google Gemini (SDK google-genai).
 
+    Two auth routes:
+    - Vertex AI (ADC / service account): billing via the GCP project;
+      no API key needed. Selected with use_vertex or
+      GOOGLE_GENAI_USE_VERTEXAI env.
+    - API key (AI Studio): GOOGLE_API_KEY / GEMINI_API_KEY.
+
     Falls back to a deterministic stub if google-genai is not installed
-    or the API key is missing. The stub lets the API surface a clear
-    "API no configurada" error message during analysis.
+    or no auth route is configured.
     """
     api_key = (
         api_key
         or os.environ.get("GOOGLE_API_KEY", "")
         or os.environ.get("GEMINI_API_KEY", "")
     )
+    if use_vertex is None:
+        use_vertex = _truthy(os.environ.get("GOOGLE_GENAI_USE_VERTEXAI", ""))
+    project = project or os.environ.get("GOOGLE_CLOUD_PROJECT", "")
+    location = location or os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
 
     try:
         from google import genai  # type: ignore
@@ -65,11 +81,13 @@ def make_google_generate_fn(
         logger.warning("google-genai no instalado; usando stub.")
         return _stub_generate_fn(reason="google-genai no instalado")
 
-    if not api_key:
-        logger.warning("GOOGLE_API_KEY no configurada; usando stub.")
-        return _stub_generate_fn(reason="GOOGLE_API_KEY no configurada")
-
-    client = genai.Client(api_key=api_key)
+    if use_vertex and project:
+        client = genai.Client(vertexai=True, project=project, location=location)
+    elif api_key:
+        client = genai.Client(api_key=api_key)
+    else:
+        logger.warning("Sin auth Gemini (ni Vertex ni API key); usando stub.")
+        return _stub_generate_fn(reason="GOOGLE_API_KEY/Vertex no configurados")
 
     def _generate(query: str, chunks: List[Dict], system_prompt: str) -> str:
         user_prompt = _build_user_prompt(query, chunks)
@@ -81,6 +99,9 @@ def make_google_generate_fn(
                     system_instruction=system_prompt,
                     max_output_tokens=max_output_tokens,
                     temperature=temperature,
+                    # Sin thinking: salida de auditor determinista; evita que
+                    # los tokens de razonamiento consuman max_output_tokens.
+                    thinking_config=genai_types.ThinkingConfig(thinking_budget=0),
                 ),
             )
         except Exception as exc:

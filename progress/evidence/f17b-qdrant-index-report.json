@@ -1,0 +1,8 @@
+{
+  "phase": "f17b-qdrant-index",
+  "collection": "standard_kb",
+  "embed_model": "gemini-embedding-001",
+  "dim": 768,
+  "points": 299,
+  "source": "data/processed/redflags_chunks.jsonl"
+}

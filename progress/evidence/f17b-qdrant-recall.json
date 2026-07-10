@@ -1,0 +1,113 @@
+{
+  "phase": "f17b-qdrant-recall-gate",
+  "embed_model": "gemini-embedding-001",
+  "dim": 768,
+  "mean_recall_at_5": 0.717948717948718,
+  "items": [
+    {
+      "query": "The procurement planning documents were not published to the",
+      "expected": [
+        "R001"
+      ],
+      "recall@5": 1.0
+    },
+    {
+      "query": "A single bidder submitted a proposal for this contract.",
+      "expected": [
+        "R018",
+        "R019"
+      ],
+      "recall@5": 0.5
+    },
+    {
+      "query": "The tender was advertised only 2 days before the submission ",
+      "expected": [
+        "R003",
+        "R014"
+      ],
+      "recall@5": 1.0
+    },
+    {
+      "query": "Several bidders submitted identical bid prices in the tender",
+      "expected": [
+        "R023",
+        "R028"
+      ],
+      "recall@5": 0.5
+    },
+    {
+      "query": "The winning bid was disqualified after being the lowest pric",
+      "expected": [
+        "R036",
+        "R037"
+      ],
+      "recall@5": 0.5
+    },
+    {
+      "query": "The buyer used a non-competitive procedure without justifica",
+      "expected": [
+        "R010",
+        "R013"
+      ],
+      "recall@5": 1.0
+    },
+    {
+      "query": "The contract delivery is delayed by 12 months and no penalty",
+      "expected": [
+        "R067"
+      ],
+      "recall@5": 1.0
+    },
+    {
+      "query": "Bidders used the same physical address and shared contact in",
+      "expected": [
+        "R032",
+        "R041",
+        "R043"
+      ],
+      "recall@5": 0.6666666666666666
+    },
+    {
+      "query": "The contract price increased by 40 percent after award throu",
+      "expected": [
+        "R059",
+        "R068",
+        "R069"
+      ],
+      "recall@5": 0.3333333333333333
+    },
+    {
+      "query": "Multiple direct awards were made just below the competitive ",
+      "expected": [
+        "R011",
+        "R012",
+        "R054"
+      ],
+      "recall@5": 0.3333333333333333
+    },
+    {
+      "query": "The winning bidder is on a sanctions list and was debarred i",
+      "expected": [
+        "R045",
+        "R046"
+      ],
+      "recall@5": 1.0
+    },
+    {
+      "query": "Technical specifications in the tender were tailored to a sp",
+      "expected": [
+        "R006",
+        "R021"
+      ],
+      "recall@5": 0.5
+    },
+    {
+      "query": "The winning bid price was almost identical to the buyer's se",
+      "expected": [
+        "R024",
+        "R031"
+      ],
+      "recall@5": 1.0
+    }
+  ]
+}

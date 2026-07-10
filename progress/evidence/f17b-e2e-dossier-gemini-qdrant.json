@@ -1,0 +1,33 @@
+{
+  "risk_level": "Evidencia insuficiente",
+  "risk_reason": "El analizador se negó a emitir observaciones por falta de evidencia.",
+  "summary": "No hay evidencia suficiente para emitir señales fundamentadas. El documento se consideró fuera del corpus cubierto por la guía.",
+  "evidence": {
+    "status": "insufficient",
+    "notes": "Refusal del analizador: No hay evidencia suficiente en los documentos recuperados para emitir observaciones fundamentadas. Requiere revisión humana.",
+    "accepted_count": 0,
+    "rejected_count": 0
+  },
+  "grounding_ratio": 0.0938,
+  "refusal": "No hay evidencia suficiente en los documentos recuperados para emitir observaciones fundamentadas. Requiere revisión humana.",
+  "findings": [],
+  "rejected_findings": [],
+  "uncertainty": [
+    "Grounding 0.09: la respuesta del modelo aún no se apoya suficientemente en evidencia.",
+    "El analizador emitió una negativa explícita (refusal)."
+  ],
+  "next_steps": [
+    "Cruzar las señales con el expediente oficial de la contratación.",
+    "Validar las citas contra la guía OCP/OCDS y los documentos del proceso.",
+    "Solicitar al área correspondiente aclaraciones sobre los puntos señalados.",
+    "Documentar las observaciones y su trazabilidad para una posible auditoría."
+  ],
+  "disclaimer": "Este análisis identifica señales de riesgo potenciales en documentos públicos. No es una acusación ni determina responsabilidad. Requiere revisión humana y verificación contra la fuente oficial.",
+  "model_name": "gemini-2.5-flash",
+  "completed_at": "2026-07-10T16:03:41.795992",
+  "stack": {
+    "llm": "gemini-2.5-flash (Vertex AI)",
+    "vector_store": "Qdrant Cloud standard_kb",
+    "embeddings": "gemini-embedding-001@768"
+  }
+}

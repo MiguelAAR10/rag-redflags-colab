@@ -59,10 +59,13 @@ def load_env_file(path: Path) -> None:
 def get_credentials() -> tuple[str, str, str]:
     load_env_file(REPO_ROOT / ".env")
     api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY") or ""
+    use_vertex = os.environ.get("GOOGLE_GENAI_USE_VERTEXAI", "").lower() in ("1", "true", "yes")
+    vertex_ready = use_vertex and os.environ.get("GOOGLE_CLOUD_PROJECT")
     qdrant_url = os.environ.get("QDRANT_URL") or os.environ.get("QDRANT_ENDPOINT") or ""
     qdrant_key = os.environ.get("QDRANT_API_KEY", "")
     missing = [name for name, val in [
-        ("GEMINI_API_KEY/GOOGLE_API_KEY", api_key),
+        ("GEMINI_API_KEY/GOOGLE_API_KEY o Vertex (GOOGLE_GENAI_USE_VERTEXAI"
+         "+GOOGLE_CLOUD_PROJECT)", api_key or vertex_ready),
         ("QDRANT_ENDPOINT/QDRANT_URL", qdrant_url),
         ("QDRANT_API_KEY", qdrant_key),
     ] if not val]
@@ -71,8 +74,25 @@ def get_credentials() -> tuple[str, str, str]:
     return api_key, qdrant_url, qdrant_key
 
 
+def make_gemini_client():
+    """Cliente google-genai: Vertex AI (ADC) si esta configurado; si no, API key."""
+    from google import genai
+
+    if os.environ.get("GOOGLE_GENAI_USE_VERTEXAI", "").lower() in ("1", "true", "yes"):
+        return genai.Client(
+            vertexai=True,
+            project=os.environ.get("GOOGLE_CLOUD_PROJECT", ""),
+            location=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1"),
+        )
+    api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY") or ""
+    return genai.Client(api_key=api_key)
+
+
 def load_chunks() -> list[dict]:
-    return [json.loads(line) for line in CHUNKS_PATH.read_text().splitlines() if line.strip()]
+    # split("\n") y no splitlines(): el texto de los chunks puede contener
+    # separadores Unicode (U+2028) que splitlines() trataria como fin de linea.
+    with open(CHUNKS_PATH, encoding="utf-8") as fh:
+        return [json.loads(line) for line in fh if line.strip()]
 
 
 def normalize(vec: list[float]) -> list[float]:
@@ -110,8 +130,8 @@ def build(recreate: bool) -> None:
     from qdrant_client import models as qm
     from google import genai
 
-    api_key, qdrant_url, qdrant_key = get_credentials()
-    gclient = genai.Client(api_key=api_key)
+    _, qdrant_url, qdrant_key = get_credentials()
+    gclient = make_gemini_client()
     qclient = QdrantClient(url=qdrant_url, api_key=qdrant_key, timeout=60)
 
     if recreate and qclient.collection_exists(COLLECTION):
@@ -163,9 +183,9 @@ def run_query(query: str) -> None:
     from qdrant_client import QdrantClient
     from google import genai
 
-    api_key, qdrant_url, qdrant_key = get_credentials()
+    _, qdrant_url, qdrant_key = get_credentials()
     for r in search(QdrantClient(url=qdrant_url, api_key=qdrant_key, timeout=60),
-                    genai.Client(api_key=api_key), query):
+                    make_gemini_client(), query):
         print(f"{r['score']:.3f} | {r.get('indicator_code')} | "
               f"{r.get('indicator_name')} | p{r.get('page_start')}")
 
@@ -175,11 +195,12 @@ def run_eval() -> None:
     from qdrant_client import QdrantClient
     from google import genai
 
-    api_key, qdrant_url, qdrant_key = get_credentials()
+    _, qdrant_url, qdrant_key = get_credentials()
     qclient = QdrantClient(url=qdrant_url, api_key=qdrant_key, timeout=60)
-    gclient = genai.Client(api_key=api_key)
+    gclient = make_gemini_client()
 
-    gold = [json.loads(line) for line in GOLDSET_PATH.read_text().splitlines() if line.strip()]
+    with open(GOLDSET_PATH, encoding="utf-8") as fh:
+        gold = [json.loads(line) for line in fh if line.strip()]
     scored = []
     for item in gold:
         expected = set(item.get("relevant_indicator_codes") or [])

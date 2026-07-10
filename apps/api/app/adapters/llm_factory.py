@@ -26,14 +26,20 @@ def resolve_generate_fn(
         return override
 
     settings = get_settings()
-    if settings.rag_use_google_llm and settings.google_api_key:
+    if google_llm_configured():
         return make_google_generate_fn(
             api_key=settings.google_api_key,
             model_name=settings.rag_gemini_model,
+            use_vertex=settings.google_genai_use_vertexai,
+            project=settings.google_cloud_project,
+            location=settings.google_cloud_location,
         )
     return make_fake_generate_fn()
 
 
 def google_llm_configured() -> bool:
     settings = get_settings()
-    return bool(settings.google_api_key and settings.rag_use_google_llm)
+    if not settings.rag_use_google_llm:
+        return False
+    vertex_ready = settings.google_genai_use_vertexai and settings.google_cloud_project
+    return bool(settings.google_api_key or vertex_ready)

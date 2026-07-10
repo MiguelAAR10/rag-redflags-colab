@@ -43,6 +43,11 @@ class Settings(BaseSettings):
     rag_gemini_model: str = "gemini-2.5-flash"
     rag_qwen_4bit: bool = False
 
+    # Vertex AI (ruta ADC/service account: factura al proyecto GCP, sin API key)
+    google_genai_use_vertexai: bool = False
+    google_cloud_project: str = ""
+    google_cloud_location: str = "us-central1"
+
     # Embeddings
     rag_embeddings_backend: str = "cpu-e5"
 

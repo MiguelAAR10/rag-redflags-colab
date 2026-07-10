@@ -1,0 +1,5 @@
+{
+  "phase": "f17b-baseline-e5-faiss",
+  "mean_recall_at_5": 0.717948717948718,
+  "n": 13
+}

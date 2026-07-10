@@ -13,7 +13,7 @@ dependencies = [
   "pydantic",
   "pydantic-settings",
   "sqlmodel",
-  "google-generativeai"
+  "google-genai"
 ]
 
 [project.optional-dependencies]

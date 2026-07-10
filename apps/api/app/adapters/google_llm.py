@@ -6,6 +6,9 @@ The signature mirrors what packages.rag_core.agent.analyze expects:
 
 In tests we inject a fake determinista via the LLMFactory, so this
 module is exercised only when GOOGLE_API_KEY is set in the env.
+
+Uses the google-genai SDK (successor of the deprecated
+google-generativeai package).
 """
 
 from __future__ import annotations
@@ -39,44 +42,42 @@ def _build_user_prompt(query: str, chunks: List[Dict]) -> str:
 def make_google_generate_fn(
     *,
     api_key: Optional[str] = None,
-    model_name: str = "gemini-1.5-flash",
-    max_output_tokens: int = 1024,
+    model_name: str = "gemini-2.5-flash",
+    max_output_tokens: int = 2048,
     temperature: float = 0.0,
 ) -> Callable[[str, List[Dict], str], str]:
-    """Build a generate_fn backed by Google Gemini.
+    """Build a generate_fn backed by Google Gemini (SDK google-genai).
 
-    Falls back to a deterministic stub if google-generativeai is not
-    installed or the API key is missing. The stub lets the API surface
-    a clear "API no configurada" error message during analysis.
+    Falls back to a deterministic stub if google-genai is not installed
+    or the API key is missing. The stub lets the API surface a clear
+    "API no configurada" error message during analysis.
     """
     api_key = api_key or os.environ.get("GOOGLE_API_KEY", "")
 
     try:
-        import google.generativeai as genai  # type: ignore
+        from google import genai  # type: ignore
+        from google.genai import types as genai_types  # type: ignore
     except Exception:
-        logger.warning("google-generativeai no instalado; usando stub.")
-        return _stub_generate_fn(reason="google-generativeai no instalado")
+        logger.warning("google-genai no instalado; usando stub.")
+        return _stub_generate_fn(reason="google-genai no instalado")
 
     if not api_key:
         logger.warning("GOOGLE_API_KEY no configurada; usando stub.")
         return _stub_generate_fn(reason="GOOGLE_API_KEY no configurada")
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(model_name)
+    client = genai.Client(api_key=api_key)
 
     def _generate(query: str, chunks: List[Dict], system_prompt: str) -> str:
         user_prompt = _build_user_prompt(query, chunks)
         try:
-            response = model.generate_content(
-                [
-                    {"role": "user", "parts": [system_prompt]},
-                    {"role": "model", "parts": ["Entendido."]},
-                    {"role": "user", "parts": [user_prompt]},
-                ],
-                generation_config={
-                    "max_output_tokens": max_output_tokens,
-                    "temperature": temperature,
-                },
+            response = client.models.generate_content(
+                model=model_name,
+                contents=user_prompt,
+                config=genai_types.GenerateContentConfig(
+                    system_instruction=system_prompt,
+                    max_output_tokens=max_output_tokens,
+                    temperature=temperature,
+                ),
             )
         except Exception as exc:
             logger.warning("Gemini falló: %s", exc)

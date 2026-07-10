@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     # LLM provider for the deployed web demo
     google_api_key: str = ""
     rag_use_google_llm: bool = True
-    rag_gemini_model: str = "gemini-1.5-flash"
+    rag_gemini_model: str = "gemini-2.5-flash"
     rag_qwen_4bit: bool = False
 
     # Embeddings

@@ -2,8 +2,11 @@
 
 _Actualizar al cerrar cada sesión._
 
-- **Fecha:** 2026-06-30
-- **Fase actual:** F16 implementado en rama `feature/final-evaluation-ragas`; siguiente acción única: F16.2 validar el flujo end-to-end con `GOOGLE_API_KEY` real y un TDR del corpus OCP.
+- **Fecha:** 2026-07-11
+- **Fase actual:** rama `v2`. **F17a/F17b/F18 ✅ COMPLETAS** (spec 007): Gemini 2.5 Flash vía Vertex AI (billing GCP `rag-redflags-v2`; el prepago AI Studio de la cuenta está agotado — no usar API keys), Qdrant Cloud `standard_kb` con 299 puntos (gemini-embedding-001 @768; recall@5 0.718 = paridad con E5/FAISS), interfaz `VectorStore` (faiss|qdrant), grounding semántico multilingüe `method="gemini"` (umbral calibrado 0.72; resuelve respuesta-ES vs corpus-EN que con léxico daba refusal falso), refusal fuera-de-dominio forzado determinista (feedback revisor), dedupe por sha256 (spec 006). Gate: **187 passed, 6 skipped**. E2E producción verificado con evidencia en `progress/evidence/f18-*`.
+- **Repo Colab (`MiguelAAR10/rag-redflags-colab`) al día** (`072198c`): PDF + datos + índice + ragas_metrics.py + notebook con fixes de Run all (celda 2.1 automática, RAGAS léxico, Gradio no bloqueante, ficha unificada, trazabilidad honesta).
+- **Siguiente acción única:** usuario corre **Run all en Colab T4** (cierra V1.1) → luego F19 (multi-formato + reindexación inteligente).
+- Pendiente de usuario para F21: crear Neon Postgres (free) y pegar `DATABASE_URL`.
 - Base funcional: F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅ · F13/F14/F15 evaluación + RAGAS local + trazabilidad ✅.
 - **F16 ✅**: TDR Risk Review MVP web desplegado localmente con FastAPI + SQLModel + Jinja2 + Tailwind CDN + Gemini. Contratos multiagente (intake/analysis/evidence/scoring/dossier) reutilizan `packages.rag_core.agent.analyze` con `generate_fn` inyectable. `bash scripts/verify.sh` → **169 passed, 6 skipped**.
 - Brecha restante: F15.3 Colab Run all + `ragas-report.json` neural del notebook académico.

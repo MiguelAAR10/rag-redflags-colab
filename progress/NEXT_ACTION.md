@@ -2,39 +2,42 @@
 
 ## Acción
 
-**F17b — Poblar Qdrant Cloud desde el notebook Colab con embeddings Gemini y validar recall.**
+**V1.1 (cierre) — Correr «Run all» en Colab T4 y guardar el `ragas-report.json` definitivo.**
 
-- **Branch:** `v2`
-- **Owner:** Humano (credenciales) + Claude (celdas + validación)
-- **Base:** F17a completada (`8d8142b`): adapter en SDK `google-genai`, modelo `gemini-2.5-flash`. Proyecto GCP personal `rag-redflags-v2` creado con Generative Language API habilitada.
+- **Branch:** `v2` (repo Colab `MiguelAAR10/rag-redflags-colab` en `072198c`)
+- **Owner:** Humano (requiere GPU de Colab; el agente no tiene)
+- **Base:** F17a/F17b/F18 completas. El repo Colab ya incluye PDF, datos
+  procesados, índice FAISS, `ragas_metrics.py`, el notebook con los fixes de
+  Run all y el `agent.py` con refusal fuera-de-dominio corregido.
 
-## Prerrequisitos del humano (bloquean F17b)
+## Pasos exactos
 
-1. Crear la API key de Gemini y guardarla en `.env` sin mostrarla (correr en la sesión con `!`):
-   ```bash
-   bash -c 'echo "GOOGLE_API_KEY=$(gcloud services api-keys create --display-name=rag-redflags-v2-gemini --api-target=service=generativelanguage.googleapis.com --project=rag-redflags-v2 --account=migarias907@gmail.com --format="value(response.keyString)")" >> .env'
-   ```
-2. Crear cluster **free** en https://cloud.qdrant.io (login con migarias907@gmail.com) y añadir a `.env`:
-   `QDRANT_URL=...` y `QDRANT_API_KEY=...`
-
-## Objetivo
-
-Celdas nuevas en `notebooks/redflags_rag_colab.ipynb` (sección V2): embedear el corpus estándar (299 chunks) con `gemini-embedding-001`, crear colección `standard_kb` en Qdrant Cloud con payload (`chunk_id`, `indicator_code`, `family`, `page_start/end`, `text`), upsert, y correr recall vs goldset comparando E5/FAISS vs Gemini/Qdrant. Gate: recall no se degrada; si cae, plan B = E5 en el contenedor.
+1. Abrir `notebooks/redflags_rag_colab.ipynb` en Google Colab.
+2. Runtime → *Change runtime type* → **GPU (T4)**.
+3. (Opcional) Colab Secrets: `HF_TOKEN`.
+4. **Runtime → Run all.** No debe pedir NINGUNA intervención manual.
+5. Al terminar: descargar `progress/evidence/ragas-report.json` generado y
+   copiarlo al repo principal (reemplaza el baseline offline).
+6. Registrar en `docs/CAVELOG.md` + run en `progress/runs/`: duración total,
+   celdas problemáticas si las hubo, y los 3 promedios RAGAS.
 
 ## Criterios de aceptación
 
-- [ ] Colección `standard_kb` con 299 puntos en Qdrant Cloud.
-- [ ] Recall@5 goldset Gemini/Qdrant ≥ E5/FAISS (o desviación justificada por escrito).
-- [ ] Smoke real de `analyze()` con Gemini 2.5 Flash (`generate_fn` API) sin GPU.
-- [ ] `bash scripts/verify.sh` sigue verde (169 passed baseline).
+- [ ] Run all completo sin errores ni interacción manual.
+- [ ] `ragas-report.json` con `n=15`, `traps=2`, promedios en [0,1].
+- [ ] Las 2 trampas dan métricas ≈ 0 (refusal correcto).
+- [ ] Celda 8.2 (fuera de dominio) muestra el refusal limpio nuevo
+      ("No puedo responder: ... fuera del dominio ...").
 
 ## NO hacer
 
-- No borrar las celdas E5/FAISS del notebook (entregable académico V1 intacto).
-- No hardcodear credenciales en celdas ni código; solo env/Colab secrets.
-- No usar el proyecto GCP `neoc-hr` (es del trabajo); todo en `rag-redflags-v2`.
-- No afirmar corrupción ni ilegalidad; mantener lenguaje seguro.
+- No editar celdas durante la corrida (invalida el "sin intervención").
+- No usar el `.env` del repo principal en Colab (credenciales V2 no
+  aplican; el notebook es autosuficiente con E5+FAISS+Qwen).
 
-## Después de F17b (tareas registradas #3–#7)
+## Después de esto (F19, agente)
 
-F18 backend→Qdrant + Neon + dedupe · F19 multi-formato + reindexación inteligente · F20 multi-query + Self-RAG · F21 Cloud Run · F22 frontend React (al final).
+Intake multi-formato (PDF/DOCX/TXT) + reindexación inteligente por chunk
+(diff de hashes, upsert incremental a `subject_docs` en Qdrant,
+`change_events`). Spec 007 §F19. Para F21 el usuario debe crear la base
+Neon (free) y pegar `DATABASE_URL` en `.env`.

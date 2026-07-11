@@ -2,17 +2,24 @@
 
 _Actualizar al cerrar cada sesión._
 
-- **Fecha:** 2026-05-29
-- **Fase actual:** F0–F0.4 ✅ · F1.1–F7 ✅ · **F8 notebook autorado (Claude) + smoke gate 5/5** → `in_progress`. Falta: **correr en Colab T4** (humano, `docs/COLAB.md`) + slides aparte.
-- Entregable: `notebooks/redflags_rag_colab.ipynb` (10 secciones + **sección 11: validación con LangChain**, 28 celdas).
+- **Fecha:** 2026-07-11
+- **Fase actual:** rama `v2`. **F17a/F17b/F18 ✅ COMPLETAS** (spec 007): Gemini 2.5 Flash vía Vertex AI (billing GCP `rag-redflags-v2`; el prepago AI Studio de la cuenta está agotado — no usar API keys), Qdrant Cloud `standard_kb` con 299 puntos (gemini-embedding-001 @768; recall@5 0.718 = paridad con E5/FAISS), interfaz `VectorStore` (faiss|qdrant), grounding semántico multilingüe `method="gemini"` (umbral calibrado 0.72; resuelve respuesta-ES vs corpus-EN que con léxico daba refusal falso), refusal fuera-de-dominio forzado determinista (feedback revisor), dedupe por sha256 (spec 006). Gate: **187 passed, 6 skipped**. E2E producción verificado con evidencia en `progress/evidence/f18-*`.
+- **Repo Colab (`MiguelAAR10/rag-redflags-colab`) al día** (`072198c`): PDF + datos + índice + ragas_metrics.py + notebook con fixes de Run all (celda 2.1 automática, RAGAS léxico, Gradio no bloqueante, ficha unificada, trazabilidad honesta).
+- **Siguiente acción única:** usuario corre **Run all en Colab T4** (cierra V1.1) → luego F19 (multi-formato + reindexación inteligente).
+- Pendiente de usuario para F21: crear Neon Postgres (free) y pegar `DATABASE_URL`.
+- Base funcional: F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅ · F13/F14/F15 evaluación + RAGAS local + trazabilidad ✅.
+- **F16 ✅**: TDR Risk Review MVP web desplegado localmente con FastAPI + SQLModel + Jinja2 + Tailwind CDN + Gemini. Contratos multiagente (intake/analysis/evidence/scoring/dossier) reutilizan `packages.rag_core.agent.analyze` con `generate_fn` inyectable. `bash scripts/verify.sh` → **169 passed, 6 skipped**.
+- Brecha restante: F15.3 Colab Run all + `ragas-report.json` neural del notebook académico.
+- Entregable: `notebooks/redflags_rag_colab.ipynb` con ficha técnica inicial, sección 9 de **RAGAS local**, tabla final de trazabilidad y secciones de instalación, dataset, chunking, embeddings, FAISS/HNSW, retrieval, rerank, Qwen, evaluación, conclusiones, LangChain, chat Gradio/MiniMax opcional.
 - **F9 (LangChain) ✅**: `packages/rag_core/langchain_rag.py` + gate (3 PASS, 2 skip). Embeddings LangChain en `data/index/langchain_faiss/`.
 - **FIX cache de modelos ✅**: `lru_cache` en loaders (anti-recarga/OOM). Notebook limpiado para Colab (token único, LangChain en 11.0, 11.2 opt-in, 10.2 resumen).
 - **F10 chat (Gradio) ✅** sobre analyze() (Qwen); MiniMax opcional; FAISS/HNSW con benchmark honesto. `verify.sh` = **104 passed, 6 skipped**.
-- **README** reescrito como documento de investigación (foco RAG avanzado, no harness; logo/docente placeholders). **Próxima: F11** — worker escribe `docs/PROYECTO.md` (base para slides).
+- **README** reescrito como documento de investigación. **F11 completada:** `docs/PROYECTO.md` existe como base para slides.
+- **Agent IO ✅:** `progress/agent_io/` registra prompts/respuestas/reviews de agentes externos; primer run: auditoría MiniMax `2026-06-29-001-minimax-repo-audit`.
 - **Sistema multi-CLI por archivos FUNCIONA y se autovalida**: worker vía START_HERE → next-task → produce → `verify.sh` corre el **gate de pytest** (hoy **75 passed, 4 skipped**) → handoff → Claude integra. Cola: `tasks/queue.json` + `scripts/next-task.sh`. Ciclo humano: `docs/LOOP.md`.
 - **Modelos = HuggingFace**: e5-base (embeddings) + bge-reranker-v2-m3 (rerank) + Qwen2.5-3B (gen). Token en `.env`. Pendiente Colab: `pip install rank_bm25`.
-- **Pendiente Colab:** `pip install rank_bm25` (activa BM25 híbrido); el resto corre local.
-- **Spec activa:** `specs/004-redflags-rag.md`
+- **Pendiente Colab:** cargar Qwen real con `RAG_QWEN_4BIT=1`, ejecutar notebook completo en T4, regenerar `progress/evidence/ragas-report.json` con `n=15`, `traps=2` y promedios en `[0,1]`, y guardar evidencia.
+- **Spec activa:** `specs/006-tdr-upload-review-mvp.md` (producto web); `specs/004-redflags-rag.md` sigue siendo la fuente del núcleo RAG.
 
 ## Qué existe
 
@@ -40,4 +47,4 @@ _Actualizar al cerrar cada sesión._
 
 ## Foco actual
 
-Dejar el arnés listo para desarrollar por fases sin saturar contexto. **No** implementar el pipeline todavía.
+F16.2: validar el flujo end-to-end del MVP web con un TDR real usando Gemini y guardar el dossier en `progress/evidence/`. No desarrollar slides; el usuario se encarga.

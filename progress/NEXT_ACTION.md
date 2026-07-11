@@ -2,53 +2,42 @@
 
 ## Acción
 
-**Fase 11 — Escribir `docs/PROYECTO.md`: documento de investigación detallado, BASE para los slides.**
+**V1.1 (cierre) — Correr «Run all» en Colab T4 y guardar el `ragas-report.json` definitivo.**
 
-- **CLI:** DeepSeek (o MiniMax) — ver `tasks/queue.json` → `F11-doc-slides` · **Reviewer:** Claude
-- **Arranque:** `bash scripts/next-task.sh deepseek`
+- **Branch:** `v2` (repo Colab `MiguelAAR10/rag-redflags-colab` en `072198c`)
+- **Owner:** Humano (requiere GPU de Colab; el agente no tiene)
+- **Base:** F17a/F17b/F18 completas. El repo Colab ya incluye PDF, datos
+  procesados, índice FAISS, `ragas_metrics.py`, el notebook con los fixes de
+  Run all y el `agent.py` con refusal fuera-de-dominio corregido.
 
-## Objetivo
+## Pasos exactos
 
-Producir **`docs/PROYECTO.md`** en español, estilo **documento de investigación bonito** (mermaid, tablas, *callouts* `> [!NOTE]`, citas), que explique **todo el proyecto paso a paso** y sirva de **guion base para generar los slides** (8 secciones). NO es sobre el harness; el foco es el **sistema RAG avanzado** y el **caso de uso** (escáner de *red flags* bajo criterios claros, no sospechas).
+1. Abrir `notebooks/redflags_rag_colab.ipynb` en Google Colab.
+2. Runtime → *Change runtime type* → **GPU (T4)**.
+3. (Opcional) Colab Secrets: `HF_TOKEN`.
+4. **Runtime → Run all.** No debe pedir NINGUNA intervención manual.
+5. Al terminar: descargar `progress/evidence/ragas-report.json` generado y
+   copiarlo al repo principal (reemplaza el baseline offline).
+6. Registrar en `docs/CAVELOG.md` + run en `progress/runs/`: duración total,
+   celdas problemáticas si las hubo, y los 3 promedios RAGAS.
 
-## Fuentes a leer (para datos REALES, sin inventar)
+## Criterios de aceptación
 
-- `README.md` (estructura y framing ya definidos) · `specs/004-redflags-rag.md` · `docs/RUBRICA.md`
-- **Números reales** desde `progress/evidence/*.json` (conteos y métricas): fase1 (unidades), fase2 (chunks/fragmentación), fase3 (dim, vectores), fase4 (retrieval), fase5 (rerank), fase6 (grounding), fase7 (Recall@k/Precision@k, ejemplos bueno/malo).
-- `docs/CAVELOG.md` (decisiones por fase). Firmas en `packages/rag_core/*.py` si hace falta.
-- **No** volcar PDF/JSONL/índices al contexto; usar los reportes.
-
-## Estructura obligatoria de `docs/PROYECTO.md`
-
-1. **Portada** (placeholders: logo `docs/assets/logo-universidad.png`, Universidad, Curso, **Docente _\<completar\>_**, Autor MiguelAAR10, Fecha).
-2. **Resumen / Abstract.**
-3. **Problema y caso de uso** (escáner de *red flags*; criterios definidos, no sospechas; "requiere revisión humana").
-4. **Fundamentos de RAG** (conceptos: retrieval, generación condicionada, grounding) con citas.
-5. **Dataset** (con números reales: unidades, chunks, familias, dificultades).
-6. **Arquitectura** (diagrama **mermaid**).
-7. **Técnicas avanzadas** (embeddings E5, FAISS, HNSW, hybrid BM25+FAISS, reranker, grounding, citation-per-sentence) — explicadas y **citadas**.
-8. **Pipeline paso a paso** (mermaid + narrativa).
-9. **Decisiones técnicas** (chunk 1024/128 y por qué; k=5; modelos elegidos; Flat vs HNSW honesto).
-10. **Evaluación y resultados** (Recall@k, Precision@k, grounding ratio, comparación de métodos, ejemplo bueno/malo) — **con los números de `progress/evidence`**.
-11. **Minimización de alucinaciones** (grounding, refusal, lenguaje seguro).
-12. **Demo (chat Gradio).**
-13. **Ética y límites.**
-14. **Limitaciones y trabajo futuro.**
-15. **Referencias** (reusar las del README).
-16. **Anexo — Mapeo a los 8 slides**: tabla `sección del doc → slide` (1 Título · 2 Problema · 3 Dataset · 4 Arquitectura · 5 Decisiones técnicas · 6 Demo · 7 Resultados · 8 Conclusiones), con 3–5 viñetas sugeridas por slide.
-
-## Criterios de aceptación (los revisa Claude)
-
-- [ ] Cubre las 16 secciones; el **Anexo mapea a los 8 slides** con viñetas.
-- [ ] Usa **números reales** de `progress/evidence` (no inventados).
-- [ ] ≥ 2 diagramas **mermaid** + sección de **Referencias**.
-- [ ] **Lenguaje seguro** (señales de riesgo, no corrupción; revisión humana).
-- [ ] `bash scripts/verify.sh` sigue verde (el doc no rompe nada).
+- [ ] Run all completo sin errores ni interacción manual.
+- [ ] `ragas-report.json` con `n=15`, `traps=2`, promedios en [0,1].
+- [ ] Las 2 trampas dan métricas ≈ 0 (refusal correcto).
+- [ ] Celda 8.2 (fuera de dominio) muestra el refusal limpio nuevo
+      ("No puedo responder: ... fuera del dominio ...").
 
 ## NO hacer
 
-- No tocar el pipeline ni el notebook. Solo crear `docs/PROYECTO.md`.
+- No editar celdas durante la corrida (invalida el "sin intervención").
+- No usar el `.env` del repo principal en Colab (credenciales V2 no
+  aplican; el notebook es autosuficiente con E5+FAISS+Qwen).
 
-## Verificación
+## Después de esto (F19, agente)
 
-`grep -c "^## " docs/PROYECTO.md` (debe haber muchas secciones) + `bash scripts/verify.sh`. Cierra con `bash scripts/handoff.sh "fase11-doc-slides" deepseek`.
+Intake multi-formato (PDF/DOCX/TXT) + reindexación inteligente por chunk
+(diff de hashes, upsert incremental a `subject_docs` en Qdrant,
+`change_events`). Spec 007 §F19. Para F21 el usuario debe crear la base
+Neon (free) y pegar `DATABASE_URL` en `.env`.

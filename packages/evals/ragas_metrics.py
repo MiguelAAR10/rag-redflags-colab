@@ -39,11 +39,21 @@ _MIN_TOKEN_LEN = 3
 
 _TOKEN_RE = re.compile(r"\b\w+\b", flags=re.UNICODE)
 _SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?;])\s+|\n+")
+
+# Marcadores de refusal INEQUÍVOCOS. NUNCA incluir aquí frases que el
+# SYSTEM_PROMPT obligue a poner en TODAS las respuestas válidas (la regla 6
+# exige terminar siempre con "Requiere revisión humana."): con ese marcador,
+# toda respuesta correcta puntuaba answer_relevance=0.0 (bug detectado en
+# auditoría externa 2026-07-11). La señal AUTORITATIVA es el campo `refusal`
+# que devuelve rag_core.agent.analyze(); estos marcadores son solo fallback
+# para textos sin esa señal.
 _REFUSAL_MARKERS = (
     "no hay evidencia suficiente",
     "insufficient evidence",
-    "requiere revisión humana",
-    "requires human review",
+    "no puedo responder",
+    "fuera del dominio",
+    "cannot answer",
+    "out of domain",
 )
 
 
@@ -165,7 +175,9 @@ def faithfulness(answer: str, contexts: Sequence[str]) -> float:
     return _clamp_unit(supported / len(sentences))
 
 
-def answer_relevance(question: str, answer: str) -> float:
+def answer_relevance(
+    question: str, answer: str, refusal: Optional[bool] = None
+) -> float:
     """
     Aproximación local determinista de la métrica RAGAS ``answer relevance``.
 
@@ -177,13 +189,17 @@ def answer_relevance(question: str, answer: str) -> float:
 
     Robusto ante:
       - ``question`` o ``answer`` vacías / ``None`` -> ``0.0``.
-      - Refusal seguro -> ``0.0`` (la respuesta no aborda la pregunta).
+      - Refusal -> ``0.0`` (la respuesta no aborda la pregunta).
       - Preguntas trampa (sin anclaje semántico) -> tiende a ``0.0``
         porque sus tokens no aparecen en respuestas convencionales.
 
     Args:
         question: pregunta del usuario.
         answer: respuesta generada.
+        refusal: señal EXPLÍCITA de refusal (p. ej. ``bool(analyze()["refusal"])``).
+            Si se pasa, es autoritativa. Si es ``None``, se usa el fallback de
+            marcadores léxicos inequívocos (que ya NO incluye la coletilla
+            obligatoria "Requiere revisión humana").
 
     Returns:
         ``float`` en ``[0, 1]``.
@@ -194,7 +210,8 @@ def answer_relevance(question: str, answer: str) -> float:
     if not q_text or not a_text:
         return 0.0
 
-    if _is_refusal(a_text):
+    is_refusal = refusal if refusal is not None else _is_refusal(a_text)
+    if is_refusal:
         return 0.0
 
     q_tokens = _tokenize(q_text)
@@ -261,6 +278,9 @@ def evaluate_ragas(items: List[Dict[str, Any]]) -> Dict[str, Any]:
       - ``question`` (``str``)
       - ``answer`` (``str``)
       - ``contexts`` (``list[str]``)
+      - ``refusal`` (``bool``, opcional): señal explícita del pipeline
+        (``bool(analyze()["refusal"])``). Si está presente es autoritativa
+        para answer_relevance; si falta, se usa el fallback léxico.
 
     Args:
         items: lista de dicts con los campos anteriores.
@@ -293,9 +313,12 @@ def evaluate_ragas(items: List[Dict[str, Any]]) -> Dict[str, Any]:
         question = _safe_text(raw.get("question"))
         answer = _safe_text(raw.get("answer"))
         contexts = _safe_contexts(raw.get("contexts"))
+        refusal_flag = raw.get("refusal")
+        if refusal_flag is not None:
+            refusal_flag = bool(refusal_flag)
 
         f = faithfulness(answer, contexts)
-        ar = answer_relevance(question, answer)
+        ar = answer_relevance(question, answer, refusal=refusal_flag)
         cr = context_relevance(question, contexts)
 
         f_sum += f
@@ -307,6 +330,9 @@ def evaluate_ragas(items: List[Dict[str, Any]]) -> Dict[str, Any]:
                 "question": question,
                 "answer": answer,
                 "contexts": contexts,
+                "refusal": (
+                    refusal_flag if refusal_flag is not None else _is_refusal(answer)
+                ),
                 "faithfulness": f,
                 "answer_relevance": ar,
                 "context_relevance": cr,

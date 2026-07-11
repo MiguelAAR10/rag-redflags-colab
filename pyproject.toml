@@ -14,7 +14,8 @@ dependencies = [
   "pydantic-settings",
   "sqlmodel",
   "google-genai",
-  "qdrant-client"
+  "qdrant-client",
+  "python-docx"
 ]
 
 [project.optional-dependencies]

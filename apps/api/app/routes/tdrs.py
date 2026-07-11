@@ -13,6 +13,7 @@ from ..config import get_settings
 from ..services.intake import MAX_TEXT_CHARS
 from ..services.orchestrator import (
     IntakeError,
+    add_version_to_tdr,
     create_tdr_with_version,
     get_dossier,
     get_run_status,
@@ -188,6 +189,48 @@ async def api_upload(
         run_id = queue_analysis(result["tdr_id"])
         result["analysis_run_id"] = run_id
     return result
+
+@router.post("/api/tdrs/{tdr_id}/upload")
+async def api_upload_new_version(
+    tdr_id: int,
+    file: Optional[UploadFile] = File(None),
+    pasted_text: Optional[str] = Form(None),
+    auto_analyze: bool = Form(False),
+) -> dict:
+    """Re-subida de una version nueva de un TDR existente (F19).
+
+    Mismo contenido -> no-op (unchanged=true). Contenido distinto -> version
+    nueva con diff por chunk (solo lo cambiado se embebe) y ChangeEvent.
+    """
+    raw_bytes: Optional[bytes] = None
+    filename = "pasted.txt"
+    if file is not None and file.filename:
+        raw_bytes = await file.read()
+        filename = file.filename
+
+    text_clean = (pasted_text or "").strip()
+    if not raw_bytes and not text_clean:
+        raise HTTPException(
+            status_code=400,
+            detail="Debes subir un archivo (PDF/DOCX/TXT/MD) o pegar texto.",
+        )
+    try:
+        result = add_version_to_tdr(
+            tdr_id,
+            filename=filename,
+            raw_bytes=raw_bytes,
+            pasted_text=text_clean or None,
+        )
+    except IntakeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    if auto_analyze and not result.get("unchanged"):
+        run_id = queue_analysis(result["tdr_id"])
+        result["analysis_run_id"] = run_id
+    return result
+
 
 
 @router.get("/api/tdrs")

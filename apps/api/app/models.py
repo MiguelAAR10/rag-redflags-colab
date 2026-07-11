@@ -78,3 +78,37 @@ class EvidenceReview(SQLModel, table=True):
     accepted_count: int = 0
     rejected_count: int = 0
     notes: str = ""
+
+
+class DocChunk(SQLModel, table=True):
+    """Chunk de un documento subido, con hash para reindexación incremental.
+
+    F19 (spec 007): al re-subir una versión modificada, solo los chunks cuyo
+    hash cambió se re-embeben y upsertean a Qdrant; los intactos reutilizan
+    su punto existente.
+    """
+
+    __tablename__ = "doc_chunks"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    tdr_version_id: int = Field(foreign_key="tdr_versions.id")
+    chunk_hash: str = Field(index=True)
+    ord: int = 0
+    text: str = ""
+    qdrant_point_id: str = ""  # vacío si aún no se ha indexado
+    embedded_at: Optional[datetime] = None
+
+
+class ChangeEvent(SQLModel, table=True):
+    """Evento de cambio entre dos versiones de un documento (CDC, spec 007)."""
+
+    __tablename__ = "change_events"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    tdr_id: int = Field(foreign_key="tdrs.id")
+    from_version_id: int = Field(foreign_key="tdr_versions.id")
+    to_version_id: int = Field(foreign_key="tdr_versions.id")
+    chunks_added: int = 0
+    chunks_removed: int = 0
+    chunks_kept: int = 0
+    detected_at: datetime = Field(default_factory=datetime.utcnow)

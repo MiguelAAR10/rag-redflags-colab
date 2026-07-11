@@ -1,0 +1,20 @@
+{
+  "v1": {
+    "chunks_total": 2,
+    "chunks_added": 2,
+    "chunks_kept": 0,
+    "chunks_removed": 0,
+    "embedded": 2,
+    "change_event_id": null
+  },
+  "v2": {
+    "chunks_total": 2,
+    "chunks_added": 1,
+    "chunks_kept": 1,
+    "chunks_removed": 1,
+    "embedded": 1,
+    "change_event_id": 1
+  },
+  "noop_reupload": true,
+  "qdrant_subject_docs_points": 2
+}

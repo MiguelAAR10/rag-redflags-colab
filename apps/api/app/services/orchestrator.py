@@ -23,6 +23,7 @@ from ..models import (
 from . import analysis as analysis_svc
 from . import dossier as dossier_svc
 from . import evidence as evidence_svc
+from . import reindex as reindex_svc
 from . import scoring as scoring_svc
 from .intake import IntakeResult, persist_intake
 
@@ -65,6 +66,19 @@ def create_tdr_with_version(
             parser_notes=intake.parser_notes,
         )
         session.add(version)
+        session.flush()
+
+        # F19: chunk + hash (+ upsert incremental a subject_docs si está
+        # habilitado). Primera versión → sin ChangeEvent.
+        reindex_summary = reindex_svc.reindex_version(
+            session,
+            tdr_id=tdr.id,
+            version=version,
+            text=intake.text,
+            prev_version=None,
+            index_enabled=settings.rag_index_subject_docs,
+        )
+
         session.commit()
         session.refresh(tdr)
         session.refresh(version)
@@ -73,6 +87,90 @@ def create_tdr_with_version(
             "version_id": version.id,
             "sha256": version.sha256,
             "char_count": version.char_count,
+            "reindex": reindex_summary,
+        }
+
+
+def add_version_to_tdr(
+    tdr_id: int,
+    *,
+    filename: str,
+    raw_bytes: Optional[bytes],
+    pasted_text: Optional[str],
+) -> Dict:
+    """Re-subida de un documento existente (F19: reindexación inteligente).
+
+    - Mismo sha256 que la versión más reciente → no-op (sin versión nueva,
+      sin ChangeEvent, cero embeddings).
+    - Contenido distinto → versión nueva + diff por chunk (solo lo cambiado
+      se embebe) + ChangeEvent con added/removed/kept.
+    """
+    settings = get_settings()
+    try:
+        intake: IntakeResult = persist_intake(
+            filename=filename,
+            raw_bytes=raw_bytes,
+            pasted_text=pasted_text,
+            upload_dir=settings.upload_dir,
+        )
+    except ValueError as exc:
+        raise IntakeError(str(exc)) from exc
+
+    with get_session() as session:
+        tdr = session.get(Tdr, tdr_id)
+        if not tdr:
+            raise ValueError(f"TDR {tdr_id} no existe.")
+        versions = session.exec(
+            select(TdrVersion)
+            .where(TdrVersion.tdr_id == tdr_id)
+            .order_by(TdrVersion.id.desc())
+        ).all()
+        latest = versions[0] if versions else None
+
+        if latest is not None and latest.sha256 == intake.sha256:
+            logger.info(
+                "Re-subida sin cambios para TDR %s (sha %s…): no-op.",
+                tdr_id, intake.sha256[:12],
+            )
+            return {
+                "tdr_id": tdr_id,
+                "version_id": latest.id,
+                "sha256": latest.sha256,
+                "unchanged": True,
+                "reindex": None,
+            }
+
+        version = TdrVersion(
+            tdr_id=tdr_id,
+            sha256=intake.sha256,
+            file_path=intake.file_path,
+            text_path=intake.text_path,
+            char_count=intake.char_count,
+            parser_notes=intake.parser_notes,
+        )
+        session.add(version)
+        session.flush()
+
+        reindex_summary = reindex_svc.reindex_version(
+            session,
+            tdr_id=tdr_id,
+            version=version,
+            text=intake.text,
+            prev_version=latest,
+            index_enabled=settings.rag_index_subject_docs,
+        )
+
+        tdr.status = "uploaded"
+        tdr.filename = filename or tdr.filename
+        session.add(tdr)
+        session.commit()
+        session.refresh(version)
+        return {
+            "tdr_id": tdr_id,
+            "version_id": version.id,
+            "sha256": version.sha256,
+            "unchanged": False,
+            "reindex": reindex_summary,
         }
 
 

@@ -77,6 +77,10 @@ class Settings(BaseSettings):
     #   resuelve respuesta-ES vs corpus-EN).
     rag_vector_store: str = "faiss"
     rag_grounding_method: str = "lexical"
+    # F19: indexar los documentos subidos en la colección subject_docs de
+    # Qdrant (embeddings incrementales por diff de chunks). Off por default
+    # para que tests/dev no requieran red.
+    rag_index_subject_docs: bool = False
     # Umbral por-frase para similitud semántica. Calibrado F18 contra chunks
     # reales de standard_kb: relacionado 0.74-0.81, fuera de dominio
     # 0.66-0.69 -> 0.72 separa ambos grupos.

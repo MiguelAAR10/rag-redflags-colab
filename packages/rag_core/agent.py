@@ -217,10 +217,16 @@ def analyze(
     # 4. Refusal check. Si el LLM se rehusó por fuera de dominio (regla 0),
     # el refusal se fuerza sin depender del grounding (ver
     # _OUT_OF_DOMAIN_MARKERS); si no, aplica el umbral de grounding.
+    # Taxonomía estructurada (auditoría 2026-07-11): OUT_OF_DOMAIN e
+    # INSUFFICIENT_EVIDENCE son abstenciones DISTINTAS; el texto humano se
+    # deriva de estos campos, no al revés.
     if _is_out_of_domain_refusal(answer):
         refusal = OUT_OF_DOMAIN_REFUSAL
+        abstain_reason = "OUT_OF_DOMAIN"
     else:
         refusal = refusal_check(grounding)
+        abstain_reason = "INSUFFICIENT_EVIDENCE" if refusal else ""
+    status = "ABSTAIN" if refusal else "ANSWER"
 
     # 5. Citations (vacías si hubo refusal: no hay observaciones que citar)
     citations = [] if refusal else build_citations(
@@ -238,6 +244,8 @@ def analyze(
     return {
         "answer": final_answer,
         "raw_answer": answer,
+        "status": status,
+        "abstain_reason": abstain_reason,
         "sentences": [
             {"text": s["text"], "supported": s["supported"]}
             for s in grounding["sentences"]

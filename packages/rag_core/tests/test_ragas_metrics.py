@@ -26,11 +26,19 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[3]
 GOLDSET = REPO / "data" / "eval" / "goldset.jsonl"
+ABSTENTION_SET = REPO / "data" / "eval" / "abstention_set.jsonl"
+# Marcadores inequívocos (alineados con packages/evals/ragas_metrics.py).
+# "requiere revisión humana" NO es marcador de refusal: la regla 6 del
+# SYSTEM_PROMPT la exige en TODAS las respuestas válidas, así que usarla
+# como marcador hacía answer_relevance=0.0 para respuestas correctas
+# (bug corregido tras auditoría externa 2026-07-11).
 _REFUSAL_MARKERS = (
     "no hay evidencia suficiente",
     "insufficient evidence",
-    "requiere revisión humana",
-    "requires human review",
+    "no puedo responder",
+    "fuera del dominio",
+    "cannot answer",
+    "out of domain",
 )
 
 
@@ -518,3 +526,147 @@ class TestGoldsetEval:
         items = self._load()
         for it in items:
             assert it.get("query"), "todo ítem del goldset debe tener 'query'"
+
+# --------------------------------------------------------------------------- #
+# Regresión del bug de refusal (auditoría externa 2026-07-11)
+# --------------------------------------------------------------------------- #
+
+
+class TestRefusalBugRegression:
+    """La coletilla obligatoria 'Requiere revisión humana.' (regla 6 del
+    SYSTEM_PROMPT) NO debe clasificar una respuesta válida como refusal."""
+
+    VALID_ANSWER = (
+        "El contrato presenta una señal de riesgo por oferente único "
+        "según el indicador R018 de la guía OCP. Requiere revisión humana."
+    )
+
+    def test_valid_answer_with_mandatory_tail_is_not_refusal(self):
+        from packages.evals.ragas_metrics import _is_refusal
+
+        assert _is_refusal(self.VALID_ANSWER) is False
+
+    def test_valid_answer_scores_above_zero(self):
+        from packages.evals.ragas_metrics import answer_relevance
+
+        question = "¿Qué señal de riesgo presenta un contrato con oferente único?"
+        score = answer_relevance(question, self.VALID_ANSWER)
+        assert score > 0.0, (
+            "una respuesta válida que cumple la regla 6 no puede puntuar 0"
+        )
+
+    def test_explicit_refusal_flag_is_authoritative(self):
+        from packages.evals.ragas_metrics import answer_relevance
+
+        question = "¿Qué señal de riesgo presenta este contrato?"
+        # Señal explícita True fuerza 0 aunque el texto parezca respuesta
+        assert answer_relevance(question, self.VALID_ANSWER, refusal=True) == 0.0
+        # Señal explícita False desactiva el fallback léxico
+        refusal_looking = "No hay evidencia suficiente sobre la señal de riesgo del contrato."
+        assert answer_relevance(question, refusal_looking, refusal=False) > 0.0
+
+    def test_evaluate_ragas_honors_item_refusal_flag(self):
+        from packages.evals.ragas_metrics import evaluate_ragas
+
+        items = [
+            {
+                "question": "¿Qué señal de riesgo hay con oferente único?",
+                "answer": self.VALID_ANSWER,
+                "contexts": ["Single bid received indicator R018."],
+                "refusal": False,
+            }
+        ]
+        out = evaluate_ragas(items)
+        assert out["items"][0]["refusal"] is False
+        assert out["items"][0]["answer_relevance"] > 0.0
+
+    def test_out_of_domain_refusal_still_detected(self):
+        from packages.evals.ragas_metrics import _is_refusal
+
+        assert _is_refusal(
+            "No puedo responder: la consulta está fuera del dominio de este "
+            "documento (contratación pública). Requiere revisión humana."
+        ) is True
+
+
+class TestAbstentionSet:
+    """Schema del abstention set (tipos A/B/C de la auditoría 2026-07-11)."""
+
+    def _load(self):
+        with open(ABSTENTION_SET, encoding="utf-8") as fh:
+            return [json.loads(l) for l in fh if l.strip()]
+
+    def test_has_three_trap_types(self):
+        items = self._load()
+        types = {it["trap_type"] for it in items}
+        assert types == {
+            "out_of_domain",
+            "in_domain_insufficient_evidence",
+            "false_premise",
+        }
+
+    def test_every_item_has_expected_status(self):
+        for it in self._load():
+            assert it.get("expected_status") in ("ABSTAIN", "ANSWER")
+            assert it.get("expected_abstain_reason")
+            assert it.get("query") and it.get("rationale")
+
+    def test_at_least_two_per_type(self):
+        from collections import Counter
+
+        counts = Counter(it["trap_type"] for it in self._load())
+        for trap_type, n in counts.items():
+            assert n >= 2, f"{trap_type} necesita >=2 casos, tiene {n}"
+
+
+class TestAnalyzeAbstentionTaxonomy:
+    """analyze() expone status/abstain_reason estructurados (P0 auditoría)."""
+
+    def test_out_of_domain_taxonomy(self):
+        from packages.rag_core.agent import analyze
+
+        def refusing_llm(query, chunks, system_prompt):
+            return (
+                "No puedo responder: la consulta está fuera del dominio de "
+                "este documento (contratación pública). Requiere revisión humana."
+            )
+
+        result = analyze(
+            "Who won the World Cup?",
+            generate_fn=refusing_llm,
+            retrieved_chunks=[{"chunk_id": "c1", "text": "single bid indicator"}],
+        )
+        assert result["status"] == "ABSTAIN"
+        assert result["abstain_reason"] == "OUT_OF_DOMAIN"
+
+    def test_insufficient_evidence_taxonomy(self):
+        from packages.rag_core.agent import analyze
+
+        def ungrounded_llm(query, chunks, system_prompt):
+            return "Afirmación sin relación alguna con el corpus recuperado."
+
+        result = analyze(
+            "¿Qué funcionario recibió un soborno?",
+            generate_fn=ungrounded_llm,
+            retrieved_chunks=[{"chunk_id": "c1", "text": "single bid indicator"}],
+            grounding_threshold=0.9,
+        )
+        assert result["status"] == "ABSTAIN"
+        assert result["abstain_reason"] == "INSUFFICIENT_EVIDENCE"
+
+    def test_answer_taxonomy(self):
+        from packages.rag_core.agent import analyze
+
+        def grounded_llm(query, chunks, system_prompt):
+            return "Single bid indicator detected. Requiere revisión humana."
+
+        result = analyze(
+            "single bidder",
+            generate_fn=grounded_llm,
+            retrieved_chunks=[
+                {"chunk_id": "c1", "text": "Single bid indicator detected for tender."}
+            ],
+            grounding_threshold=0.2,
+        )
+        assert result["status"] == "ANSWER"
+        assert result["abstain_reason"] == ""

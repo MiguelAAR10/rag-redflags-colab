@@ -60,6 +60,23 @@ REFUSAL_MESSAGE = (
     "Requiere revisión humana."
 )
 
+OUT_OF_DOMAIN_REFUSAL = (
+    "No puedo responder: la consulta está fuera del dominio de este documento "
+    "(contratación pública). Requiere revisión humana."
+)
+
+# Marcadores de la regla 0 del SYSTEM_PROMPT. Si el LLM se rehúsa por fuera
+# de dominio, el refusal se fuerza DETERMINISTAMENTE aquí: el grounding no
+# sirve como única defensa porque la propia frase de refusal menciona
+# "contratación pública" y puntúa alto contra el corpus (calibración F18:
+# refusal=0.757 vs umbral semántico 0.72).
+_OUT_OF_DOMAIN_MARKERS = ("no puedo responder", "fuera del dominio")
+
+
+def _is_out_of_domain_refusal(answer: str) -> bool:
+    low = answer.lower()
+    return any(marker in low for marker in _OUT_OF_DOMAIN_MARKERS)
+
 
 def _build_context(chunks: List[Dict]) -> str:
     return "\n\n".join(
@@ -158,7 +175,8 @@ def analyze(
         generate_fn: if provided, called as `fn(query, chunks, system_prompt) -> str`.
             Use for tests with a fake LLM.
         retrieved_chunks: if provided, skip retrieval+reranking (for tests).
-        grounding_method: 'lexical' (default, deterministic) or 'embedding'.
+        grounding_method: 'lexical' (default, deterministic), 'embedding'
+            (E5 local) o 'gemini' (API multilingüe — producción web F18).
         grounding_threshold: minimum similarity to consider a sentence supported.
 
     Returns:
@@ -196,11 +214,18 @@ def analyze(
     sentences = split_sentences(answer)
     grounding = verify_grounding(sentences, retrieved_chunks, threshold=grounding_threshold, method=grounding_method)
 
-    # 4. Refusal check
-    refusal = refusal_check(grounding)
+    # 4. Refusal check. Si el LLM se rehusó por fuera de dominio (regla 0),
+    # el refusal se fuerza sin depender del grounding (ver
+    # _OUT_OF_DOMAIN_MARKERS); si no, aplica el umbral de grounding.
+    if _is_out_of_domain_refusal(answer):
+        refusal = OUT_OF_DOMAIN_REFUSAL
+    else:
+        refusal = refusal_check(grounding)
 
-    # 5. Citations
-    citations = build_citations(grounding["sentences"], retrieved_chunks)
+    # 5. Citations (vacías si hubo refusal: no hay observaciones que citar)
+    citations = [] if refusal else build_citations(
+        grounding["sentences"], retrieved_chunks
+    )
 
     # Si hay refusal, el `answer` visible se reemplaza por el mensaje de
     # refusal determinista. No confiamos en que el LLM haya obedecido la

@@ -53,6 +53,7 @@ def run_analysis(
     generate_fn: Callable[[str, List[Dict], str], str],
     *,
     grounding_threshold: float = 0.25,
+    grounding_method: str = "lexical",
     retrieved_chunks: Optional[List[Dict]] = None,
     model_name: str = "",
 ) -> AnalysisOutput:
@@ -64,6 +65,8 @@ def run_analysis(
             (query, chunks, system_prompt) -> str.
         grounding_threshold: minimum grounding ratio to consider
             the response supported.
+        grounding_method: 'lexical' (default, determinista para tests) o
+            'gemini' (semántico multilingüe, producción).
         retrieved_chunks: optional pre-computed chunks (for tests).
         model_name: human-readable name of the LLM, recorded in output.
     """
@@ -75,7 +78,7 @@ def run_analysis(
         query=query,
         generate_fn=generate_fn,
         retrieved_chunks=retrieved_chunks,
-        grounding_method="lexical",
+        grounding_method=grounding_method,
         grounding_threshold=grounding_threshold,
     )
 

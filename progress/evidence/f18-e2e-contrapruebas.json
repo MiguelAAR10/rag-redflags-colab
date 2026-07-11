@@ -1,0 +1,91 @@
+{
+  "fuera_dominio": {
+    "tdr_id": 9,
+    "filename": "smoke-f18-fuera-v2.txt",
+    "sha256": "cb5383636fafcc24edb25a97bc9f523a6f110909721d01716e92934bb1916a65",
+    "risk_level": "Evidencia insuficiente",
+    "risk_reason": "El analizador se negó a emitir observaciones por falta de evidencia.",
+    "summary": "No hay evidencia suficiente para emitir señales fundamentadas. El documento se consideró fuera del corpus cubierto por la guía.",
+    "evidence": {
+      "status": "insufficient",
+      "notes": "Refusal del analizador: No puedo responder: la consulta está fuera del dominio de este documento (contratación pública). Requiere revisión humana.",
+      "accepted_count": 0,
+      "rejected_count": 0
+    },
+    "grounding_ratio": 1.0,
+    "refusal": "No puedo responder: la consulta está fuera del dominio de este documento (contratación pública). Requiere revisión humana.",
+    "findings": [],
+    "rejected_findings": [],
+    "uncertainty": [
+      "No se recuperaron citas literales de la guía OCP/OCDS.",
+      "El analizador emitió una negativa explícita (refusal)."
+    ],
+    "next_steps": [
+      "Cruzar las señales con el expediente oficial de la contratación.",
+      "Validar las citas contra la guía OCP/OCDS y los documentos del proceso.",
+      "Solicitar al área correspondiente aclaraciones sobre los puntos señalados.",
+      "Documentar las observaciones y su trazabilidad para una posible auditoría."
+    ],
+    "disclaimer": "Este análisis identifica señales de riesgo potenciales en documentos públicos. No es una acusación ni determina responsabilidad. Requiere revisión humana y verificación contra la fuente oficial.",
+    "model_name": "gemini-2.5-flash",
+    "completed_at": "2026-07-11 16:42:27.308877"
+  },
+  "riesgo_real": {
+    "tdr_id": 10,
+    "filename": "smoke-f18-riesgo-v2.txt",
+    "sha256": "a9330f97f2d7ce0efdd10be1740b5f6f07c2ccc2d10e1eb99c145dc2200f1de0",
+    "risk_level": "Medio",
+    "risk_reason": "3 señales aceptadas, ninguna alta.",
+    "summary": "Se identificaron 3 señales de riesgo con evidencia y 0 sin evidencia suficiente (rechazadas). Riesgo preliminar: Medio.",
+    "evidence": {
+      "status": "sufficient",
+      "notes": "3 señales aceptadas, 0 rechazadas.",
+      "accepted_count": 3,
+      "rejected_count": 0
+    },
+    "grounding_ratio": 1.0,
+    "refusal": "",
+    "findings": [
+      {
+        "title": "Uso injustificado de procedimiento no competitivo (adjudicación directa).",
+        "severity": "Bajo",
+        "evidence_quote": "Licitacion de servicios de consultoria adjudicada de forma directa sin proceso competitivo.",
+        "citation": "N/A — General (p.20-20)",
+        "explanation": "La adjudicación directa sin un proceso competitivo adecuado puede limitar la concurrencia, reducir la transparencia y favorecer a un proveedor específico, lo que podría resultar en precios no competitivos o servicios de menor calidad.",
+        "accepted": true,
+        "rejection_reason": ""
+      },
+      {
+        "title": "Especificaciones técnicas irrazonables o restrictivas.",
+        "severity": "Bajo",
+        "evidence_quote": "El TDR exige experiencia exclusiva con una marca privada especifica\".",
+        "citation": "N/A — General (p.20-20)",
+        "explanation": "Requerir experiencia exclusiva con una marca privada específica restringe la competencia a un número muy limitado de proveedores, o incluso a uno solo, lo que va en contra de los principios de libre concurrencia y eficiencia en la contratación pública.",
+        "accepted": true,
+        "rejection_reason": ""
+      },
+      {
+        "title": "Plazo de presentación de ofertas demasiado corto.",
+        "severity": "Medio",
+        "evidence_quote": "el plazo para postular fue de 48 horas.",
+        "citation": "R014 — The submission period is too short (p.26-26)",
+        "explanation": "Un plazo extremadamente corto para la presentación de ofertas (48 horas) limita severamente la capacidad de los potenciales proveedores para preparar y presentar propuestas adecuadas, favoreciendo a aquellos que ya tienen información privilegiada o están preseleccionados.",
+        "accepted": true,
+        "rejection_reason": ""
+      }
+    ],
+    "rejected_findings": [],
+    "uncertainty": [
+      "Aún con evidencia suficiente, las señales son preliminares y deben cruzarse con el expediente completo."
+    ],
+    "next_steps": [
+      "Cruzar las señales con el expediente oficial de la contratación.",
+      "Validar las citas contra la guía OCP/OCDS y los documentos del proceso.",
+      "Solicitar al área correspondiente aclaraciones sobre los puntos señalados.",
+      "Documentar las observaciones y su trazabilidad para una posible auditoría."
+    ],
+    "disclaimer": "Este análisis identifica señales de riesgo potenciales en documentos públicos. No es una acusación ni determina responsabilidad. Requiere revisión humana y verificación contra la fuente oficial.",
+    "model_name": "gemini-2.5-flash",
+    "completed_at": "2026-07-11 16:42:38.737310"
+  }
+}

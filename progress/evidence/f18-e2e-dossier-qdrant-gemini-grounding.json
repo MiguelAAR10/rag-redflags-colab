@@ -1,0 +1,58 @@
+{
+  "tdr_id": 7,
+  "filename": "smoke-f18.txt",
+  "sha256": "1f243981f6f7ed4248e4226bff26aef8643b33b0b8876716d0758b867def7a26",
+  "risk_level": "Medio",
+  "risk_reason": "3 señales aceptadas, ninguna alta.",
+  "summary": "Se identificaron 3 señales de riesgo con evidencia y 0 sin evidencia suficiente (rechazadas). Riesgo preliminar: Medio.",
+  "evidence": {
+    "status": "sufficient",
+    "notes": "3 señales aceptadas, 0 rechazadas.",
+    "accepted_count": 3,
+    "rejected_count": 0
+  },
+  "grounding_ratio": 1.0,
+  "refusal": "",
+  "findings": [
+    {
+      "title": "Adjudicación a un solo oferente con precios casi idénticos entre los participantes.",
+      "severity": "Bajo",
+      "evidence_quote": "adjudicado a un solo oferente. Los precios de los participantes fueron casi identicos",
+      "citation": "N/A — Fraud (p.18-18)",
+      "explanation": "La baja competencia y la similitud de precios pueden indicar colusión o manipulación del proceso de licitación.",
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "title": "Plazo muy corto entre la publicación y la apertura de ofertas.",
+      "severity": "Medio",
+      "evidence_quote": "hubo solo 3 dias entre la publicacion y la apertura de ofertas.",
+      "citation": "N/A — Fraud (p.18-18)",
+      "explanation": "Un plazo insuficiente puede limitar la capacidad de otros oferentes para preparar y presentar propuestas competitivas, favoreciendo a un oferente preseleccionado.",
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "title": "Aprobación de una adenda que incrementa significativamente el precio del contrato.",
+      "severity": "Bajo",
+      "evidence_quote": "Se aprobo una adenda que incrementa el precio en 40 por ciento despues de la firma del contrato.",
+      "citation": "N/A — Fraud (p.18-18)",
+      "explanation": "Un aumento sustancial del valor del contrato mediante adendas, especialmente después de una adjudicación con baja competencia, puede ser una señal de que el contrato inicial fue subestimado intencionalmente o que se están añadiendo elementos no previstos para favorecer al contratista.",
+      "accepted": true,
+      "rejection_reason": ""
+    }
+  ],
+  "rejected_findings": [],
+  "uncertainty": [
+    "Aún con evidencia suficiente, las señales son preliminares y deben cruzarse con el expediente completo."
+  ],
+  "next_steps": [
+    "Cruzar las señales con el expediente oficial de la contratación.",
+    "Validar las citas contra la guía OCP/OCDS y los documentos del proceso.",
+    "Solicitar al área correspondiente aclaraciones sobre los puntos señalados.",
+    "Documentar las observaciones y su trazabilidad para una posible auditoría."
+  ],
+  "disclaimer": "Este análisis identifica señales de riesgo potenciales en documentos públicos. No es una acusación ni determina responsabilidad. Requiere revisión humana y verificación contra la fuente oficial.",
+  "model_name": "gemini-2.5-flash",
+  "completed_at": "2026-07-11 16:39:10.440509"
+}

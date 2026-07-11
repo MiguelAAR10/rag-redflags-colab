@@ -13,7 +13,8 @@ dependencies = [
   "pydantic",
   "pydantic-settings",
   "sqlmodel",
-  "google-genai"
+  "google-genai",
+  "qdrant-client"
 ]
 
 [project.optional-dependencies]

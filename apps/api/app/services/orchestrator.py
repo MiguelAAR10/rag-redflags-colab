@@ -171,12 +171,17 @@ def queue_analysis(
     tdr_id: int,
     *,
     generate_fn: Optional[Callable[[str, List[Dict], str], str]] = None,
+    force: bool = False,
 ) -> int:
     """Create a queued analysis_run and run it synchronously inline.
 
     For the V1 demo we execute the pipeline immediately. The model
     already exposes the status field (`queued` -> `running` -> `completed`)
     so the UI can poll without further changes.
+
+    Dedupe (spec 006): si la versión más reciente (mismo sha256 de texto)
+    ya tiene un run `completed`, se devuelve ese run en vez de re-analizar.
+    `force=True` fuerza un re-análisis explícito.
     """
     settings = get_settings()
 
@@ -192,6 +197,20 @@ def queue_analysis(
         if not versions:
             raise ValueError(f"TDR {tdr_id} no tiene versiones.")
         latest_version = versions[0]
+
+        if not force:
+            existing = session.exec(
+                select(AnalysisRun)
+                .where(AnalysisRun.tdr_version_id == latest_version.id)
+                .where(AnalysisRun.status == "completed")
+                .order_by(AnalysisRun.id.desc())
+            ).first()
+            if existing is not None:
+                logger.info(
+                    "Dedupe: versión %s (sha %s…) ya analizada en run %s.",
+                    latest_version.id, latest_version.sha256[:12], existing.id,
+                )
+                return existing.id
 
         run = AnalysisRun(
             tdr_version_id=latest_version.id,
@@ -238,10 +257,32 @@ def _execute_run(
             raise FileNotFoundError(f"Texto no encontrado: {text_path}")
         tdr_text = text_path.read_text(encoding="utf-8")
 
+        # F18: retrieval vía VectorStore seleccionable. Con 'qdrant' el
+        # backend no carga FAISS/E5 locales: embebe la query con Gemini y
+        # consulta standard_kb en Qdrant Cloud. Con 'faiss' (default) el
+        # retrieval lo hace agent.analyze() como en V1 (tests sin red).
+        retrieved_chunks = None
+        if settings.rag_vector_store == "qdrant":
+            from packages.rag_core.vector_store import make_vector_store
+
+            store = make_vector_store("qdrant")
+            retrieved_chunks = store.search(
+                analysis_svc._build_query(tdr_text), k=settings.rag_retrieval_k
+            )
+
+        grounding_method = settings.rag_grounding_method
+        grounding_threshold = (
+            settings.grounding_threshold_semantic
+            if grounding_method in ("gemini", "embedding")
+            else settings.grounding_threshold
+        )
+
         analysis = analysis_svc.run_analysis(
             tdr_text=tdr_text,
             generate_fn=fn,
-            grounding_threshold=settings.grounding_threshold,
+            grounding_threshold=grounding_threshold,
+            grounding_method=grounding_method,
+            retrieved_chunks=retrieved_chunks,
             model_name=model_name,
         )
 

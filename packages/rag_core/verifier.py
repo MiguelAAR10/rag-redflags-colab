@@ -48,11 +48,72 @@ def _embedding_similarity(sentence: str, chunk_text: str) -> float:
     return float((s_vec @ c_vec.T)[0, 0])
 
 
+def _verify_grounding_gemini(
+    sentences: List[str],
+    chunks: List[Dict],
+    threshold: float,
+    embed_fn=None,
+) -> Dict:
+    """Grounding semántico multilingüe vía gemini-embedding-001 (F18).
+
+    Resuelve el caso cross-lingüe (respuesta en ES vs corpus en EN) donde el
+    método léxico da ~0 por falta de solapamiento de tokens. Solo 2 llamadas
+    API por verificación (batch de frases + batch de chunks), no una por par.
+    `embed_fn` es inyectable para tests deterministas sin red.
+    """
+    if not sentences:
+        return {"sentences": [], "grounding_ratio": 0.0, "passed": False}
+
+    if embed_fn is None:
+        from packages.rag_core.gemini_embeddings import make_similarity_embed_fn
+
+        embed_fn = make_similarity_embed_fn()
+
+    chunk_texts = [c.get("text", "") for c in chunks]
+    sent_vecs = np.asarray(embed_fn(sentences), dtype=float)
+    chunk_vecs = (
+        np.asarray(embed_fn(chunk_texts), dtype=float)
+        if chunk_texts
+        else np.zeros((0, sent_vecs.shape[1] if sent_vecs.size else 1))
+    )
+
+    sentence_results = []
+    supported_count = 0
+    sims = sent_vecs @ chunk_vecs.T if chunk_vecs.size else np.zeros((len(sentences), 0))
+
+    for i, sent in enumerate(sentences):
+        if sims.shape[1]:
+            best_idx = int(np.argmax(sims[i]))
+            best_score = float(sims[i][best_idx])
+            best_chunk_id = chunks[best_idx].get("chunk_id")
+        else:
+            best_score, best_chunk_id = 0.0, None
+        is_supported = best_score >= threshold
+        if is_supported:
+            supported_count += 1
+        sentence_results.append(
+            {
+                "text": sent,
+                "supported": is_supported,
+                "best_chunk_id": best_chunk_id,
+                "best_score": round(best_score, 4),
+            }
+        )
+
+    grounding_ratio = supported_count / len(sentences)
+    return {
+        "sentences": sentence_results,
+        "grounding_ratio": round(grounding_ratio, 4),
+        "passed": grounding_ratio >= threshold,
+    }
+
+
 def verify_grounding(
     sentences: List[str],
     chunks: List[Dict],
     threshold: float = DEFAULT_GROUNDING_THRESHOLD,
     method: str = "lexical",
+    embed_fn=None,
 ) -> Dict:
     """
     Check each sentence against retrieved chunks for factual support.
@@ -61,7 +122,9 @@ def verify_grounding(
         sentences: list of sentence strings.
         chunks: list of chunk dicts with at least 'text' and 'chunk_id'.
         threshold: minimum similarity score to consider a sentence supported.
-        method: 'lexical' (deterministic, fast) or 'embedding' (semantic).
+        method: 'lexical' (deterministic, fast), 'embedding' (E5 local) or
+            'gemini' (API multilingüe, producción — maneja ES vs EN).
+        embed_fn: solo para method='gemini'; inyectable en tests.
 
     Returns:
         {
@@ -74,8 +137,12 @@ def verify_grounding(
             "passed": bool,
         }
     """
+    if method == "gemini":
+        return _verify_grounding_gemini(sentences, chunks, threshold, embed_fn)
     if method not in ("lexical", "embedding"):
-        raise ValueError(f"method must be 'lexical' or 'embedding', got {method!r}")
+        raise ValueError(
+            f"method must be 'lexical', 'embedding' or 'gemini', got {method!r}"
+        )
 
     sim_fn = _embedding_similarity if method == "embedding" else _lexical_similarity
 

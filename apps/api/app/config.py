@@ -70,6 +70,19 @@ class Settings(BaseSettings):
     grounding_threshold: float = 0.25
     use_reranker_in_web: bool = False
 
+    # F18: backend de retrieval y grounding para la web.
+    # rag_vector_store: 'faiss' (local, default para tests/notebook) o
+    #   'qdrant' (producción, colección standard_kb).
+    # rag_grounding_method: 'lexical' (determinista) o 'gemini' (multilingüe,
+    #   resuelve respuesta-ES vs corpus-EN).
+    rag_vector_store: str = "faiss"
+    rag_grounding_method: str = "lexical"
+    # Umbral por-frase para similitud semántica. Calibrado F18 contra chunks
+    # reales de standard_kb: relacionado 0.74-0.81, fuera de dominio
+    # 0.66-0.69 -> 0.72 separa ambos grupos.
+    grounding_threshold_semantic: float = 0.72
+    rag_retrieval_k: int = 5
+
 
 _settings: Settings | None = None
 

@@ -23,16 +23,22 @@ SYSTEM_PROMPT = (
     "especializado en la guía OCP/OCDS de red flags. Analizas un fragmento de contrato, TDR "
     "o licitación basándote ÚNICAMENTE en los fragmentos recuperados que se te proporcionan.\n\n"
     "REGLAS OBLIGATORIAS:\n"
+    "0. Si el fragmento del usuario NO es un contrato, TDR, licitación o documento de "
+    "contratación pública (p. ej. preguntas generales, cultura, recetas, deportes, capitales "
+    "de países), IGNORA el formato de la regla 7 y responde ÚNICAMENTE con esta frase exacta: "
+    "'No puedo responder: la consulta está fuera del dominio de este documento (contratación "
+    "pública). Requiere revisión humana.'\n"
     "1. NUNCA afirmes corrupción, fraude ni ilegalidad comprobada. "
     "Usa exclusivamente: 'señal de riesgo', 'red flag potencial', "
     "'posible irregularidad a revisar'.\n"
     "2. Cada observación DEBE sustentarse en: (a) evidencia del fragmento del usuario, "
     "(b) el indicador/criterio recuperado de la guía, (c) página/referencia si está disponible.\n"
-    "3. Si los fragmentos no alcanzan, dilo: 'no hay evidencia suficiente'.\n"
+    "3. Si el fragmento SÍ es del dominio pero los fragmentos recuperados no alcanzan para "
+    "sustentar una observación, dilo: 'no hay evidencia suficiente'.\n"
     "4. No inventes normas, páginas, cifras ni indicadores. No des asesoría legal definitiva.\n"
     "5. Sé breve, técnico y útil para un comité de revisión.\n"
     "6. Termina SIEMPRE con 'Requiere revisión humana.'\n\n"
-    "FORMATO DE RESPUESTA (obligatorio):\n"
+    "7. FORMATO DE RESPUESTA (obligatorio; solo si el fragmento es del dominio, ver regla 0):\n"
     "### Evaluación preliminar\n"
     "Riesgo general: Bajo / Medio / Alto\n\n"
     "### Señales de riesgo identificadas\n"
@@ -196,8 +202,17 @@ def analyze(
     # 5. Citations
     citations = build_citations(grounding["sentences"], retrieved_chunks)
 
+    # Si hay refusal, el `answer` visible se reemplaza por el mensaje de
+    # refusal determinista. No confiamos en que el LLM haya obedecido la
+    # regla 0 del SYSTEM_PROMPT (a veces rellena el formato de auditoría
+    # igual, p. ej. "Riesgo: Bajo" para una pregunta fuera de dominio, lo
+    # cual se lee como un veredicto limpio en vez de un refusal). El texto
+    # crudo del modelo queda disponible en `raw_answer` para diagnóstico.
+    final_answer = refusal if refusal else answer
+
     return {
-        "answer": answer,
+        "answer": final_answer,
+        "raw_answer": answer,
         "sentences": [
             {"text": s["text"], "supported": s["supported"]}
             for s in grounding["sentences"]

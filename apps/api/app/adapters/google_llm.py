@@ -15,7 +15,8 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Callable, List, Dict, Optional
+from types import SimpleNamespace
+from typing import Any, Callable, List, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,37 @@ def _build_user_prompt(query: str, chunks: List[Dict]) -> str:
 
 
 def _truthy(value: str) -> bool:
-    return value.strip().lower() in ("1", "true", "yes", "on")
+    return str(value or "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def _import_google_genai() -> Tuple[Any, Any]:
+    """Import google-genai SDK; extracted so tests can patch it."""
+    from google import genai  # type: ignore
+    from google.genai import types as genai_types  # type: ignore
+    return genai, genai_types
+
+
+def _build_generation_config(
+    system_instruction: str,
+    max_output_tokens: int,
+    temperature: float,
+    genai_types: Any,
+) -> Any:
+    """Build a config object compatible with the injected client."""
+    if genai_types is not None:
+        return genai_types.GenerateContentConfig(
+            system_instruction=system_instruction,
+            max_output_tokens=max_output_tokens,
+            temperature=temperature,
+            # Sin thinking: salida de auditor determinista; evita que
+            # los tokens de razonamiento consuman max_output_tokens.
+            thinking_config=genai_types.ThinkingConfig(thinking_budget=0),
+        )
+    return SimpleNamespace(
+        system_instruction=system_instruction,
+        max_output_tokens=max_output_tokens,
+        temperature=temperature,
+    )
 
 
 def make_google_generate_fn(
@@ -52,6 +83,8 @@ def make_google_generate_fn(
     use_vertex: Optional[bool] = None,
     project: str = "",
     location: str = "",
+    client: Optional[Any] = None,
+    strict: bool = False,
 ) -> Callable[[str, List[Dict], str], str]:
     """Build a generate_fn backed by Google Gemini (SDK google-genai).
 
@@ -61,8 +94,18 @@ def make_google_generate_fn(
       GOOGLE_GENAI_USE_VERTEXAI env.
     - API key (AI Studio): GOOGLE_API_KEY / GEMINI_API_KEY.
 
+    Parameters
+    ----------
+    client:
+        Optional pre-built google-genai client (or fake). When provided,
+        auth discovery is skipped and this client is used directly.
+    strict:
+        If True, any SDK/import error, missing auth, API exception or empty
+        response raises a controlled RuntimeError instead of falling back to
+        the safe stub. Credentials are never included in error messages.
+
     Falls back to a deterministic stub if google-genai is not installed
-    or no auth route is configured.
+    or no auth route is configured (and strict=False).
     """
     api_key = (
         api_key
@@ -74,44 +117,76 @@ def make_google_generate_fn(
     project = project or os.environ.get("GOOGLE_CLOUD_PROJECT", "")
     location = location or os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
 
-    try:
-        from google import genai  # type: ignore
-        from google.genai import types as genai_types  # type: ignore
-    except Exception:
-        logger.warning("google-genai no instalado; usando stub.")
-        return _stub_generate_fn(reason="google-genai no instalado")
+    genai_types: Any = None
+    resolved_client = client
+    if resolved_client is None:
+        try:
+            genai, genai_types = _import_google_genai()
+        except Exception:
+            if strict:
+                raise RuntimeError(
+                    "El SDK de Google (google-genai) no está disponible. "
+                    "Requiere revisión humana."
+                )
+            logger.warning("google-genai no instalado; usando stub.")
+            return _stub_generate_fn(reason="google-genai no instalado")
 
-    if use_vertex and project:
-        client = genai.Client(vertexai=True, project=project, location=location)
-    elif api_key:
-        client = genai.Client(api_key=api_key)
-    else:
-        logger.warning("Sin auth Gemini (ni Vertex ni API key); usando stub.")
-        return _stub_generate_fn(reason="GOOGLE_API_KEY/Vertex no configurados")
+        if use_vertex and not project:
+            if strict:
+                raise RuntimeError(
+                    "Vertex AI requiere GOOGLE_CLOUD_PROJECT para usar Gemini. "
+                    "Requiere revisión humana."
+                )
+            logger.warning("Vertex AI configurado sin proyecto; usando stub.")
+            return _stub_generate_fn(reason="Vertex AI sin GOOGLE_CLOUD_PROJECT")
+
+        if use_vertex and project:
+            resolved_client = genai.Client(
+                vertexai=True, project=project, location=location
+            )
+        elif api_key:
+            resolved_client = genai.Client(api_key=api_key)
+        elif strict:
+            raise RuntimeError(
+                "Faltan credenciales de autenticación para Gemini "
+                "(API key o configuración Vertex). Requiere revisión humana."
+            )
+        else:
+            logger.warning("Sin auth Gemini (ni Vertex ni API key); usando stub.")
+            return _stub_generate_fn(reason="GOOGLE_API_KEY/Vertex no configurados")
 
     def _generate(query: str, chunks: List[Dict], system_prompt: str) -> str:
         user_prompt = _build_user_prompt(query, chunks)
+        config = _build_generation_config(
+            system_instruction=system_prompt,
+            max_output_tokens=max_output_tokens,
+            temperature=temperature,
+            genai_types=genai_types,
+        )
         try:
-            response = client.models.generate_content(
+            response = resolved_client.models.generate_content(
                 model=model_name,
                 contents=user_prompt,
-                config=genai_types.GenerateContentConfig(
-                    system_instruction=system_prompt,
-                    max_output_tokens=max_output_tokens,
-                    temperature=temperature,
-                    # Sin thinking: salida de auditor determinista; evita que
-                    # los tokens de razonamiento consuman max_output_tokens.
-                    thinking_config=genai_types.ThinkingConfig(thinking_budget=0),
-                ),
+                config=config,
             )
         except Exception as exc:
+            if strict:
+                logger.warning("Gemini falló en modo estricto: %s", exc)
+                raise RuntimeError(
+                    "Error al llamar a la API de Gemini. Requiere revisión humana."
+                )
             logger.warning("Gemini falló: %s", exc)
             return _REFUSAL_BY_API_ERROR.format(reason=str(exc))
 
         text = getattr(response, "text", None)
-        if not text:
+        if not text or not str(text).strip():
+            if strict:
+                raise RuntimeError(
+                    "La API de Gemini devolvió una respuesta vacía. "
+                    "Requiere revisión humana."
+                )
             return _REFUSAL_BY_API_ERROR.format(reason="respuesta vacía")
-        return text.strip()
+        return str(text).strip()
 
     return _generate
 

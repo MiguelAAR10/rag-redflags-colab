@@ -68,6 +68,12 @@ def test_code_cells_non_empty():
         assert "".join(c.get("source", [])).strip(), "celda de código vacía"
 
 
+def test_run_all_has_no_interactive_prompts():
+    src = _all_source()
+    assert "getpass(" not in src, "Run all no debe pedir tokens manualmente"
+    assert "files.upload(" not in src, "Run all no debe pedir archivos manualmente"
+
+
 def test_has_chat_section():
     src = _all_source()
     assert "## 12" in src, "falta la sección 12 (chat)"
@@ -78,3 +84,29 @@ def test_has_chat_section():
 def test_has_hnsw_benchmark():
     src = _all_source()
     assert "IndexHNSWFlat" in src, "falta el benchmark HNSW (sección 5.2)"
+
+
+def test_has_dual_rag_gemini_qdrant_optional_path():
+    src = _all_source()
+    for token in [
+        "RAG_BACKEND",
+        "RAG_GENERATOR",
+        "RUN_QDRANT_DEMO",
+        "RUN_DUAL_RAG_COMPARISON",
+        "retrieve(",
+        "compare_backends",
+        "validate_dual_evidence",
+        "make_google_generate_fn",
+        "standard_kb",
+        "GEMINI_API_KEY",
+        "QDRANT_URL",
+        "QDRANT_API_KEY",
+    ]:
+        assert token in src, f"falta contrato dual RAG: {token}"
+
+
+def test_default_path_remains_faiss_qwen():
+    src = _all_source()
+    assert 'RAG_BACKEND = os.getenv("RAG_BACKEND", "faiss")' in src
+    assert 'RAG_GENERATOR = os.getenv("RAG_GENERATOR", "qwen")' in src
+    assert "Qwen2.5-3B" in src

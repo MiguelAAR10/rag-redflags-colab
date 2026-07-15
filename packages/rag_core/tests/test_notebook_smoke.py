@@ -120,6 +120,14 @@ def test_run_all_has_no_interactive_prompts():
     assert "files.upload(" not in src, "Run all no debe pedir archivos manualmente"
 
 
+def test_pdf_fallback_uses_versioned_asset_and_validates_download():
+    src = _all_source()
+    assert "raw.githubusercontent.com/MiguelAAR10/rag-redflags-colab/" in src
+    assert 'PDF_ASSET_COMMIT = "873398bf5b57a4463c0041e8797d8a89473e237e"' in src
+    assert "rag-redflags-colab/raw/main" not in src
+    assert 'partial_path.read_bytes()[:5] == b"%PDF-"' in src
+
+
 def test_has_chat_section():
     src = _all_source()
     assert "## 12" in src, "falta la sección 12 (chat)"
@@ -165,3 +173,38 @@ def test_evaluation_separates_answer_quality_from_security_traps():
     assert "abstention_accuracy" in src
     assert "evaluate_security_case" in src
     assert "correction_match" in src
+
+
+def test_evaluation_displays_every_question_answer_evidence_and_metric():
+    src = _all_source()
+    for token in [
+        "evaluation_catalog",
+        "Pregunta {position}/15",
+        "Respuesta completa de Qwen",
+        "Evidencia recuperada (top 3)",
+        "Detalle de las 11 preguntas respondibles",
+        "Detalle de los 4 casos de seguridad",
+        "Faithfulness",
+        "Answer relevance",
+        "Context relevance",
+        "pd.DataFrame",
+    ]:
+        assert token in src, f"falta evidencia visible por pregunta: {token}"
+    assert "for position, item in enumerate(gold_all, start=1)" in src
+    assert "len(gold_all) == 15" in src
+
+
+def test_official_evaluation_fails_closed_and_exports_auditable_bundle():
+    src = _all_source()
+    for token in [
+        "require_qwen=True",
+        "generation_backend",
+        "fallback_count == 0",
+        "goldset-v2-qwen-neural-colab",
+        "git_commit",
+        "gpu_name",
+        "export_report_bundle",
+        "ragas-cases.csv",
+        "ragas-report.html",
+    ]:
+        assert token in src, f"falta trazabilidad de evaluación neural: {token}"

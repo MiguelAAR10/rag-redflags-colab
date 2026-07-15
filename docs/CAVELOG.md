@@ -2,6 +2,153 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-07-15 — Hardening de evidencia neural y reporte Colab
+
+### Decisión
+- La evaluación oficial invoca `analyze(..., require_qwen=True)`: si Qwen no carga, el notebook falla y nunca presenta el fallback determinista como evidencia neural.
+- `analyze()` expone `generation_backend` y `generation_error`; los usos inyectados y no estrictos siguen disponibles para tests y producto web.
+- Cada uno de los 15 casos registra backend, duración, grounding, evidencia y citas. El reporte agrega commit, Python, PyTorch, Transformers, GPU, modelo, cuantización y conteo de fallbacks.
+- La fase neural válida se identifica como `goldset-v2-qwen-neural-colab` y exige `fallback_count=0`.
+- La sección §9.2 exporta un bundle reproducible: `ragas-report.json`, `ragas-cases.csv` y `ragas-report.html` autocontenido.
+
+### Evidencia
+- Notebook JSON válido y celdas §9.2a–§9.2c compiladas.
+- Tests focalizados: **36 passed**.
+- Gate completo: `bash scripts/verify.sh` → **307 passed, 6 skipped**.
+
+### Riesgos
+- La ejecución neural real continúa pendiente: este entorno no sustituye una sesión Google autenticada con GPU T4.
+- La versión pública de `main` debe sincronizarse antes de abrir el enlace Colab; de lo contrario, el clone interno seguirá usando código anterior.
+
+## 2026-07-15 — Chat RAG aislado por documento y desplegado
+
+### Decisión
+- Cada chat se liga a la última versión de un `tdr_id`; el filtro documental ocurre antes del ranking y no existe conversación multiarchivo.
+- El retrieval es léxico e interpretable, devuelve hasta cinco fragmentos y usa páginas reales cuando la entrada es PDF. TXT, DOCX y texto pegado citan número de fragmento.
+- Gemini usa un prompt de lectura documental distinto del auditor OCP. El archivo se trata como dato y no puede introducir instrucciones al sistema.
+- Solo se conservan oraciones que superan el gate de grounding; sin coincidencia, generación o soporte suficiente se responde con abstención explícita.
+- El historial, las citas, la incertidumbre y próximos pasos se guardan por versión en SQLite. La limitación de persistencia entre redeploys permanece declarada.
+- El panel se muestra en cada dossier y también en archivos aún no analizados desde `/documentos`.
+
+### Evidencia
+- Backend focalizado: **25 passed**; aislamiento entre dos documentos, abstención sin llamada al LLM, cita de PDF con página y contrato HTTP.
+- Gate completo: `bash scripts/verify.sh` → **301 passed, 6 skipped**.
+- Frontend: **5 Vitest passed**, ESLint, TypeScript y build Next.js verdes.
+- Cloud Run `tdr-api-00006-k5f`, 100 % del tráfico, desplegado con `migarias907@gmail.com`.
+- Vercel deployment `dpl_6EzrF1trqBhJjzq8kzL2oyJ8n5NR`, alias `https://tdr-risk-auditor.vercel.app`.
+- Prueba pública: pregunta sobre plazo → `ANSWER`, grounding 1.0, dos fragmentos del mismo archivo, historial 1/1 y revisión humana obligatoria.
+- Historial público sembrado con los tres `subject_demo`: Contraloría (20 chunks), PREDES (75) y PRONIED (107). Contraloría y PREDES respondieron con grounding 1.0 y páginas; PRONIED se abstuvo de forma segura.
+
+### Riesgos
+- SQLite y archivos subidos continúan siendo efímeros después de un redeploy de Cloud Run.
+- El retrieval léxico es conservador; preguntas conceptuales sin términos compartidos pueden abstenerse aunque un humano encuentre relación.
+- El chat ayuda a leer un archivo, pero no corrige por sí solo la falta de pares subject/gold para evaluar la calidad del scoring de riesgo.
+
+## 2026-07-15 — Activación jurídica observable y página pública de evidencia
+
+### Decisión
+- La activación del corpus se prueba con una matriz versionada de seis casos: cuatro recuperaciones positivas (Ley 30225/Ley 32069) y dos abstenciones (score bajo/fecha ausente).
+- El retrieval jurídico filtra tanto por régimen como por `valid_from`/`valid_to`. La precisión declarada es `regime_window`; no se afirma vigencia histórica exacta por artículo.
+- El dossier conserva decisión, razón, umbral y top-3 de candidatos aun si el gate se abstiene. Sin fecha no mezcla regímenes.
+- Se publica `/evidencia` como artefacto explicativo reproducible; el JSON se genera desde los 1.838 chunks reales, no desde cifras escritas a mano.
+- Review-Architect mantiene `PASS` para MVP académico/demo y sube la rúbrica a 38/45; no aprueba uso jurídico o de auditoría productivo.
+
+### Evidencia
+- `python3 scripts/evaluate_legal_activation.py` → **PASS 6/6**, 5 fuentes registradas, 4 activas, 914 chunks Ley 30225 y 924 Ley 32069.
+- Gate completo: `bash scripts/verify.sh` → **295 passed, 6 skipped**.
+- Frontend: **2 Vitest passed**, TypeScript y build Next.js verdes; `/evidencia` prerenderizada.
+- Vercel producción: `https://tdr-risk-auditor.vercel.app/evidencia` y `/legal-activation-report.json` → HTTP 200; deployment `dpl_DSqkQoH6FqiibxipFQvAfH7b3uTx`.
+- Smoke productivo contra el backend existente: **PASS**, riesgo Medio, grounding 1.0, 1 hallazgo aceptado, revisión humana obligatoria.
+- Review: `progress/reviews/2026-07-15-review-architect-legal-activation.md`.
+
+### Riesgos
+- Cloud Run no pudo recibir el nuevo contrato top-3: la cuenta activa perdió `run.services.get` en `rag-redflags-v2`. El API existente sigue saludable y el smoke pasó; falta restaurar IAM y desplegar.
+- La página pública sí demuestra el retrieval jurídico real, pero los dossiers productivos seguirán usando la revisión anterior hasta ese redeploy.
+- Persisten las brechas declaradas de recall OCP multiseñal, CORS/autenticación/cuotas, SQLite efímera y freshness jurídico.
+
+## 2026-07-15 — Review-Architect y validación E2E reproducible de Finding V2
+
+### Decisión
+- Se adopta un gate de dos niveles: integración HTTP hermética con colaboradores remotos sustituidos en sus fronteras y smoke productivo explícito contra Vercel/Cloud Run.
+- La integración atraviesa `upload → detail → analyze → run → dossier`; ya no llama directamente al orquestador y valida una evidencia jurídica positiva bajo Ley 30225.
+- El smoke productivo exige `--allow-write`, crea un único caso sintético y comprueba invariantes estructurales, no texto exacto del LLM.
+- El canario productivo usa una sola conducta calibrada. La evaluación multiseñal se mantiene separada: no se relaja el EvidenceCritic para ocultar fallos de recall.
+- Review-Architect emite `PASS` solo para MVP académico/demo, no para uso productivo de auditoría.
+
+### Evidencia
+- Focused gate: **24 passed** para pipeline, critic y corpus legal.
+- Primer E2E multiseñal: infraestructura y grounding 1.0, pero 0/3 señales aceptadas porque el retrieval no aportó los códigos OCP exactos; el critic rechazó correctamente las tres.
+- E2E canario productivo: `PASS`, TDR #2/run #2, riesgo Medio, grounding 1.0, 1 hallazgo aceptado, fecha `2024-03-15`, revisión humana obligatoria y abstención jurídica explícita.
+- Gate completo: `bash scripts/verify.sh` → **289 passed, 6 skipped**.
+- Review y rúbrica: `progress/reviews/2026-07-15-review-architect-e2e-v2.md`, **34/45**.
+
+### Riesgos
+- Un documento multiseñal puede sufrir dilución semántica con consulta única y `top-k=5`; falta un gold específico para medir recall por señal.
+- Producción no persiste los candidatos/score de retrieval en el dossier, lo que limita observabilidad.
+- CORS `*`, API sin autenticación/cuotas, ejecución síncrona y SQLite efímera son aceptables solo dentro del alcance demo declarado.
+
+## 2026-07-15 — Legal Grounding V2: corpus oficial, Finding V2 y demos sin fuga
+
+### Decisión
+- Se separan cuatro colecciones conceptuales: metodología OCP, corpus jurídico, documento sujeto y gold de evaluación. Las resoluciones del Tribunal son referencias de evaluación y nunca se presentan como TDR para analizar.
+- El corpus jurídico incorpora cinco PDF oficiales OECE/OSCE: Ley 30225 y reglamento, línea de tiempo del régimen, Ley 32069 y reglamento. El manifiesto conserva URL oficial, SHA-256, vigencia y nota de aplicabilidad.
+- La recuperación jurídica enruta por fecha del procedimiento: hasta 2025-04-21 usa `LEY_30225`; desde 2025-04-22 usa `LEY_32069`. Sin fecha explícita o sin score suficiente, se abstiene y muestra `no hay evidencia jurídica suficiente`.
+- Finding V2 separa hecho literal del documento, criterio OCP y norma candidata. Prioridad de revisión y confianza de evidencia son dimensiones distintas; toda señal exige revisión humana.
+- EvidenceCritic exige cita literal, código OCP exacto y prerrequisitos semánticos para indicadores confundibles. En especial, R018 (una oferta recibida) no se sustituye por R035 (otras ofertas descalificadas).
+- Cloud Run incluye solo el manifiesto y 1.838 chunks procesados; los PDF originales no inflan la imagen. Vercel explica las tres capas y distingue demos exploratorias de referencias de evaluación.
+
+### Evidencia
+- Corpus: 5/5 PDF con firma `%PDF-`, hash verificado, 1.838 chunks jurídicos con metadata temporal.
+- Gate completo: `bash scripts/verify.sh` → **289 passed, 6 skipped**.
+- Frontend: Vitest, ESLint y build Next.js verdes; producción disponible en `https://tdr-risk-auditor.vercel.app`.
+- Backend: Cloud Run `tdr-api-00004-482`, 100 % del tráfico; `/health` HTTP 200 en `https://tdr-api-x42sfxhyha-uc.a.run.app`.
+- E2E público sintético con fecha `2024-03-15`: R014 sobrevivió con cita literal; la señal de oferente único se rechazó al faltar R018; R035 no se usó como reemplazo; la capa jurídica se abstuvo de forma explícita.
+- Notebook JSON válido, smoke verde y nueva sección explicativa de corpus jurídico temporal con comparación entre regímenes.
+
+### Riesgos
+- La norma recuperada es fundamento candidato, no dictamen jurídico; debe contrastarse con expediente, modificaciones y fuentes oficiales vigentes.
+- Los tres expedientes del Tribunal siguen bloqueados como gold hasta disponer de sus bases/TDR originales; no deben usarse como input sujeto.
+- Cloud Run conserva SQLite en `/tmp`, por lo que el historial visible se reinicia al desplegar; Qdrant y el corpus empaquetado no dependen de esa metadata.
+- La evidencia neural definitiva de las 15 preguntas RAGAS aún requiere `Run all` en Colab T4 autenticado.
+
+## 2026-07-15 — Evaluación RAGAS visible y explicable por pregunta en Colab
+
+### Decisión
+- Se conserva el gold set canónico de **15 preguntas**: 11 respondibles y 4 casos de seguridad. No se copia el set de 10 preguntas del notebook externo porque sus trampas mostraban respuestas/citas incorrectas.
+- La sección §9.2 se divide en tres celdas: catálogo completo, ejecución detallada de los 15 casos y resumen persistente de métricas/seguridad.
+- Cada pregunta muestra consulta, comportamiento esperado, respuesta completa de Qwen, estado, razón de abstención, grounding ratio, top 3 de evidencia recuperada y citas únicas.
+- Las 11 respondibles muestran faithfulness, answer relevance y context relevance por fila; los 4 casos de seguridad muestran estado/razón esperados y observados, corrección de premisa y fuga de citas.
+- Las tablas usan `pandas.DataFrame`/`Styler` solo para presentación; el cálculo continúa en `packages/evals/ragas_metrics.py` y el reporte JSON conserva respuestas y evidencia.
+
+### Evidencia
+- Notebook válido: `python3 -m json.tool notebooks/redflags_rag_colab.ipynb` → exit 0.
+- Las tres nuevas celdas §9.2 compilan sin errores de sintaxis.
+- Smoke del notebook: **15 passed**.
+- Gate completo: `bash scripts/verify.sh` → **278 passed, 6 skipped**.
+- Context7 consultado para el uso actual de `pandas.Styler.format` y `Styler.map` en notebooks.
+
+### Riesgos
+- Las salidas reales siguen pendientes de la corrida `Run all` en Colab T4; localmente solo se valida estructura, contrato y sintaxis.
+- La sección genera 15 respuestas con Qwen y puede ser la parte más larga de la ejecución; no debe editarse durante la corrida final.
+
+## 2026-07-15 — Fix de descarga del PDF en Colab (HTTP 404)
+
+### Decisión
+- El `HTTP Error 404` no provenía de `urllib`: `main` remoto (`4c1744e`) no contiene `data/raw/OCP2024-RedFlagProcurement-1.pdf`; el archivo sí está versionado en `873398b`.
+- La celda 2.1 descarga desde `raw.githubusercontent.com` fijando el commit que contiene el asset, escribe primero un `.part`, valida tamaño mayor a 1 MB y firma `%PDF-`, y solo entonces reemplaza la ruta final.
+- Se capturan `HTTPError` y `URLError` para producir un error accionable y eliminar descargas parciales.
+
+### Evidencia
+- URL raw fijada a `873398bf5b57a4463c0041e8797d8a89473e237e`: HTTP 200, `content-length: 2076804`.
+- `python3 -m json.tool notebooks/redflags_rag_colab.ipynb`: exit 0.
+- `python3 -m pytest -q packages/rag_core/tests/test_notebook_smoke.py`: **14 passed**.
+- Suite RAG bajo sandbox: **221 passed, 7 skipped, 7 failed**; los siete fallos son integraciones neuronales que intentan acceder a Hugging Face sin DNS/red.
+- `bash scripts/verify.sh` no concluyó: la suite web quedó bloqueada en `apps/api/tests/test_dedupe.py::test_same_version_returns_existing_run` y se interrumpió tras más de 11 minutos.
+
+### Riesgos
+- El gate completo no puede declararse verde en este entorno; debe repetirse en el entorno limpio/CI con dependencias opcionales correctamente omitidas o con acceso a los modelos.
+- `main` seguirá sin incluir el PDF hasta integrar/publicar `fix/colleague-ragas-ci`; el fallback fijado permite ejecutar la celda mientras tanto.
+
 ## 2026-07-14 — Integración selectiva del trabajo externo y hardening final
 
 ### Decisión

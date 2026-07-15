@@ -14,7 +14,14 @@ El PDF autorizado para el proyecto, los `.jsonl` procesados y el índice FAISS e
 2. **Runtime → Change runtime type → GPU (T4)**.
 3. Opcional: en **Secrets (🔑)** añade `HF_TOKEN`. Qwen2.5-3B es público y la celda no pide entrada manual si falta.
 4. **Runtime → Run all.** No edites celdas durante la corrida.
-5. Al terminar, descarga `progress/evidence/ragas-report.json` y reemplaza el baseline offline del repositorio.
+5. La sección 9.2 debe terminar con `Ejecución neural válida: 15/15 casos generados con Qwen, sin fallback.`
+6. Desde el panel **Files** descarga los tres artefactos generados en `progress/evidence/`:
+   - `ragas-report.json`: evidencia completa y metadatos reproducibles;
+   - `ragas-cases.csv`: una fila por cada una de las 15 preguntas;
+   - `ragas-report.html`: reporte humano autocontenido con respuestas y evidencia.
+7. Descarga también una copia del `.ipynb` ejecutado para conservar los outputs visibles y reemplaza el baseline offline del repositorio.
+
+La evaluación oficial usa `require_qwen=True`. Si Qwen no carga, no hay GPU o aparece un fallback, la corrida se detiene: ese fallo no debe ocultarse ni convertirse en un reporte neural.
 
 ### Modo predeterminado evaluado
 
@@ -51,3 +58,4 @@ Si faltan Secrets, esas celdas imprimen `SKIPPED` y el `Run all` base sigue func
 - Qwen2.5-3B y el grounding `embedding` dan ratios realistas en GPU (en local se usa fallback).
 - Gemini/Qdrant es una demostración cloud opcional; no reemplaza el requisito Qwen del notebook.
 - La ejecución T4 requiere una sesión Google autenticada; los tests locales validan estructura y ausencia de prompts, pero no sustituyen el `Run all` completo.
+- El JSON final debe indicar `phase=goldset-v2-qwen-neural-colab`, `generation_backend=qwen`, `fallback_count=0`, el modelo, GPU, commit y tiempos de ejecución.

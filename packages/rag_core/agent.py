@@ -31,11 +31,15 @@ SYSTEM_PROMPT = (
     "1. NUNCA afirmes corrupción, fraude ni ilegalidad comprobada. "
     "Usa exclusivamente: 'señal de riesgo', 'red flag potencial', "
     "'posible irregularidad a revisar'.\n"
-    "2. Cada observación DEBE sustentarse en: (a) evidencia del fragmento del usuario, "
-    "(b) el indicador/criterio recuperado de la guía, (c) página/referencia si está disponible.\n"
+    "2. Cada observación DEBE sustentarse en: (a) una cita LITERAL exacta del fragmento "
+    "del usuario, sin parafrasearla, (b) el indicador/criterio recuperado de la guía con "
+    "su código Rxxx exacto, (c) página/referencia si está disponible.\n"
     "3. Si el fragmento SÍ es del dominio pero los fragmentos recuperados no alcanzan para "
     "sustentar una observación, dilo: 'no hay evidencia suficiente'.\n"
     "4. No inventes normas, páginas, cifras ni indicadores. No des asesoría legal definitiva.\n"
+    "4.1. No confundas hechos parecidos: R018 exige una sola oferta recibida; R035 exige "
+    "que otras ofertas hayan sido descalificadas. Si el fragmento no contiene el hecho "
+    "mínimo del indicador, no lo cites.\n"
     "5. Sé breve, técnico y útil para un comité de revisión.\n"
     "6. Termina SIEMPRE con 'Requiere revisión humana.'\n\n"
     "7. FORMATO DE RESPUESTA (obligatorio; solo si el fragmento es del dominio, ver regla 0):\n"
@@ -45,7 +49,7 @@ SYSTEM_PROMPT = (
     "1. Señal: ...\n"
     "   - Evidencia del fragmento: ...\n"
     "   - Por qué importa: ...\n"
-    "   - Sustento recuperado: (Indicador: nombre, p.XX)\n\n"
+    "   - Sustento recuperado: (Indicador: nombre, código Rxxx, p.XX)\n\n"
     "### Qué faltaría validar\n- ...\n\n"
     "### Conclusión\n"
     "No se determina corrupción; son señales de riesgo potenciales. Requiere revisión humana."
@@ -166,6 +170,7 @@ def analyze(
     retrieved_chunks: Optional[List[Dict]] = None,
     grounding_method: str = "lexical",
     grounding_threshold: float = 0.25,
+    require_qwen: bool = False,
 ) -> Dict:
     """
     Full RAG pipeline: retrieve → rerank → generate → verify → cite.
@@ -178,6 +183,9 @@ def analyze(
         grounding_method: 'lexical' (default, deterministic), 'embedding'
             (E5 local) o 'gemini' (API multilingüe — producción web F18).
         grounding_threshold: minimum similarity to consider a sentence supported.
+        require_qwen: fail closed if the local Qwen generator cannot run. Use this
+            for the official Colab evaluation so a fallback cannot be reported as
+            neural evidence. It is incompatible with ``generate_fn`` injection.
 
     Returns:
         {
@@ -200,15 +208,30 @@ def analyze(
     if retrieved_chunks is None:
         retrieved_chunks = _retrieve_and_rerank(query, k_retrieve=20, n_rerank=5)
 
-    # 2. Generate answer
+    if require_qwen and generate_fn is not None:
+        raise ValueError("require_qwen=True no admite generate_fn inyectado")
+
+    # 2. Generate answer. Keep the backend in the result so evaluations can
+    # distinguish real Qwen output from deterministic/test fallbacks.
     if generate_fn is not None:
         answer = generate_fn(query, retrieved_chunks, SYSTEM_PROMPT)
+        generation_backend = "injected"
+        generation_error = ""
     else:
         try:
             answer = _qwen_generate(query, retrieved_chunks, SYSTEM_PROMPT)
+            generation_backend = "qwen"
+            generation_error = ""
         except Exception as exc:
+            if require_qwen:
+                raise RuntimeError(
+                    "La evaluación oficial requiere Qwen, pero el modelo no pudo "
+                    f"generar: {type(exc).__name__}: {exc}"
+                ) from exc
             logger.warning("Qwen no disponible (%s). Usando fallback simple.", exc)
             answer = _minimal_analysis(query, retrieved_chunks)
+            generation_backend = "fallback"
+            generation_error = f"{type(exc).__name__}: {exc}"
 
     # 3. Verify grounding
     sentences = split_sentences(answer)
@@ -254,6 +277,8 @@ def analyze(
         "grounding_ratio": grounding["grounding_ratio"],
         "refusal": refusal,
         "retrieved": retrieved_chunks,
+        "generation_backend": generation_backend,
+        "generation_error": generation_error,
     }
 
 

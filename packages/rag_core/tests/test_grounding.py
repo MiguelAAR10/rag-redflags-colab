@@ -196,6 +196,50 @@ class TestAgentUnit:
         assert "grounding_ratio" in result
         assert isinstance(result["grounding_ratio"], float)
         assert "retrieved" in result
+        assert result["generation_backend"] == "injected"
+        assert result["generation_error"] == ""
+
+    def test_require_qwen_rejects_injected_generator(self, dummy_chunks, fake_generate):
+        from packages.rag_core.agent import analyze
+
+        with pytest.raises(ValueError, match="no admite generate_fn"):
+            analyze(
+                "procurement budget issues",
+                generate_fn=fake_generate,
+                retrieved_chunks=dummy_chunks,
+                require_qwen=True,
+            )
+
+    def test_require_qwen_fails_closed_instead_of_using_fallback(
+        self, dummy_chunks, monkeypatch
+    ):
+        from packages.rag_core import agent
+
+        def broken_qwen(*args, **kwargs):
+            raise OSError("modelo no disponible")
+
+        monkeypatch.setattr(agent, "_qwen_generate", broken_qwen)
+        with pytest.raises(RuntimeError, match="requiere Qwen"):
+            agent.analyze(
+                "procurement budget issues",
+                retrieved_chunks=dummy_chunks,
+                require_qwen=True,
+            )
+
+    def test_non_strict_mode_reports_fallback(self, dummy_chunks, monkeypatch):
+        from packages.rag_core import agent
+
+        def broken_qwen(*args, **kwargs):
+            raise OSError("modelo no disponible")
+
+        monkeypatch.setattr(agent, "_qwen_generate", broken_qwen)
+        result = agent.analyze(
+            "procurement budget issues",
+            retrieved_chunks=dummy_chunks,
+        )
+
+        assert result["generation_backend"] == "fallback"
+        assert result["generation_error"].startswith("OSError:")
 
     def test_analyze_refusal(self, dummy_chunks, fake_generate_refusal):
         from packages.rag_core.agent import analyze

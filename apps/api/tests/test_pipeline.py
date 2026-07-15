@@ -19,6 +19,21 @@ from app.models import TdrVersion
 from app.services.intake import persist_intake
 
 
+FAKE_RETRIEVED_CHUNKS = [
+    {
+        "chunk_id": "test-r010",
+        "text": (
+            "El plazo de entrega es de 5 dias habiles. Los plazos muy cortos "
+            "pueden reducir la competencia y requieren revision humana."
+        ),
+        "indicator_name": "Bidding period too short",
+        "indicator_code": "R010",
+        "page_start": 10,
+        "page_end": 12,
+    }
+]
+
+
 @pytest.fixture
 def temp_upload_dir(tmp_path, monkeypatch):
     monkeypatch.setenv("UPLOAD_DIR", str(tmp_path / "uploads"))
@@ -26,6 +41,7 @@ def temp_upload_dir(tmp_path, monkeypatch):
     # Hermético: sin red aunque el .env local del dev diga qdrant/gemini
     monkeypatch.setenv("RAG_VECTOR_STORE", "faiss")
     monkeypatch.setenv("RAG_GROUNDING_METHOD", "lexical")
+    monkeypatch.setenv("RAG_INDEX_SUBJECT_DOCS", "false")
     reset_settings_cache()
     init_db()
     return tmp_path
@@ -68,7 +84,9 @@ def test_pipeline_end_to_end(temp_upload_dir):
         version_id = v.id
 
     run_id = queue_analysis(
-        tdr_id, generate_fn=make_fake_generate_fn()
+        tdr_id,
+        generate_fn=make_fake_generate_fn(),
+        retrieved_chunks=FAKE_RETRIEVED_CHUNKS,
     )
 
     # 3) Verify status

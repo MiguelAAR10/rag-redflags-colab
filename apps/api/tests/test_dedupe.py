@@ -15,6 +15,21 @@ from app.db import init_db
 from app.main import app
 
 
+FAKE_RETRIEVED_CHUNKS = [
+    {
+        "chunk_id": "test-r010",
+        "text": (
+            "El plazo de entrega es de 5 dias habiles. Los plazos muy cortos "
+            "pueden reducir la competencia y requieren revision humana."
+        ),
+        "indicator_name": "Bidding period too short",
+        "indicator_code": "R010",
+        "page_start": 10,
+        "page_end": 12,
+    }
+]
+
+
 @pytest.fixture
 def temp_env(tmp_path, monkeypatch):
     monkeypatch.setenv("UPLOAD_DIR", str(tmp_path / "uploads"))
@@ -22,6 +37,7 @@ def temp_env(tmp_path, monkeypatch):
     # Hermético: sin red aunque el .env local del dev diga qdrant/gemini
     monkeypatch.setenv("RAG_VECTOR_STORE", "faiss")
     monkeypatch.setenv("RAG_GROUNDING_METHOD", "lexical")
+    monkeypatch.setenv("RAG_INDEX_SUBJECT_DOCS", "false")
     reset_settings_cache()
     init_db()
     return tmp_path
@@ -44,8 +60,12 @@ def test_same_version_returns_existing_run(temp_env):
     tdr_id = _upload_tdr(client, text)
 
     fake = make_fake_generate_fn()
-    run1 = queue_analysis(tdr_id, generate_fn=fake)
-    run2 = queue_analysis(tdr_id, generate_fn=fake)
+    run1 = queue_analysis(
+        tdr_id, generate_fn=fake, retrieved_chunks=FAKE_RETRIEVED_CHUNKS
+    )
+    run2 = queue_analysis(
+        tdr_id, generate_fn=fake, retrieved_chunks=FAKE_RETRIEVED_CHUNKS
+    )
 
     assert run1 == run2, "misma versión completada no debe re-analizarse"
 
@@ -58,8 +78,15 @@ def test_force_creates_new_run(temp_env):
     tdr_id = _upload_tdr(client, text)
 
     fake = make_fake_generate_fn()
-    run1 = queue_analysis(tdr_id, generate_fn=fake)
-    run2 = queue_analysis(tdr_id, generate_fn=fake, force=True)
+    run1 = queue_analysis(
+        tdr_id, generate_fn=fake, retrieved_chunks=FAKE_RETRIEVED_CHUNKS
+    )
+    run2 = queue_analysis(
+        tdr_id,
+        generate_fn=fake,
+        retrieved_chunks=FAKE_RETRIEVED_CHUNKS,
+        force=True,
+    )
 
     assert run2 != run1, "force=True debe crear un run nuevo"
 
@@ -74,8 +101,14 @@ def test_failed_run_does_not_block_retry(temp_env):
     def broken_fn(query, chunks, system_prompt):
         raise RuntimeError("LLM caído")
 
-    run1 = queue_analysis(tdr_id, generate_fn=broken_fn)
+    run1 = queue_analysis(
+        tdr_id,
+        generate_fn=broken_fn,
+        retrieved_chunks=FAKE_RETRIEVED_CHUNKS,
+    )
 
     fake = make_fake_generate_fn()
-    run2 = queue_analysis(tdr_id, generate_fn=fake)
+    run2 = queue_analysis(
+        tdr_id, generate_fn=fake, retrieved_chunks=FAKE_RETRIEVED_CHUNKS
+    )
     assert run2 != run1, "un run fallido no debe bloquear el reintento"

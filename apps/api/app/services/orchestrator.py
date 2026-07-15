@@ -269,6 +269,7 @@ def queue_analysis(
     tdr_id: int,
     *,
     generate_fn: Optional[Callable[[str, List[Dict], str], str]] = None,
+    retrieved_chunks: Optional[List[Dict]] = None,
     force: bool = False,
 ) -> int:
     """Create a queued analysis_run and run it synchronously inline.
@@ -321,7 +322,11 @@ def queue_analysis(
         run_id = run.id
 
     try:
-        _execute_run(run_id, generate_fn=generate_fn)
+        _execute_run(
+            run_id,
+            generate_fn=generate_fn,
+            retrieved_chunks=retrieved_chunks,
+        )
     except Exception as exc:  # pragma: no cover - defensive
         logger.exception("Análisis %s falló", run_id)
         _mark_run_failed(run_id, error=f"{exc}\n{traceback.format_exc()}")
@@ -333,6 +338,7 @@ def _execute_run(
     run_id: int,
     *,
     generate_fn: Optional[Callable[[str, List[Dict], str], str]] = None,
+    retrieved_chunks: Optional[List[Dict]] = None,
 ) -> None:
     settings = get_settings()
     fn = generate_fn if generate_fn is not None else resolve_generate_fn()
@@ -359,8 +365,7 @@ def _execute_run(
         # backend no carga FAISS/E5 locales: embebe la query con Gemini y
         # consulta standard_kb en Qdrant Cloud. Con 'faiss' (default) el
         # retrieval lo hace agent.analyze() como en V1 (tests sin red).
-        retrieved_chunks = None
-        if settings.rag_vector_store == "qdrant":
+        if retrieved_chunks is None and settings.rag_vector_store == "qdrant":
             from packages.rag_core.vector_store import make_vector_store
 
             store = make_vector_store("qdrant")

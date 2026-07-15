@@ -31,7 +31,7 @@ bash scripts/verify.sh
 ```
 
 ## Resultado
-El notebook falla explícitamente si no dispone de GPU/Qwen, muestra el backend y duración por pregunta y exporta un bundle auditable de 15 casos.
+El notebook falla explícitamente si no dispone de GPU/Qwen, muestra el backend y duración por pregunta y exporta un bundle auditable de 15 casos. La versión quedó publicada en `main` (`f582c9b`).
 
 ## Evidencia
 - Notebook JSON válido; celdas 36–38 compiladas.
@@ -39,8 +39,7 @@ El notebook falla explícitamente si no dispone de GPU/Qwen, muestra el backend 
 - Gate completo: 307 passed, 6 skipped.
 
 ## Riesgos
-- `main` público aún debe sincronizarse.
 - Sólo una sesión Google autenticada con T4 puede generar los outputs neuronales definitivos.
 
 ## Próxima acción exacta
-Publicar los cambios del Colab en `main` y ejecutar `Run all` en T4 para descargar notebook ejecutado y bundle neural.
+Ejecutar `Run all` en T4 para descargar notebook ejecutado y bundle neural.

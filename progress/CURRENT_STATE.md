@@ -3,8 +3,8 @@
 _Actualizar al cerrar cada sesión._
 
 - **Fecha:** 2026-07-15
-- **Colab hardening neural:** la evaluación oficial falla si Qwen/GPU no están disponibles, registra backend/modelo/GPU/commit/tiempos y exporta JSON+CSV+HTML; gate **307 passed, 6 skipped**.
-- **Brecha Colab aún abierta:** publicar la versión local en `main` y ejecutar `Run all` autenticado en T4 para reemplazar el baseline offline con outputs neuronales reales.
+- **Colab hardening neural publicado:** `main` en `f582c9b`; la evaluación oficial falla si Qwen/GPU no están disponibles, registra backend/modelo/GPU/commit/tiempos y exporta JSON+CSV+HTML; gate **307 passed, 6 skipped**.
+- **Brecha Colab aún abierta:** ejecutar `Run all` autenticado en T4 para reemplazar el baseline offline con outputs neuronales reales.
 - **Fase actual:** chat RAG por documento implementado y desplegado. Cada archivo del historial ofrece preguntas aisladas, top de fragmentos, página/sección, grounding, abstención e historial por versión.
 - **Chat documental:** `GET/POST /api/tdrs/{tdr_id}/chat`; generación Gemini con prompt específico, retrieval sujeto determinista y guardrail contra instrucciones dentro del documento.
 - **Prueba pública del chat:** `ANSWER`, grounding 1.0, 2 citas del mismo archivo, historial 1/1 y `requires_human_review=true`.

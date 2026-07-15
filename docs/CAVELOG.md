@@ -15,10 +15,10 @@ Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arr
 - Notebook JSON válido y celdas §9.2a–§9.2c compiladas.
 - Tests focalizados: **36 passed**.
 - Gate completo: `bash scripts/verify.sh` → **307 passed, 6 skipped**.
+- Publicado en `main`: commit `f582c9b`; GitHub raw confirma 56 celdas, modo estricto Qwen y bundle de reportes; enlace Colab HTTP 200.
 
 ### Riesgos
 - La ejecución neural real continúa pendiente: este entorno no sustituye una sesión Google autenticada con GPU T4.
-- La versión pública de `main` debe sincronizarse antes de abrir el enlace Colab; de lo contrario, el clone interno seguirá usando código anterior.
 
 ## 2026-07-15 — Chat RAG aislado por documento y desplegado
 

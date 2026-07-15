@@ -4,17 +4,19 @@
 
 **V1.1 (cierre) — Correr «Run all» en Colab T4 y guardar el `ragas-report.json` definitivo.**
 
-- **Branch:** `v2` (repo Colab `MiguelAAR10/rag-redflags-colab` en `072198c`)
+- **Branch:** `main` después del cierre V2
 - **Owner:** Humano (requiere GPU de Colab; el agente no tiene)
 - **Base:** F17a/F17b/F18 completas. El repo Colab ya incluye PDF, datos
   procesados, índice FAISS, `ragas_metrics.py`, el notebook con los fixes de
-  Run all y el `agent.py` con refusal fuera-de-dominio corregido.
+  Run all, ruta opcional Gemini/Qdrant y el `agent.py` con refusal fuera-de-dominio corregido.
 
 ## Pasos exactos
 
 1. Abrir `notebooks/redflags_rag_colab.ipynb` en Google Colab.
 2. Runtime → *Change runtime type* → **GPU (T4)**.
-3. (Opcional) Colab Secrets: `HF_TOKEN`.
+3. (Opcional) Colab Secrets: `HF_TOKEN`; su ausencia ya no abre un prompt.
+   Para probar cloud opt-in: `GEMINI_API_KEY`/`GOOGLE_API_KEY`, `QDRANT_URL`,
+   `QDRANT_API_KEY`, y flags `RAG_GENERATOR=gemini`, `RAG_BACKEND=qdrant`.
 4. **Runtime → Run all.** No debe pedir NINGUNA intervención manual.
 5. Al terminar: descargar `progress/evidence/ragas-report.json` generado y
    copiarlo al repo principal (reemplaza el baseline offline).
@@ -32,12 +34,10 @@
 ## NO hacer
 
 - No editar celdas durante la corrida (invalida el "sin intervención").
-- No usar el `.env` del repo principal en Colab (credenciales V2 no
-  aplican; el notebook es autosuficiente con E5+FAISS+Qwen).
+- No pegar credenciales en celdas ni salidas. Usar Colab Secrets si se prueba
+  Gemini/Qdrant. El notebook base sigue autosuficiente con E5+FAISS+Qwen.
 
-## Después de esto (F19, agente)
+## Después de esto
 
-Intake multi-formato (PDF/DOCX/TXT) + reindexación inteligente por chunk
-(diff de hashes, upsert incremental a `subject_docs` en Qdrant,
-`change_events`). Spec 007 §F19. Para F21 el usuario debe crear la base
-Neon (free) y pegar `DATABASE_URL` en `.env`.
+Proyecto cerrado. Cualquier persistencia SQL gestionada, CI/CD automático o mejora de
+calidad de citas se trata como hardening posterior, no como requisito de la entrega.

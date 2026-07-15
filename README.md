@@ -3,7 +3,7 @@
 <!-- Coloca el logo de tu universidad en docs/assets/logo-universidad.png -->
 <img src="docs/assets/logo-universidad.png" alt="Logo Universidad" width="140"/>
 
-# 🚩 RAG-Scanner de *Red Flags* en Contratación Pública
+# 🚩 TDR Risk Auditor V2
 ### Detección de patrones de riesgo en contratos del Estado mediante *Retrieval-Augmented Generation* avanzado con Qwen
 
 **Proyecto Final — Maestría en Ciencia de Datos (Data Science)**
@@ -17,8 +17,11 @@
 | **Curso** | IA Generativa I |
 | **Docente** | PhD. Lucy Choque |
 | **Autor** | Miguel Arias ([@MiguelAAR10](https://github.com/MiguelAAR10)) |
-| **Fecha** | 31/05/2026 |
+| **Fecha** | 11/07/2026 |
 | **Repositorio** | https://github.com/MiguelAAR10/rag-redflags-colab |
+| **Aplicación web** | https://tdr-risk-auditor.vercel.app |
+| **API** | https://tdr-api-x42sfxhyha-uc.a.run.app |
+| **Notebook Colab** | https://colab.research.google.com/github/MiguelAAR10/rag-redflags-colab/blob/main/notebooks/redflags_rag_colab.ipynb |
 
 <!-- (Opcional) foto del autor o del equipo: docs/assets/autor.png -->
 
@@ -29,6 +32,8 @@
 ## Resumen (Abstract)
 
 Este proyecto diseña e implementa un sistema **RAG (Retrieval-Augmented Generation)** que funciona como un **escáner asistido de señales de riesgo** en documentos de contratación pública. A partir de la guía internacional **OCP — *Red Flags for Procurement*** (mapeada al estándar **OCDS**), el sistema indexa el conocimiento normativo, recupera los **indicadores de riesgo relevantes** ante un contrato/TDR, y genera **observaciones fundamentadas** con un modelo **Qwen2.5-3B-Instruct**, verificando que cada afirmación esté respaldada por la evidencia recuperada (*grounding*) y citando la fuente.
+
+La **V2** conserva el notebook académico autosuficiente (Qwen + E5 + FAISS en Colab T4) y añade una aplicación Next.js en Vercel conectada a una API FastAPI en Cloud Run. La plataforma consume los 299 embeddings de la guía en Qdrant Cloud, acepta PDF/DOCX/TXT/MD, usa Gemini 2.5 Flash vía Vertex AI y reindexa incrementalmente documentos subidos en `subject_docs`. La interfaz Streamlit original permanece disponible como respaldo.
 
 > [!IMPORTANT]
 > El sistema **no determina corrupción ni emite acusaciones**. Detecta **patrones de riesgo bajo criterios definidos** (cada *red flag* es un indicador con definición y fórmula en la guía OCP) y **siempre requiere revisión humana**. La salida habla de *"señales de riesgo potenciales"*, no de *"sospechas"* ni *"fraude"*.
@@ -85,6 +90,21 @@ flowchart LR
 ```
 
 **Modelos (HuggingFace):** `intfloat/multilingual-e5-base` (embeddings) · `BAAI/bge-reranker-v2-m3` (reranker) · `Qwen/Qwen2.5-3B-Instruct` (generación). [3][4][8]
+
+### 4.1 Arquitectura web V2
+
+```mermaid
+flowchart LR
+    U[Usuario] --> W[Next.js en Vercel]
+    W --> A[FastAPI en Cloud Run]
+    A --> O[Orquestador Python]
+    O --> V[Gemini 2.5 Flash en Vertex AI]
+    O --> Q[(Qdrant Cloud)]
+    Q --> K[standard_kb: 299 chunks OCP]
+    Q --> D[subject_docs: documentos incrementales]
+```
+
+El frontend consume la API JSON pública desplegada como `tdr-api` en Cloud Run. Streamlit sigue desplegado como respaldo y reutiliza el mismo orquestador. La metadata temporal usa SQLite en `/tmp`; Qdrant conserva los vectores, pero la lista de análisis puede reiniciarse al crear una nueva revisión de Cloud Run.
 
 ---
 
@@ -171,16 +191,29 @@ El notebook incluye un **chat (Gradio)** sobre `analyze()`: pegas un fragmento d
 ## 11. Cómo ejecutar (Google Colab)
 
 1. Abrir: `https://colab.research.google.com/github/MiguelAAR10/rag-redflags-colab/blob/main/notebooks/redflags_rag_colab.ipynb`
-2. *Runtime → GPU (T4)* · añadir secret **`HF_TOKEN`**.
-3. Subir el PDF de la guía OCP cuando lo pida.
-4. *Run all.* Detalle en [`docs/COLAB.md`](docs/COLAB.md).
+2. Iniciar sesión en Google y conectar un runtime **GPU T4**.
+3. Opcional: añadir `HF_TOKEN` en Colab Secrets. El modelo es público y la ausencia del token no bloquea `Run all`.
+4. Ejecutar *Runtime → Run all*. El PDF, los procesados y el índice ya están incluidos; no hay cargas manuales. Detalle en [`docs/COLAB.md`](docs/COLAB.md).
 
 ---
 
-## 12. Limitaciones y trabajo futuro
+## 12. Aplicación web V2
+
+- **Frontend principal:** [TDR Risk Auditor en Vercel](https://tdr-risk-auditor.vercel.app).
+- **API FastAPI:** [tdr-api en Cloud Run](https://tdr-api-x42sfxhyha-uc.a.run.app).
+- **Respaldo:** [interfaz Streamlit en Cloud Run](https://tdr-risk-auditor-x42sfxhyha-uc.a.run.app).
+- **Formatos:** PDF, DOCX, TXT y Markdown, hasta 20 MB.
+- **Flujo verificado:** texto de prueba → extracción/chunking → Qdrant + Vertex AI → dossier con 3 señales aceptadas, citas, `grounding=1.00` y nota de revisión humana.
+- **Health:** `/health` en la API y `/_stcore/health` en Streamlit devuelven HTTP 200.
+
+---
+
+## 13. Limitaciones y trabajo futuro
 
 - Corpus de ~100 pp (un PDF); `stage` inferido por heurística.
-- **Futuro:** GraphRAG de entidades (proveedor/comprador) para *red flags* relacionales; sub-índices FAISS por familia; comparación Qwen 3B vs 7B; MiniMax como evaluador externo.
+- La metadata web usa SQLite efímero en Cloud Run; un redeploy puede vaciar el historial visible. Los vectores en Qdrant sí persisten.
+- El `ragas-report.json` versionado sigue siendo el baseline offline hasta completar un `Run all` autenticado en Colab T4 y traer el reporte generado.
+- **Futuro:** persistencia SQL gestionada, GraphRAG de entidades, comparación Qwen 3B vs 7B y MiniMax como evaluador externo.
 
 ---
 

@@ -2,6 +2,64 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-07-14 — Promoción V2 a main y cierre de producción
+
+### Decisión
+- La experiencia principal pasa a ser Next.js en Vercel, consumiendo la API FastAPI `tdr-api` en Cloud Run. Streamlit permanece como respaldo operativo.
+- `v2` se promueve a `main` mediante merge no destructivo; no se reescribe la historia ni se usa force-push.
+- Los tests de orquestación aceptan chunks recuperados inyectables. Así validan dedupe, persistencia, scoring y dossier sin cargar el CrossEncoder real en CPU.
+- `.env*` queda excluido tanto de Git como del contexto de `gcloud run deploy --source`; los secretos permanecen fuera del repositorio y del artefacto de build.
+
+### Evidencia
+- Causa de la demora reproducida con `faulthandler`: `test_dedupe` ejecutaba `BAAI/bge-reranker-v2-m3` real dentro de PyTorch pese a usar un LLM falso.
+- Gate corregido: **258 passed, 6 skipped** en 35.19 s.
+- Frontend: `npm run lint && npm run build` OK; rutas `/`, `/analizar`, `/como-funciona` y `/documentos` prerenderizadas.
+- Producción: frontend `/` y `/analizar`, API `/health` y `/api/tdrs`, y Streamlit de respaldo responden HTTP 200.
+- `gcloud meta list-files-for-upload` confirma que `.env` no forma parte del upload.
+
+### Riesgos
+- Cloud Run presenta arranque en frío de aproximadamente 4-7 s tras inactividad.
+- SQLite en `/tmp` sigue siendo efímero; Qdrant conserva los vectores, pero un redeploy puede reiniciar el historial visible.
+- Las credenciales locales deben rotarse si fueron expuestas fuera del equipo; nunca se versionan.
+
+## 2026-07-11 — Notebook Colab dual RAG: FAISS/Qwen default + Gemini/Qdrant opt-in
+
+### Decisión
+- El notebook conserva la ruta académica obligatoria **FAISS/E5 + Qwen2.5-3B** como default (`RAG_BACKEND=faiss`, `RAG_GENERATOR=qwen`).
+- Se añade una ruta cloud opcional: `RAG_BACKEND=qdrant` consulta `standard_kb`; `RAG_GENERATOR=gemini` usa `gemini-2.5-flash` vía `google-genai` con `generate_fn` inyectable.
+- El PDF OCP sigue cargándose automáticamente desde el repo/fallback público; no se usa `files.upload()` ni `getpass()`.
+- Las señales del modo Gemini requieren doble evidencia: cita literal del contrato y evidencia OCP con `chunk_id`/`indicator_code`; si falta, quedan en revisión.
+
+### Evidencia
+- Nuevo helper hermético: `packages/rag_core/notebook_rag.py` (`retrieve`, `compare_backends`, `validate_dual_evidence`).
+- Qdrant hardened: normalización común de chunks, preflight de colección, soporte para vector anónimo o vector nombrado.
+- Gemini adapter hardened: cliente falso inyectable, `strict=True`, respuesta vacía/espacios como error controlado, fallback conservado en modo no estricto.
+- Tests focalizados: `python3 -m pytest packages/rag_core/tests/test_notebook_smoke.py apps/api/tests/test_google_llm.py packages/rag_core/tests/test_notebook_rag.py packages/rag_core/tests/test_vector_store.py -q` → **64 passed**.
+- Gate completo local: `bash scripts/verify.sh` → **258 passed, 6 skipped**.
+
+### Riesgos
+- La validación real `Run all` en Colab T4 sigue pendiente por autenticación humana.
+- La ruta Qdrant/Gemini es opt-in y solo puede validarse con Secrets (`GEMINI_API_KEY`/`GOOGLE_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`). No reemplaza Qwen.
+
+## 2026-07-11 — Cierre V2: Streamlit + Cloud Run y gate Colab
+
+### Decisión
+- Streamlit reemplaza Next.js/Vercel y ejecuta el orquestador en el mismo contenedor; no existe una URL backend separada.
+- Self-RAG sale del alcance final: Qdrant, grounding semántico, abstención y EvidenceCritic ya cubren los requisitos con menor latencia y complejidad.
+- La metadata web queda en SQLite efímero para la demo. Qdrant conserva `standard_kb` y `subject_docs`; la falta de persistencia del historial tras redeploy se declara como limitación.
+- `HF_TOKEN` pasa a ser opcional y no interactivo en el notebook para que `Run all` no se detenga en `getpass()`.
+
+### Evidencia
+- Cloud Run `tdr-risk-auditor-00001-6mq`: ready, 100% del tráfico, root y `/_stcore/health` HTTP 200.
+- Prueba browser real: texto de 449 caracteres → TDR #1 → run #1 → 3 señales aceptadas, 0 rechazadas, grounding 1.00 y dossier con revisión humana.
+- Colab abre correctamente desde GitHub y ofrece runtime T4, pero Google exige iniciar sesión antes de conectar; la corrida completa sigue pendiente del humano autenticado.
+- `test_notebook_smoke.py`: 8 passed, incluida regresión contra prompts interactivos.
+- `bash scripts/verify.sh`: 209 passed, 6 skipped; `git diff --check` y validación JSON del notebook/reporte sin errores.
+
+### Riesgos
+- El baseline `progress/evidence/ragas-report.json` aún no es la salida neural de un Run all T4.
+- La prueba E2E mostró que una señal de oferente único puede heredar una cita R003 de plazo corto; requiere revisión humana y es candidato a hardening de calidad de citas.
+
 ## 2026-06-30 — Fase 16: TDR Risk Review MVP multiagent-ready, desplegado end-to-end
 
 ### Decisión

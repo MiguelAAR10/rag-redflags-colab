@@ -1,4 +1,4 @@
-# Spec 007 — V2 Producción: Qdrant + Neon + Gemini 2.5 Flash + Cloud Run + Next.js
+# Spec 007 — V2 Producción: Qdrant + Gemini + Next.js/Vercel + Cloud Run
 
 - **Estado:** ACTIVA (V2). Complementa `specs/006-tdr-upload-review-mvp.md` (F16, base web) y
   NO sustituye a `specs/004-redflags-rag.md` (núcleo RAG académico).
@@ -10,41 +10,38 @@
 
 ## 1. Objetivo
 
-Llevar el TDR Risk Review (F16) a producción real, gratis en free tiers:
-subida multi-formato de documentos, embeddings y retrieval sobre una base vectorial
-gestionada, reindexación inteligente por versión, técnicas avanzadas nuevas
-(multi-query + Self-RAG), backend en Cloud Run y frontend Next.js en Vercel.
+Llevar el TDR Risk Review (F16) a una demo pública: subida multi-formato,
+retrieval en una base vectorial gestionada, reindexación inteligente por versión,
+Gemini vía Vertex AI, un frontend Next.js en Vercel y una API FastAPI en Cloud Run. Streamlit queda como respaldo. Se elimina Self-RAG
+del alcance final porque la base actual con grounding y EvidenceCritic cumple los requisitos.
 
 ## 2. Arquitectura
 
 ```
-Usuario ─▶ Frontend Next.js 14 + Tailwind + shadcn/ui (Vercel)
-              │  fetch /api/*
-              ▼
-          FastAPI (Cloud Run, contenedor liviano sin torch)
+Usuario ─▶ Next.js (Vercel) ─HTTP JSON─▶ FastAPI (Cloud Run)
+                                          │
+                                          ▼
+                                     Orquestador Python
           LLM: Gemini 2.5 Flash vía google-genai (F17a ✅)
           Embeddings de query: gemini-embedding-001 (dim 768)
               │
        ┌──────┴──────────┐
        ▼                 ▼
-  Neon Postgres      Qdrant Cloud (free 1GB)
-  (metadata:          · standard_kb  — guía OCP (299 chunks, poblada por script)
-   tdrs, versions,    · subject_docs — chunks de documentos subidos, versionados
-   runs, findings,
-   doc_chunks meta,
-   change_events)
+ SQLite /tmp         Qdrant Cloud (free 1GB)
+ metadata efímera    · standard_kb — guía OCP (299 chunks)
+                     · subject_docs — documentos subidos, versionados
 ```
 
 ### Decisiones y alternativas descartadas
 | Decisión | Elección | Descartado / por qué |
 |---|---|---|
 | Vector DB | Qdrant Cloud free (1 GB) | pgvector/Cloud SQL (costo+ops), Vertex Vector Search (caro) |
-| Metadata | Neon Postgres free | SQLite (FS efímero en Cloud Run), payload-only en Qdrant (pierde relaciones) |
+| Metadata | SQLite efímero para la demo final | Neon diferido: no fue necesario para demostrar el flujo; el historial visible puede reiniciarse en redeploy |
 | Embeddings | `gemini-embedding-001`, `output_dimensionality=768` | `text-embedding-004` (generación anterior, rumbo a deprecación); E5 en contenedor (torso ~2.5GB) — queda como plan B si el recall cae |
 | Población del índice | `scripts/build_qdrant_index.py` local | Celdas en notebook (riesgo Run all académico); Colab (innecesario sin GPU) |
-| Archivos originales | **No se guardan en MVP**; solo texto extraído en Neon | ⚠️ DEUDA TÉCNICA registrada: el original es evidencia de auditoría; upgrade GCS/R2 en hardening |
-| Reranker web | Apagado (RRF híbrido + multi-query) | bge-reranker CPU (lento); LLM-rerank opcional futuro |
-| Frontend | Next.js 14 + shadcn/ui en Vercel, **solo presentación** | Toda la lógica queda en FastAPI; Jinja2 actual queda como fallback demo |
+| Archivos originales | **No se guardan en MVP**; solo texto extraído en SQLite y chunks en Qdrant | Deuda técnica: el original es evidencia de auditoría; upgrade GCS/R2 en hardening |
+| Reranker web | Apagado; recuperación vectorial Qdrant con filtro por familia | bge-reranker CPU (lento); LLM-rerank opcional futuro |
+| Frontend | Next.js en Vercel; Streamlit como respaldo | Jinja/Streamlit como interfaz principal: menor separación entre producto y API |
 
 ### Regla invariante
 El modelo de embeddings del corpus y el de las queries deben ser EL MISMO
@@ -97,31 +94,24 @@ El modelo de embeddings del corpus y el de las queries deben ser EL MISMO
 - ✔️ Test: re-subir doc idéntico ⇒ 0 embeddings nuevos; doc con 1 párrafo cambiado ⇒
   solo sus chunks se re-embedean; `change_events` refleja added/removed/kept.
 
-### F20 — Multi-query + Self-RAG
-- `expand_queries(query, generate_fn, n=3)` + fusión con `_rrf_fusion` existente; opt-in
-  (`multi_query=False` default para no alterar V1).
-- `analyze_with_reflection(query, max_iters=2)`: grounding < umbral ⇒ reescritura de query
-  informada por oraciones no soportadas + retrieval ampliado ⇒ regenerar; si persiste ⇒
-  refusal actual. `reflection_trace` en dossier.
-- ✔️ RAGAS local re-corrido; comparación antes/después en `progress/evidence/`;
-  las 2 trampas del goldset siguen produciendo refusal.
+### F20 — Cancelada por simplificación
+- Sin Self-RAG. Se conserva retrieval Qdrant, grounding semántico, abstención determinista
+  y EvidenceCritic. Añadir reflexión no mejora un requisito evaluado y aumenta latencia/costo.
 
-### F21 — Deploy backend (proyecto GCP `rag-redflags-v2`, NUNCA `neoc-hr`)
-- Dockerfile sin torch; Cloud Run; Secret Manager (`GOOGLE_API_KEY`, `QDRANT_*`,
-  `DATABASE_URL`); `_execute_run` a BackgroundTasks; unificar `/health`;
-  CI/CD GitHub Actions → Artifact Registry → Cloud Run.
-- ✔️ URL pública: upload→análisis→dossier real; redeploy no pierde datos (Neon/Qdrant).
+### F21 ✅ — Deploy (proyecto GCP `rag-redflags-v2`, NUNCA `neoc-hr`)
+- Dockerfile sin torch; Cloud Run; Vertex AI por identidad del proyecto y secretos Qdrant.
+- URL pública y health verificados. Los vectores persisten en Qdrant; la metadata SQLite
+  no persiste entre revisiones y queda declarada como limitación.
 
-### F22 — Frontend Next.js (al final)
-- Next.js 14 + Tailwind + shadcn/ui en Vercel sobre `/api/*` existentes: upload
-  (drag&drop multi-formato), lista, detalle con run status (polling), dossier con señales
-  aceptadas/rechazadas + citas + grounding, feed de change_events. CORS en FastAPI.
-- ✔️ Flujo completo desde la URL de Vercel contra Cloud Run.
+### F22 ✅ — Frontend de producto + respaldo Streamlit
+- Next.js en Vercel: landing, análisis, documentos y explicación del sistema.
+- API FastAPI pública en Cloud Run con CORS para el frontend.
+- Streamlit permanece disponible como respaldo operativo.
+- Flujo público verificado contra Vertex AI + Qdrant.
 
 ## 5. Fuera de alcance (V2)
-SEACE/OSCE scraping (V2-B, requiere spike de datos — `docs/V2_VIGILANCIA_ACTIVA.md`),
-OCR de escaneados, auth multiusuario completa, LangGraph, ragas librería oficial,
-almacenamiento de archivos originales (deuda registrada).
+SEACE/OSCE scraping, OCR de escaneados, auth multiusuario, LangGraph, Self-RAG,
+RAGAS oficial y almacenamiento de archivos originales.
 
 ## 6. Riesgos
 | Riesgo | Mitigación |

@@ -2,15 +2,16 @@
 
 _Actualizar al cerrar cada sesión._
 
-- **Fecha:** 2026-07-11
-- **Fase actual:** rama `v2`. **F17a/F17b/F18 ✅ COMPLETAS** (spec 007): Gemini 2.5 Flash vía Vertex AI (billing GCP `rag-redflags-v2`; el prepago AI Studio de la cuenta está agotado — no usar API keys), Qdrant Cloud `standard_kb` con 299 puntos (gemini-embedding-001 @768; recall@5 0.718 = paridad con E5/FAISS), interfaz `VectorStore` (faiss|qdrant), grounding semántico multilingüe `method="gemini"` (umbral calibrado 0.72; resuelve respuesta-ES vs corpus-EN que con léxico daba refusal falso), refusal fuera-de-dominio forzado determinista (feedback revisor), dedupe por sha256 (spec 006). Gate: **187 passed, 6 skipped**. E2E producción verificado con evidencia en `progress/evidence/f18-*`.
-- **Repo Colab (`MiguelAAR10/rag-redflags-colab`) al día** (`072198c`): PDF + datos + índice + ragas_metrics.py + notebook con fixes de Run all (celda 2.1 automática, RAGAS léxico, Gradio no bloqueante, ficha unificada, trazabilidad honesta).
-- **Siguiente acción única:** usuario corre **Run all en Colab T4** (cierra V1.1) → luego F19 (multi-formato + reindexación inteligente).
-- Pendiente de usuario para F21: crear Neon Postgres (free) y pegar `DATABASE_URL`.
+- **Fecha:** 2026-07-14
+- **Fase actual:** promoción de V2 a `main` + cierre. El frontend principal Next.js está público en `https://tdr-risk-auditor.vercel.app`, la API FastAPI en `https://tdr-api-x42sfxhyha-uc.a.run.app` y Streamlit permanece como respaldo en `https://tdr-risk-auditor-x42sfxhyha-uc.a.run.app`. La API usa Vertex AI + Qdrant (`standard_kb` 299 puntos y `subject_docs` incremental).
+- **Repo Colab (`MiguelAAR10/rag-redflags-colab`) listo para publicar en `main`:** PDF + datos + índice + `ragas_metrics.py` + notebook con fixes de Run all (token opcional no interactivo, celda 2.1 automática, RAGAS léxico, Gradio no bloqueante, ficha unificada, trazabilidad honesta) y ruta opcional Gemini/Qdrant (`RAG_BACKEND=qdrant`, `RAG_GENERATOR=gemini`) sin romper FAISS/Qwen default.
+- **Siguiente acción única:** iniciar sesión en Google Colab y correr **Run all en T4** para reemplazar el baseline offline `ragas-report.json`. El agente abrió el notebook y confirmó que Colab exige autenticación para conectar T4.
+- **Limitación web declarada:** Qdrant persiste embeddings, pero la metadata usa SQLite en `/tmp` y puede perderse al desplegar una nueva revisión.
+- **Gate local de cierre:** `python3 -m pytest -q` → **258 passed, 6 skipped** en 35 s; `npm run lint && npm run build` → 4 rutas de producto + not-found compiladas correctamente.
 - Base funcional: F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅ · F13/F14/F15 evaluación + RAGAS local + trazabilidad ✅.
 - **F16 ✅**: TDR Risk Review MVP web desplegado localmente con FastAPI + SQLModel + Jinja2 + Tailwind CDN + Gemini. Contratos multiagente (intake/analysis/evidence/scoring/dossier) reutilizan `packages.rag_core.agent.analyze` con `generate_fn` inyectable. `bash scripts/verify.sh` → **169 passed, 6 skipped**.
 - Brecha restante: F15.3 Colab Run all + `ragas-report.json` neural del notebook académico.
-- Entregable: `notebooks/redflags_rag_colab.ipynb` con ficha técnica inicial, sección 9 de **RAGAS local**, tabla final de trazabilidad y secciones de instalación, dataset, chunking, embeddings, FAISS/HNSW, retrieval, rerank, Qwen, evaluación, conclusiones, LangChain, chat Gradio/MiniMax opcional.
+- Entregable: `notebooks/redflags_rag_colab.ipynb` con ficha técnica inicial, sección 9 de **RAGAS local**, tabla final de trazabilidad y secciones de instalación, dataset, chunking, embeddings, FAISS/HNSW, retrieval, rerank, Qwen, evaluación, conclusiones, LangChain, chat Gradio/MiniMax opcional, y demo cloud opcional Gemini/Qdrant.
 - **F9 (LangChain) ✅**: `packages/rag_core/langchain_rag.py` + gate (3 PASS, 2 skip). Embeddings LangChain en `data/index/langchain_faiss/`.
 - **FIX cache de modelos ✅**: `lru_cache` en loaders (anti-recarga/OOM). Notebook limpiado para Colab (token único, LangChain en 11.0, 11.2 opt-in, 10.2 resumen).
 - **F10 chat (Gradio) ✅** sobre analyze() (Qwen); MiniMax opcional; FAISS/HNSW con benchmark honesto. `verify.sh` = **104 passed, 6 skipped**.

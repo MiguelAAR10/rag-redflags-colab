@@ -1,7 +1,12 @@
 .env
+.env*
+!.env.example
 .venv/
 venv/
 node_modules/
+apps/web/.next/
+.gstack/
+*.log
 __pycache__/
 *.pyc
 .ipynb_checkpoints/

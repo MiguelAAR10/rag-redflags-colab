@@ -8,12 +8,21 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .db import init_db
 from .routes.tdrs import router as tdrs_router
 
 
 app = FastAPI(title="TDR Risk Review API")
+
+# El frontend Next.js (Vercel) consume /api/* directamente desde el navegador.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.on_event("startup")

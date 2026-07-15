@@ -1,0 +1,14 @@
+# Solo apps/, packages/ y .streamlit/ entran a la imagen (ver Dockerfile).
+.git
+.gstack
+.venv
+.env*
+node_modules
+data
+notebooks
+progress
+docs
+specs
+tasks
+apps/web/node_modules
+apps/web/.next

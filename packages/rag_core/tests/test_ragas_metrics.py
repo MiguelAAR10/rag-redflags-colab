@@ -27,6 +27,7 @@ import pytest
 REPO = Path(__file__).resolve().parents[3]
 GOLDSET = REPO / "data" / "eval" / "goldset.jsonl"
 ABSTENTION_SET = REPO / "data" / "eval" / "abstention_set.jsonl"
+RAGAS_REPORT = REPO / "progress" / "evidence" / "ragas-report.json"
 # Marcadores inequívocos (alineados con packages/evals/ragas_metrics.py).
 # "requiere revisión humana" NO es marcador de refusal: la regla 6 del
 # SYSTEM_PROMPT la exige en TODAS las respuestas válidas, así que usarla
@@ -481,6 +482,72 @@ class TestEvaluateRagas:
         ):
             assert key in out, f"falta clave {key!r} en salida de evaluate_ragas"
 
+    def test_preserves_traceability_fields(self):
+        from packages.evals.ragas_metrics import evaluate_ragas
+
+        result = evaluate_ragas([
+            {
+                "id": "gold-01",
+                "status": "ANSWER",
+                "question": "single bidder",
+                "answer": "single bidder R018",
+                "contexts": ["single bidder R018"],
+            }
+        ])
+        assert result["items"][0]["id"] == "gold-01"
+        assert result["items"][0]["status"] == "ANSWER"
+
+
+class TestSecurityEvaluation:
+    def test_false_premise_requires_correction_and_expected_citation(self):
+        from packages.evals.ragas_metrics import evaluate_security_case
+
+        expected = {
+            "id": "false-01",
+            "trap_type": "false_premise",
+            "expected_status": "ANSWER",
+            "expected_abstain_reason": "",
+            "relevant_indicator_codes": ["R018", "R019"],
+        }
+        unsafe = {
+            "status": "ANSWER",
+            "abstain_reason": "",
+            "answer": "Muchos oferentes confirman corrupción.",
+            "citations": [{"indicator_code": "R018"}],
+        }
+        safe = {
+            "status": "ANSWER",
+            "abstain_reason": "",
+            "answer": "La premisa es incorrecta: la señal es baja participación.",
+            "citations": [
+                {"indicator_code": "R018"},
+                {"indicator_code": "R019"},
+            ],
+        }
+        assert evaluate_security_case(expected, unsafe)["correction_match"] is False
+        assert evaluate_security_case(expected, safe)["correction_match"] is True
+        assert evaluate_security_case(expected, safe)["codes_match"] is True
+
+    def test_abstention_reports_citation_leakage(self):
+        from packages.evals.ragas_metrics import evaluate_security_case
+
+        row = evaluate_security_case(
+            {
+                "id": "ood-01",
+                "trap_type": "out_of_domain",
+                "expected_status": "ABSTAIN",
+                "expected_abstain_reason": "OUT_OF_DOMAIN",
+            },
+            {
+                "status": "ABSTAIN",
+                "abstain_reason": "OUT_OF_DOMAIN",
+                "answer": "No puedo responder.",
+                "citations": [{"indicator_code": "R001"}],
+            },
+        )
+        assert row["status_match"] is True
+        assert row["citation_leakage"] is True
+
 
 # --------------------------------------------------------------------------- #
 # Tests del gold set de evaluación (Fase 14)
@@ -515,7 +582,10 @@ class TestGoldsetEval:
 
     def test_traps_expect_refusal_answer(self):
         items = self._load()
-        traps = [it for it in items if it.get("trap") is True]
+        traps = [
+            it for it in items
+            if it.get("trap") is True and it.get("expected_status") == "ABSTAIN"
+        ]
         for t in traps:
             expected = (t.get("expected_answer") or "").lower()
             assert any(m in expected for m in _REFUSAL_MARKERS), (
@@ -526,6 +596,57 @@ class TestGoldsetEval:
         items = self._load()
         for it in items:
             assert it.get("query"), "todo ítem del goldset debe tener 'query'"
+
+    def test_goldset_v2_has_unique_ids_and_multilingual_coverage(self):
+        items = self._load()
+        ids = [it.get("id") for it in items]
+        assert all(ids), "todo ítem debe tener id estable"
+        assert len(ids) == len(set(ids)), "los ids del goldset deben ser únicos"
+        assert sum(it.get("language") == "es" for it in items) >= 4
+        assert sum(it.get("language") == "en" for it in items) >= 2
+
+    def test_answerable_items_have_reference_answer_pages_and_status(self):
+        items = self._load()
+        for it in items:
+            if it.get("trap"):
+                continue
+            assert it.get("expected_status") == "ANSWER"
+            assert it.get("expected_answer")
+            assert it.get("expected_pages")
+            assert "revisión humana" in it["expected_answer"].lower()
+
+    def test_goldset_covers_all_families_and_security_cases(self):
+        items = self._load()
+        family_counts = {}
+        for it in items:
+            for family in it.get("relevant_families", []):
+                family_counts[family] = family_counts.get(family, 0) + 1
+        for family in (
+            "planeacion",
+            "competencia/licitacion",
+            "adjudicacion",
+            "ejecucion/contrato",
+        ):
+            assert family_counts.get(family, 0) >= 2, f"cobertura insuficiente: {family}"
+
+        traps = [it for it in items if it.get("trap")]
+        assert sum(it.get("trap_type") == "out_of_domain" for it in traps) >= 2
+        assert any(it.get("trap_type") == "in_domain_insufficient_evidence" for it in traps)
+        assert any(it.get("trap_type") == "false_premise" for it in traps)
+
+    def test_versioned_report_matches_goldset_v2_contract(self):
+        items = self._load()
+        report = json.loads(RAGAS_REPORT.read_text(encoding="utf-8"))
+        answerable = [it for it in items if not it.get("trap")]
+        security = [it for it in items if it.get("trap")]
+
+        assert report["n"] == len(items)
+        assert report["n_answerable"] == len(answerable)
+        assert report["traps"] == len(security)
+        assert {row["id"] for row in report["items"]} == {
+            item["id"] for item in answerable
+        }
+        assert report["security"]["n"] == len(security)
 
 # --------------------------------------------------------------------------- #
 # Regresión del bug de refusal (auditoría externa 2026-07-11)
@@ -608,7 +729,10 @@ class TestAbstentionSet:
     def test_every_item_has_expected_status(self):
         for it in self._load():
             assert it.get("expected_status") in ("ABSTAIN", "ANSWER")
-            assert it.get("expected_abstain_reason")
+            if it["expected_status"] == "ABSTAIN":
+                assert it.get("expected_abstain_reason")
+            else:
+                assert not it.get("expected_abstain_reason")
             assert it.get("query") and it.get("rationale")
 
     def test_at_least_two_per_type(self):
@@ -617,6 +741,16 @@ class TestAbstentionSet:
         counts = Counter(it["trap_type"] for it in self._load())
         for trap_type, n in counts.items():
             assert n >= 2, f"{trap_type} necesita >=2 casos, tiene {n}"
+
+    def test_false_premises_require_safe_correction_with_evidence(self):
+        false_premises = [
+            it for it in self._load() if it["trap_type"] == "false_premise"
+        ]
+        for item in false_premises:
+            assert item["expected_status"] == "ANSWER"
+            assert item.get("expected_indicator_codes")
+            assert item.get("expected_pages")
+            assert item.get("expected_answer")
 
 
 class TestAnalyzeAbstentionTaxonomy:

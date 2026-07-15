@@ -6,12 +6,20 @@ JSON nbformat v4 válido, cubra las 10 secciones de la rúbrica e invoque las
 APIs reales de rag_core. Si el notebook no existe, hace skip.
 """
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
 
 REPO = Path(__file__).resolve().parents[3]
 NB = REPO / "notebooks" / "redflags_rag_colab.ipynb"
+COLAB_ARTIFACTS = {
+    "data/raw/OCP2024-RedFlagProcurement-1.pdf": 1_000_000,
+    "data/processed/redflags_units.jsonl": 100_000,
+    "data/processed/redflags_chunks.jsonl": 100_000,
+    "data/index/redflags_flatip.index": 500_000,
+    "data/index/chunk_id_mapping.json": 10_000,
+}
 
 
 def _load():
@@ -29,6 +37,38 @@ def test_notebook_is_valid_nbformat4():
     nb = _load()
     assert nb.get("nbformat") == 4
     assert isinstance(nb.get("cells"), list) and len(nb["cells"]) >= 10
+
+
+def test_required_colab_artifacts_are_versioned():
+    for relative_path, minimum_size in COLAB_ARTIFACTS.items():
+        artifact = REPO / relative_path
+        tracked = subprocess.run(
+            ["git", "ls-files", "--error-unmatch", relative_path],
+            cwd=REPO,
+            capture_output=True,
+            text=True,
+        )
+        assert tracked.returncode == 0, f"artefacto no versionado: {relative_path}"
+        assert artifact.is_file(), f"artefacto requerido por Run all ausente: {relative_path}"
+        assert artifact.stat().st_size >= minimum_size, (
+            f"artefacto vacio o incompleto: {relative_path}"
+        )
+
+
+def test_versioned_jsonl_artifacts_are_one_valid_object_per_line():
+    expected_counts = {
+        "data/processed/redflags_units.jsonl": 237,
+        "data/processed/redflags_chunks.jsonl": 299,
+    }
+    for relative_path, expected_count in expected_counts.items():
+        with (REPO / relative_path).open(encoding="utf-8") as jsonl_file:
+            lines = list(jsonl_file)
+        assert len(lines) == expected_count, f"conteo inesperado en {relative_path}"
+        for line_number, line in enumerate(lines, start=1):
+            try:
+                json.loads(line)
+            except json.JSONDecodeError as exc:
+                pytest.fail(f"JSONL invalido en {relative_path}:{line_number}: {exc}")
 
 
 def test_has_ten_rubric_sections():
@@ -58,6 +98,12 @@ def test_uses_qwen_and_safe_language():
     src = _all_source()
     assert "Qwen2.5-3B" in src
     assert "revisión humana" in src or "revision humana" in src
+    for unsafe_claim in (
+        "señal de riesgo de corrupción",
+        "prácticas fraudulentas",
+        "resultado de corrupción",
+    ):
+        assert unsafe_claim not in src.lower(), f"lenguaje inseguro: {unsafe_claim}"
 
 
 def test_code_cells_non_empty():
@@ -110,3 +156,12 @@ def test_default_path_remains_faiss_qwen():
     assert 'RAG_BACKEND = os.getenv("RAG_BACKEND", "faiss")' in src
     assert 'RAG_GENERATOR = os.getenv("RAG_GENERATOR", "qwen")' in src
     assert "Qwen2.5-3B" in src
+
+
+def test_evaluation_separates_answer_quality_from_security_traps():
+    src = _all_source()
+    assert "answerable_gold" in src
+    assert "security_gold" in src
+    assert "abstention_accuracy" in src
+    assert "evaluate_security_case" in src
+    assert "correction_match" in src

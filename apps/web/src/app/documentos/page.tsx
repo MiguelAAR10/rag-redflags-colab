@@ -17,7 +17,64 @@ import {
   Inbox,
   AlertCircle,
   Play,
+  Download,
 } from "lucide-react";
+
+type DemoDocument = {
+  filename: string;
+  title: string;
+  source: string;
+  description: string;
+};
+
+const DEMO_PDF_BASE =
+  "https://raw.githubusercontent.com/MiguelAAR10/rag-redflags-colab/main/data/samples";
+
+const DEMO_DOCUMENTS = [
+  {
+    filename: "tdr-tce-01626-2023-essalud-comite-nulo.pdf",
+    title: "EsSalud: conformación del comité",
+    source: "Tribunal de Contrataciones del Estado · Resolución 01626-2023",
+    description:
+      "Fuente pública con un hallazgo oficial documentado sobre la conformación del comité de selección.",
+  },
+  {
+    filename:
+      "tdr-tce-00132-2022-hospital-lambayeque-registro-sanitario.pdf",
+    title: "Hospital Lambayeque: registro sanitario",
+    source: "Tribunal de Contrataciones del Estado · Resolución 00132-2022",
+    description:
+      "Fuente pública para revisar requisitos de registro sanitario consignados en el procedimiento.",
+  },
+  {
+    filename: "tdr-tce-04185-2022-fospeme-certificado-incumplido.pdf",
+    title: "Fospeme: certificado presentado",
+    source: "Tribunal de Contrataciones del Estado · Resolución 04185-2022",
+    description:
+      "Fuente pública con un hallazgo oficial documentado sobre la evaluación de un certificado.",
+  },
+  {
+    filename: "tdr-contraloria-bid-seguimiento-contractual.pdf",
+    title: "Seguimiento contractual BID",
+    source: "Contraloría General de la República",
+    description:
+      "Documento público para explorar señales vinculadas al seguimiento de la ejecución contractual.",
+  },
+  {
+    filename: "tdr-predes-zona-segura-los-olivos.pdf",
+    title: "Zona Segura Los Olivos",
+    source: "PREDES",
+    description:
+      "Documento público de demostración para revisar condiciones y alcance de una contratación.",
+  },
+  {
+    filename: "tdr-pronied-infraestructura-educativa.pdf",
+    title: "Infraestructura educativa PRONIED",
+    source: "PRONIED",
+    description:
+      "Documento público de demostración para revisar requisitos de infraestructura educativa.",
+  },
+] satisfies readonly DemoDocument[];
 
 const RISK_DOT: Record<string, string> = {
   Alto: "bg-flag",
@@ -130,43 +187,98 @@ export default function DocumentosPage() {
   return (
     <div className="mx-auto max-w-4xl px-5 py-14">
       <h1 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-        Documentos analizados
+        Documentos de demostración
       </h1>
       <p className="mt-3 text-muted">
-        Historial de TDRs auditados en esta instancia. La metadata es efímera
-        entre despliegues (limitación declarada de la demo).
+        Descarga uno de los casos públicos para conocer el tipo de documento
+        que puede procesar la aplicación.
       </p>
 
-      <div className="mt-9 space-y-3">
-        {error && (
-          <p className="flex items-center gap-2 rounded-2xl border border-flag/40 bg-flag/10 p-4 text-sm text-flag-soft">
-            <AlertCircle className="size-4" /> {error}
-          </p>
-        )}
-        {!error && tdrs === null && (
-          <p className="flex items-center gap-2 text-sm text-muted">
-            <Loader2 className="size-4 animate-spin" /> Cargando documentos…
-          </p>
-        )}
-        {tdrs?.length === 0 && (
-          <div className="grid place-items-center rounded-2xl border border-dashed border-line bg-surface px-6 py-16 text-center">
-            <Inbox className="size-9 text-muted" strokeWidth={1.5} />
-            <p className="mt-4 font-medium">Aún no hay documentos</p>
-            <p className="mt-1 text-sm text-muted">
-              Sube el primero desde la página de análisis.
+      <p className="mt-6 rounded-2xl border border-amber/40 bg-amber/10 p-4 text-sm leading-relaxed text-fg">
+        {"Estas son fuentes públicas de demostración para revisar señales de riesgo potenciales. "}
+        Todo resultado requiere revisión humana.
+      </p>
+
+      <section className="mt-8 grid gap-4 sm:grid-cols-2">
+        {DEMO_DOCUMENTS.map((document) => (
+          <article
+            key={document.filename}
+            className="flex flex-col rounded-2xl border border-line bg-surface p-5"
+          >
+            <p className="font-mono text-[11px] leading-relaxed text-faint">
+              {document.filename}
             </p>
-            <Link
-              href="/analizar"
-              className="mt-5 rounded-lg bg-flag px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-flag-deep"
-            >
-              Auditar un TDR
-            </Link>
-          </div>
-        )}
-        {tdrs?.map((t) => (
-          <TdrRow key={t.id} tdr={t} />
+            <h2 className="mt-3 font-display text-xl font-semibold">
+              {document.title}
+            </h2>
+            <p className="mt-1 text-xs font-medium uppercase tracking-wide text-flag-soft">
+              {document.source}
+            </p>
+            <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
+              {document.description}
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a
+                href={`${DEMO_PDF_BASE}/${document.filename}`}
+                aria-label={`Descargar PDF: ${document.title}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface-2 px-3.5 py-2 text-sm font-medium text-fg transition hover:border-flag/40"
+              >
+                <Download className="size-4" /> Descargar PDF
+              </a>
+              <Link
+                href="/analizar"
+                aria-label={`Analizar documento: ${document.title}`}
+                className="inline-flex items-center rounded-lg bg-flag px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-flag-deep"
+              >
+                Analizar un documento
+              </Link>
+            </div>
+          </article>
         ))}
-      </div>
+      </section>
+
+      <section className="mt-14">
+        <h2 className="font-display text-2xl font-semibold tracking-tight">
+          Historial de documentos revisados
+        </h2>
+        <p className="mt-2 text-sm text-muted">
+          La metadata de esta instancia es efímera entre despliegues
+          (limitación declarada de la demo).
+        </p>
+
+        <div className="mt-6 space-y-3">
+          {error && (
+            <p className="flex items-center gap-2 rounded-2xl border border-flag/40 bg-flag/10 p-4 text-sm text-flag-soft">
+              <AlertCircle className="size-4" /> {error}
+            </p>
+          )}
+          {!error && tdrs === null && (
+            <p className="flex items-center gap-2 text-sm text-muted">
+              <Loader2 className="size-4 animate-spin" /> Cargando documentos…
+            </p>
+          )}
+          {tdrs?.length === 0 && (
+            <div className="grid place-items-center rounded-2xl border border-dashed border-line bg-surface px-6 py-16 text-center">
+              <Inbox className="size-9 text-muted" strokeWidth={1.5} />
+              <p className="mt-4 font-medium">Aún no hay documentos</p>
+              <p className="mt-1 text-sm text-muted">
+                Sube el primero desde la página de análisis.
+              </p>
+              <Link
+                href="/analizar"
+                className="mt-5 rounded-lg bg-flag px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-flag-deep"
+              >
+                Analizar un documento
+              </Link>
+            </div>
+          )}
+          {tdrs?.map((t) => (
+            <TdrRow key={t.id} tdr={t} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

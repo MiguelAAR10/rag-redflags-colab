@@ -179,6 +179,10 @@ class TestRerankerUnit:
 # --------------------------------------------------------------------------- #
 
 class TestRerankerIntegration:
+    @pytest.fixture(autouse=True)
+    def _require_sentence_transformers(self):
+        pytest.importorskip("sentence_transformers")
+
     def test_rerank_with_real_model(self):
         from packages.rag_core.rerankers import rerank
 

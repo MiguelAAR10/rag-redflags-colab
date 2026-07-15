@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "rag-agentic-harness"
 version = "0.1.0"
@@ -15,7 +19,10 @@ dependencies = [
   "sqlmodel",
   "google-genai",
   "qdrant-client",
-  "python-docx"
+  "python-docx",
+  "numpy",
+  "faiss-cpu",
+  "pymupdf"
 ]
 
 [project.optional-dependencies]
@@ -23,8 +30,17 @@ dev = [
   "pytest",
   "httpx"
 ]
+neural = [
+  "sentence-transformers",
+  "rank-bm25"
+]
 
 [tool.pytest.ini_options]
 testpaths = ["apps/api/tests", "packages"]
 pythonpath = ["apps/api", "apps/api/app", "."]
 addopts = "-ra"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["packages*", "apps.api.app*"]
+namespaces = true

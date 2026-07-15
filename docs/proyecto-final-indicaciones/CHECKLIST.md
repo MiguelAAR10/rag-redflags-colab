@@ -5,16 +5,16 @@ Este checklist deriva de `docs/proyecto-final-indicaciones/README.md` y debe gui
 ## Condición para aprobar
 
 - [ ] Notebook corre `Run all` en Google Colab sin intervención manual ni errores.
-- [ ] Corpus propio y real documentado.
-- [ ] Pipeline RAG completo: ingesta, chunking, embeddings, FAISS, top-k, generación.
-- [ ] Respuestas fundamentadas en contexto recuperado.
-- [ ] Mínimo 2 técnicas avanzadas implementadas y justificadas.
-- [ ] Set de evaluación de 10 a 15 preguntas.
-- [ ] Al menos 2 preguntas trampa fuera del corpus.
-- [ ] Métricas RAGAS implementadas o replicadas: faithfulness, answer relevance, context relevance.
-- [ ] Puntajes RAGAS reportados y comentados.
-- [ ] Primera celda del notebook contiene ficha técnica.
-- [ ] Notebook incluye tabla de trazabilidad requisito/técnica -> celda.
+- [x] Corpus propio y real documentado.
+- [x] Pipeline RAG completo: ingesta, chunking, embeddings, FAISS, top-k, generación.
+- [x] Respuestas fundamentadas en contexto recuperado.
+- [x] Mínimo 2 técnicas avanzadas implementadas y justificadas.
+- [x] Set de evaluación de 15 preguntas.
+- [x] Al menos 2 preguntas trampa fuera del corpus.
+- [x] Proxies léxicos locales inspirados en RAGAS: faithfulness, answer relevance, context relevance.
+- [x] Baseline offline reportado y comentado; pendiente reemplazo neural con Colab T4.
+- [x] Primera celda del notebook contiene ficha técnica.
+- [x] Notebook incluye tabla de trazabilidad requisito/técnica -> celda.
 - [ ] Presentación incluye problema, dominio, arquitectura, técnicas, resultados RAGAS y demo en vivo.
 
 ## Técnicas avanzadas candidatas ya alineadas al proyecto
@@ -24,9 +24,9 @@ Este checklist deriva de `docs/proyecto-final-indicaciones/README.md` y debe gui
 - [x] Routing condicional / triaje por familia de red flag.
 - [x] Interfaz Gradio como bonus.
 - [x] Benchmark comparativo FAISS Flat vs HNSW / híbrido como bonus.
-- [ ] RAGAS obligatorio pendiente de implementar/reportar formalmente.
-- [ ] Preguntas trampa explícitas pendientes de asegurar en el set de evaluación final.
-- [ ] Ficha técnica y tabla de trazabilidad pendientes de auditar contra notebook final.
+- [x] Proxies RAGAS locales implementados y etiquetados sin afirmar equivalencia con la librería oficial.
+- [x] Preguntas de seguridad explícitas aseguradas en el set de evaluación final.
+- [x] Ficha técnica y tabla de trazabilidad auditadas contra el notebook final.
 
 ## Prioridad de mejora
 

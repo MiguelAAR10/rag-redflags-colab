@@ -296,3 +296,37 @@ def test_loader_output_matches_schema():
     assert not missing, (
         f"La 1a unidad del loader no cumple el esquema; faltan claves: {sorted(missing)}"
     )
+
+
+def test_indicator_code_is_bound_to_title_not_cross_references() -> None:
+    from packages.rag_core.loaders import extract_indicator_code
+
+    # Code BEFORE title (PDF order): R003 appears on the title line.
+    page_info = {
+        "full_text": (
+            "R003\n"
+            "The submission period is too short\n"
+            "See also R014 - Short advertising period."
+        )
+    }
+    assert (
+        extract_indicator_code(
+            page_info, "The submission period is too short"
+        )
+        == "R003"
+    )
+
+    # Code AFTER title: avoids picking up R011/R055 cross-references.
+    page_info = {
+        "full_text": (
+            "Manipulation of procurement thresholds\n"
+            "R002\n"
+            "See also R011 and R055"
+        )
+    }
+    assert (
+        extract_indicator_code(
+            page_info, "Manipulation of procurement thresholds"
+        )
+        == "R002"
+    )

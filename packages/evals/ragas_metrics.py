@@ -327,6 +327,8 @@ def evaluate_ragas(items: List[Dict[str, Any]]) -> Dict[str, Any]:
 
         per_item.append(
             {
+                "id": raw.get("id"),
+                "status": raw.get("status"),
                 "question": question,
                 "answer": answer,
                 "contexts": contexts,
@@ -349,10 +351,89 @@ def evaluate_ragas(items: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
+_CORRECTION_MARKERS = (
+    "la premisa es incorrecta",
+    "the premise is incorrect",
+    "no es correcto",
+    "al contrario",
+)
+
+
+def _normalize_codes(codes: Iterable[Any]) -> set:
+    return {str(code).strip() for code in codes if code}
+
+
+def evaluate_security_case(expected: Dict, actual: Dict) -> Dict[str, Any]:
+    """Validate a security probe (trap) against its expected contract.
+
+    Returns a row used by the notebook §9 and the offline builder to
+    distinguish correct abstentions and correct false-premise corrections
+    from regressions that invent content or citations.
+    """
+    expected_status = expected.get("expected_status")
+    expected_reason = expected.get("expected_abstain_reason", "") or ""
+    trap_type = expected.get("trap_type", "")
+
+    actual_status = actual.get("status", "")
+    actual_reason = actual.get("abstain_reason", "") or ""
+    actual_codes = _normalize_codes(
+        citation.get("indicator_code") for citation in (actual.get("citations") or [])
+    )
+    actual_pages = {
+        int(page)
+        for citation in (actual.get("citations") or [])
+        for page in (
+            citation.get("page_start"),
+            citation.get("page"),
+        )
+        if isinstance(page, (int, float)) and page is not None
+    }
+
+    expected_codes = _normalize_codes(expected.get("relevant_indicator_codes", []))
+    expected_pages = {int(p) for p in (expected.get("expected_pages") or []) if p}
+
+    correction_match = True
+    if trap_type == "false_premise":
+        answer_text = _safe_text(actual.get("answer")).lower()
+        has_marker = any(
+            marker in answer_text for marker in _CORRECTION_MARKERS
+        )
+        codes_cover_expected = bool(not expected_codes or expected_codes & actual_codes)
+        correction_match = has_marker and codes_cover_expected
+
+    citation_leakage = (
+        actual_status == "ABSTAIN" and bool(actual_codes)
+    )
+
+    pages_match = True
+    if expected_pages:
+        pages_match = bool(actual_pages & expected_pages)
+
+    return {
+        "id": expected.get("id"),
+        "trap_type": trap_type,
+        "expected_status": expected_status,
+        "actual_status": actual_status,
+        "status_match": actual_status == expected_status,
+        "expected_abstain_reason": expected_reason,
+        "actual_abstain_reason": actual_reason,
+        "reason_match": actual_reason == expected_reason if expected_status == "ABSTAIN" else True,
+        "citation_leakage": citation_leakage,
+        "expected_indicator_codes": sorted(expected_codes),
+        "actual_indicator_codes": sorted(actual_codes),
+        "codes_match": bool(not expected_codes or expected_codes & actual_codes),
+        "expected_pages": sorted(expected_pages),
+        "actual_pages": sorted(actual_pages),
+        "pages_match": pages_match,
+        "correction_match": correction_match,
+    }
+
+
 __all__ = [
     "FAITHFULNESS_THRESHOLD",
     "faithfulness",
     "answer_relevance",
     "context_relevance",
     "evaluate_ragas",
+    "evaluate_security_case",
 ]

@@ -26,8 +26,9 @@
 ## Criterios de aceptación
 
 - [ ] Run all completo sin errores ni interacción manual.
-- [ ] `ragas-report.json` con `n=15`, `traps=2`, promedios en [0,1].
-- [ ] Las 2 trampas dan métricas ≈ 0 (refusal correcto).
+- [ ] `ragas-report.json` con `n=15`, `n_answerable=11`, `traps=4` y promedios en [0,1] calculados solo sobre preguntas respondibles.
+- [ ] Seguridad separada: 2 consultas fuera de dominio, 1 sin evidencia suficiente y 1 premisa falsa; reporta `abstention_accuracy`, `reason_accuracy` y fuga de citas.
+- [ ] Las abstenciones no emiten afirmaciones ni citas engañosas; la premisa falsa se corrige con R018/R019 y revisión humana.
 - [ ] Celda 8.2 (fuera de dominio) muestra el refusal limpio nuevo
       ("No puedo responder: ... fuera del dominio ...").
 

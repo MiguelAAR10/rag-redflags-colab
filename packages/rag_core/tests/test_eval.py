@@ -108,6 +108,34 @@ class TestMetricsUnit:
 
         assert mean_grounding_ratio([]) == 0.0
 
+    def test_evaluation_excludes_traps_without_relevant_codes(self):
+        from packages.evals.metrics import evaluate_on_goldset
+
+        gold = [
+            {"query": "single bidder", "relevant_indicator_codes": ["R018"]},
+            {"query": "cookie recipe", "relevant_indicator_codes": [], "trap": True},
+        ]
+        retrieved = [
+            {"retrieved_indicator_codes": ["R018"]},
+            {"retrieved_indicator_codes": ["R999"]},
+        ]
+
+        report = evaluate_on_goldset(gold, retrieved, ks=[1])
+
+        assert report["evaluated_items"] == 1
+        assert report["excluded_items"] == 1
+        assert report["recall_at_k"][1] == 1.0
+
+    def test_evaluation_rejects_missing_retrieval_rows(self):
+        from packages.evals.metrics import evaluate_on_goldset
+
+        gold = [
+            {"query": "q1", "relevant_indicator_codes": ["R001"]},
+            {"query": "q2", "relevant_indicator_codes": ["R002"]},
+        ]
+        with pytest.raises(ValueError, match="mismo número"):
+            evaluate_on_goldset(gold, [{"retrieved_indicator_codes": ["R001"]}])
+
 
 class TestGoldSet:
     def test_goldset_has_min_items(self, gold_items):
@@ -120,9 +148,9 @@ class TestGoldSet:
             assert "query" in item, f"Falta 'query' en {item}"
             assert "relevant_indicator_codes" in item, f"Falta 'relevant_indicator_codes' en {item}"
             assert isinstance(item["relevant_indicator_codes"], list)
-            # Las preguntas trampa (fuera del corpus, Fase 14) no tienen códigos
-            # relevantes por diseño: su comportamiento esperado es refusal.
-            if item.get("trap") is True:
+            # Las abstenciones no tienen códigos relevantes. Una premisa falsa
+            # puede esperar ANSWER si la respuesta la corrige con evidencia.
+            if item.get("expected_status") == "ABSTAIN":
                 assert len(item["relevant_indicator_codes"]) == 0
                 assert item.get("expected_answer"), "trampa sin expected_answer"
             else:

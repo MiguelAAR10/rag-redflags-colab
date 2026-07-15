@@ -2,6 +2,32 @@
 
 Bitácora de decisiones, avances y evidencia. (Append-only; lo más reciente arriba.)
 
+## 2026-07-14 — Integración selectiva del trabajo externo y hardening final
+
+### Decisión
+- No se integra el notebook de `trabajo-colega/` completo: reintroduce prompts manuales, elimina la evaluación RAGAS local y contiene outputs con abstenciones/citas incorrectas y lenguaje no apto para la presentación.
+- Se adaptan sus casos útiles al gold set canónico de 15 preguntas: 11 respondibles y 4 de seguridad (dos fuera de dominio, una sin evidencia suficiente y una premisa falsa), con IDs, idioma, códigos, páginas y respuestas esperadas.
+- Retrieval y proxies léxicos locales inspirados en RAGAS excluyen las trampas; seguridad se reporta aparte mediante exactitud de estado/razón y fuga de citas.
+- Se restauran y versionan los cinco artefactos necesarios para Colab `Run all`: PDF, unidades, chunks, índice FAISS y mapping.
+- La página `/documentos` ofrece los seis PDFs públicos de demostración mediante enlaces raw de GitHub y mantiene el catálogo disponible aunque falle el historial de la API.
+- CI instala Python, ejecuta pytest, instala Node, ejecuta Vitest, lint y build. Los tests neuronales se omiten explícitamente si no se instala el extra `neural`.
+
+### Evidencia
+- Gate local: `bash scripts/verify.sh` → **276 passed, 6 skipped**.
++- Entorno Python limpio: **266 passed, 16 skips opcionales** sin fallos.
++- Frontend: Vitest 1 passed, ESLint exit 0 y Next.js build correcto.
++- `evaluate_security_case` valida status, razón, fuga de citas, códigos/páginas esperados y corrección de premisas falsas; el reporte preserva `id` y `status` por fila.
++- `extract_indicator_code` elige el código de la misma línea del título y evita referencias cruzadas; los JSONL ahora se regeneran sin líneas partidas.
+- Entorno Python limpio: instalación editable exitosa y **260 passed, 16 skipped**, sin fallos; los skips corresponden a modelos/dependencias opcionales.
+- Frontend: Vitest 1 passed, ESLint exit 0 y Next.js build correcto.
+- Gold set: 15 IDs únicos, 4 consultas en español o más, cuatro familias cubiertas y oráculos de páginas/códigos.
+- Los seis PDFs tienen firma `%PDF-`; sus enlaces se validan después de publicar.
+
+### Riesgos
+- El reporte versionado sigue siendo baseline offline de contrato; la corrida neural definitiva requiere Colab T4 autenticado.
+- `trabajo-colega/` permanece local e ignorado como evidencia de revisión; no es fuente canónica ni se publica.
+- Cloud Run mantiene metadata SQLite efímera; no afecta las descargas estáticas de los PDFs.
+
 ## 2026-07-14 — Promoción V2 a main y cierre de producción
 
 ### Decisión

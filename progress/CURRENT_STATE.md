@@ -3,11 +3,11 @@
 _Actualizar al cerrar cada sesión._
 
 - **Fecha:** 2026-07-14
-- **Fase actual:** promoción de V2 a `main` + cierre. El frontend principal Next.js está público en `https://tdr-risk-auditor.vercel.app`, la API FastAPI en `https://tdr-api-x42sfxhyha-uc.a.run.app` y Streamlit permanece como respaldo en `https://tdr-risk-auditor-x42sfxhyha-uc.a.run.app`. La API usa Vertex AI + Qdrant (`standard_kb` 299 puntos y `subject_docs` incremental).
+- **Fase actual:** hardening final tras revisión del trabajo externo. Se restauraron los artefactos Colab que faltaban en `main`, se fortaleció CI, el gold set mantiene 15 preguntas con evaluación de seguridad separada y `/documentos` expone seis PDFs públicos descargables. El notebook externo no se integra completo por regresiones de reproducibilidad, evaluación y lenguaje.
 - **Repo Colab (`MiguelAAR10/rag-redflags-colab`) listo para publicar en `main`:** PDF + datos + índice + `ragas_metrics.py` + notebook con fixes de Run all (token opcional no interactivo, celda 2.1 automática, RAGAS léxico, Gradio no bloqueante, ficha unificada, trazabilidad honesta) y ruta opcional Gemini/Qdrant (`RAG_BACKEND=qdrant`, `RAG_GENERATOR=gemini`) sin romper FAISS/Qwen default.
-- **Siguiente acción única:** iniciar sesión en Google Colab y correr **Run all en T4** para reemplazar el baseline offline `ragas-report.json`. El agente abrió el notebook y confirmó que Colab exige autenticación para conectar T4.
+- **Siguiente acción única:** iniciar sesión en Google Colab y correr **Run all en T4** para reemplazar el baseline offline `ragas-report.json`. El reporte esperado conserva `n=15`, separa `n_answerable=11` y `traps=4`, e incluye métricas de seguridad.
 - **Limitación web declarada:** Qdrant persiste embeddings, pero la metadata usa SQLite en `/tmp` y puede perderse al desplegar una nueva revisión.
-- **Gate local de cierre:** `python3 -m pytest -q` → **258 passed, 6 skipped** en 35 s; `npm run lint && npm run build` → 4 rutas de producto + not-found compiladas correctamente.
+- **Gate local de cierre:** `bash scripts/verify.sh` → **276 passed, 6 skipped**; entorno Python limpio → **266 passed, 16 skips opcionales**; Vitest, lint y build Next.js verdes.
 - Base funcional: F0–F0.4 ✅ · F1.1–F7 ✅ · F8 notebook autorado + smoke gate ✅ · F9 LangChain ✅ · F10 chat Gradio ✅ · F11 `docs/PROYECTO.md` ✅ · F12 prompt auditor/Qwen 4-bit/MiniMax ✅ · F13/F14/F15 evaluación + RAGAS local + trazabilidad ✅.
 - **F16 ✅**: TDR Risk Review MVP web desplegado localmente con FastAPI + SQLModel + Jinja2 + Tailwind CDN + Gemini. Contratos multiagente (intake/analysis/evidence/scoring/dossier) reutilizan `packages.rag_core.agent.analyze` con `generate_fn` inyectable. `bash scripts/verify.sh` → **169 passed, 6 skipped**.
 - Brecha restante: F15.3 Colab Run all + `ragas-report.json` neural del notebook académico.

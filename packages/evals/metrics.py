@@ -90,12 +90,23 @@ def evaluate_on_goldset(
     if ks is None:
         ks = [3, 5, 10]
 
+    if len(gold_items) != len(retrieved_items):
+        raise ValueError(
+            "gold_items y retrieved_items deben tener el mismo número de "
+            f"filas (gold={len(gold_items)}, retrieved={len(retrieved_items)})"
+        )
+
+    evaluable_pairs = [
+        (gold, ret)
+        for gold, ret in zip(gold_items, retrieved_items)
+        if not gold.get("trap") and gold.get("relevant_indicator_codes")
+    ]
     recall = {}
     precision = {}
     for k in ks:
         recalls = []
         precs = []
-        for gold, ret in zip(gold_items, retrieved_items):
+        for gold, ret in evaluable_pairs:
             rel = gold.get("relevant_indicator_codes", [])
             ret_codes = ret.get("retrieved_indicator_codes", [])
             recalls.append(recall_at_k(ret_codes, rel, k))
@@ -106,7 +117,11 @@ def evaluate_on_goldset(
     return {
         "recall_at_k": recall,
         "precision_at_k": precision,
-        "mean_grounding_ratio": round(mean_grounding_ratio(retrieved_items), 4),
+        "mean_grounding_ratio": round(
+            mean_grounding_ratio([ret for _, ret in evaluable_pairs]), 4
+        ),
+        "evaluated_items": len(evaluable_pairs),
+        "excluded_items": len(gold_items) - len(evaluable_pairs),
     }
 
 

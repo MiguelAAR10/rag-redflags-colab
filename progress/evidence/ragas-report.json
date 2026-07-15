@@ -1,188 +1,246 @@
 {
-  "n": 15,
-  "mean_faithfulness": 0.8650406504065041,
-  "mean_answer_relevance": 0.33694805194805194,
-  "mean_context_relevance": 0.2044293240805589,
+  "mean_faithfulness": 0.0,
+  "mean_answer_relevance": 0.08074866310160428,
+  "mean_context_relevance": 0.19769961774190106,
   "items": [
     {
+      "id": "gold-v2-plan-en-01",
+      "status": null,
       "question": "The procurement planning documents were not published to the public.",
-      "answer": "Definition\nUnit of analysis\nType of red flag\nLow transparency\nStage\nR001 Planning documents not available\nBuyer\nSource\nBased on OECD’s Principles for Integrity in Public \nProcurement",
+      "answer": "La falta de publicación de documentos de planificación corresponde a la señal de riesgo potencial R001 (OCP, p.24). No prueba una irregularidad y requiere revisión humana.",
       "contexts": [
         "Definition\nUnit of analysis\nType of red flag\nLow transparency\nStage\nR001 Planning documents not available\nBuyer\nSource\nBased on OECD’s Principles for Integrity in Public \nProcurement"
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.625,
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
       "context_relevance": 0.3,
-      "trap": false
+      "expected_pages": [
+        24
+      ]
     },
     {
+      "id": "gold-v2-competition-en-01",
+      "status": null,
       "question": "A single bidder submitted a proposal for this contract.",
-      "answer": "Definition\nWhy is this a red flag? Definition\nWhy is this a red flag?",
+      "answer": "Un único postor puede activar R018 y debe compararse con R019 sobre baja participación (OCP, pp.41-42). Es una señal de riesgo potencial y requiere revisión humana.",
       "contexts": [
         "Definition\nWhy is this a red flag?",
         "Definition\nWhy is this a red flag?"
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.14285714285714285,
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
       "context_relevance": 0.5,
-      "trap": false
+      "expected_pages": [
+        41,
+        42
+      ]
     },
     {
+      "id": "gold-v2-deadline-en-01",
+      "status": null,
       "question": "The tender was advertised only 2 days before the submission deadline.",
-      "answer": "Definition\nWhy is this a red flag? Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “Shortened time span for bidding process” \nin Corruption in Public Procurement: Finding the Ri",
+      "answer": "Un plazo de dos días puede corresponder a R003/R014 sobre periodos de presentación demasiado cortos (OCP, pp.37-38). Requiere revisión humana.",
       "contexts": [
         "Definition\nWhy is this a red flag?",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “Shortened time span for bidd"
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “Shortened time span for bidding process” \nin Corruption in Public Procurement: Finding the Right \nIndicators, “Short submission period” in An Objective \nCorruption Risk Index Using Public Procurement Data, \n“Short or inadequate notice to bidders” in Guide \nto Combating Corruption & Fraud in Infrastructure \nDevelopment Projects, and “Deadline for submitting \nbids is very short” in Fraud in Public Procurement: A \ncollection of Red Flags and Best Practices."
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.4444444444444444,
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
       "context_relevance": 0.16,
-      "trap": false
+      "expected_pages": [
+        37,
+        38
+      ]
     },
     {
+      "id": "gold-v2-prices-en-01",
+      "status": null,
       "question": "Several bidders submitted identical bid prices in the tender.",
-      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Bidders having the same bid price” in Assessing the potential for detecting \ncollusion in Swedish public procurement ",
+      "answer": "Precios idénticos o múltiplos fijos pueden relacionarse con R028 y R023 (OCP, pp.46 y 51). Son señales de riesgo potenciales que requieren revisión humana.",
       "contexts": [
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Bidders having th",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Bidders having the same bid price” in Assessing the potential for detecting \ncollusion in Swedish public procurement and “Different companies include identical unit \nprices in their bid documents” in Fraud in Public Procurement: A collection of Red Flags \nand Best Practices.\nA contracting process is flagged if different tenderers submitted bids with the same price.\nThese tenderers are also flagged.\nFor bidders k and j bidding in the same procedure, the procedure is flagged if the bidders \nsubmit identical bid prices: \nR028i = 1 if bids/details/value/amountk,i = bids/details/value/amountj,i\nThis indicator is included in Cardinal.",
         "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage"
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.75,
-      "context_relevance": 0.2222222222222222,
-      "trap": false
-    },
-    {
-      "question": "The winning bid was disqualified after being the lowest price.",
-      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “The lowest bid is rejected almost inexplicably” in Fraud in Public \nProcurement: A collection of Red Flags and Best Practices, “",
-      "contexts": [
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “The lowest bid is rejected a",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “Excluding qualified bidders”"
-      ],
-      "faithfulness": 0.975609756097561,
-      "answer_relevance": 0.3333333333333333,
-      "context_relevance": 0.18,
-      "trap": false
-    },
-    {
-      "question": "The buyer used a non-competitive procedure without justification.",
-      "answer": "Definition\nWhy is this a red flag? Definition\nWhy is this a red flag?",
-      "contexts": [
-        "Definition\nWhy is this a red flag?",
-        "Definition\nWhy is this a red flag?"
-      ],
-      "faithfulness": 1.0,
+      "refusal": false,
+      "faithfulness": 0.0,
       "answer_relevance": 0.0,
+      "context_relevance": 0.2222222222222222,
+      "expected_pages": [
+        46,
+        51
+      ]
+    },
+    {
+      "id": "gold-v2-disqualification-en-01",
+      "status": null,
+      "question": "The winning bid was disqualified after being the lowest price.",
+      "answer": "La descalificación de la oferta más baja debe revisarse con R036 y R037 (OCP, pp.59-60), sin asumir una irregularidad. Requiere revisión humana.",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “The lowest bid is rejected almost inexplicably” in Fraud in Public \nProcurement: A collection of Red Flags and Best Practices, “Lowest bidder not \nselected” in Common Red Flags of Fraud and Corruption in Procurement, and “Award \nto other than lowest qualified bidder” in Guide to Combating Corruption & Fraud in \nInfrastructure Development Projects\nFor each procedure i that has one or more active awards:\n1. If tender/awardCriteria, filter procedures where tender/awardCriteria = \npriceOnly. If not, calculate this for all tenders with awards. \n2. Select procedures where there are one or more valid bids with amounts.\n3. Flag the procedure i if the lowest bid submitted MIN(bids/details/value/amount) \nis disqualified bids/details/status= disqualified\nThis indicator is included in Cardinal.",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on “Excluding qualified bidders” in Guide \nto Combating Corruption & Fraud in Infrastructure \nDevelopment Projects\nA contracting process is flagged if the reasons for \ndisqualification do not align with the award criteria and \nseem unjustified."
+      ],
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
+      "context_relevance": 0.18,
+      "expected_pages": [
+        59,
+        60
+      ]
+    },
+    {
+      "id": "gold-v2-threshold-es-01",
+      "status": null,
+      "question": "Una entidad dividió una compra de S/ 520 000 en seis órdenes de S/ 86 000 para quedar por debajo del umbral competitivo. ¿Qué señal de riesgo potencial corresponde?",
+      "answer": "La división de compras por debajo del umbral corresponde a R002, manipulación o fraccionamiento de umbrales (OCP, pp.25 y 34). No demuestra una irregularidad y requiere revisión humana.",
+      "contexts": [
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage"
+      ],
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.3,
       "context_relevance": 0.0,
-      "trap": false
+      "expected_pages": [
+        25,
+        34
+      ]
     },
     {
+      "id": "gold-v2-delivery-en-01",
+      "status": null,
       "question": "The contract delivery is delayed by 12 months and no penalty was applied.",
-      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nSource\nBased on “Failure to Meet Contract Specifications” in Guide to Combating Corruption \n& Fraud in Development Projects and “Contract share with sizeable delivery delays” in \nGovernance Risk Ass",
+      "answer": "El retraso prolongado debe contrastarse con R067 sobre incumplimiento de entrega (OCP, p.90) y con la documentación de penalidades. Requiere revisión humana.",
       "contexts": [
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nSource\nBased on “Failure to Meet Contract Specifications” in Guide to Combating Corruption \n& Frau"
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nSource\nBased on “Failure to Meet Contract Specifications” in Guide to Combating Corruption \n& Fraud in Development Projects and “Contract share with sizeable delivery delays” in \nGovernance Risk Assessment System (GRAS) Advanced Data Analytics for Detecting \nFraud, Corruption, and Collusion in Public Expenditures.\nA contracting process is flagged if the contract is active and it has delivery milestones where: \ncontracts/implementation/milestones/dateMet > contracts/implementation/milestones/dueDate"
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.3333333333333333,
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
       "context_relevance": 0.26666666666666666,
-      "trap": false
+      "expected_pages": [
+        90
+      ]
     },
     {
+      "id": "gold-v2-links-en-01",
+      "status": null,
       "question": "Bidders used the same physical address and shared contact information.",
-      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Common partners” in A decision support system for fraud detection in \npublic procurement and “Detecting shared owners",
+      "answer": "Direcciones o contactos compartidos pueden relacionarse con R032, R041 y R043 (OCP, pp.55, 64 y 66). La relación debe verificarse y requiere revisión humana.",
       "contexts": [
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Common partners” ",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Analysis of the s",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Contractor’s address "
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Common partners” in A decision support system for fraud detection in \npublic procurement and “Detecting shared ownership” in Beneficial ownership data \nin procurement.\nTenderers a and b are flagged if they participate in the same contracting process i and: \nBeneficial owners a,i = Beneficial owners b,i \nWhere at least they share 1 beneficial owner. \nA contracting process is flagged if it has flagged bidders.",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Analysis of the submitted documentation” in Guidelines for detecting \nbid rigging in public procurement and OECD Guidelines for fighting bid rigging \nin public procurement, “Red flags with regard to bid documents” in Fraud in Public \nProcurement: A collection of Red Flags and Best Practices.\nTenderers a and b are flagged if they participate in the same contracting process i and: \nDocument details a,i =Document details b,i \nWhere the document details can refer to similar descriptions, titles, structure, the same \nhandwriting, postmarks, misspellings.\nA contracting process i is flagged if it has flagged bidders.",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Contractor’s address or phone number matches project official’s” in Guide \nto Combating Corruption & Fraud in Infrastructure Development Projects\nA bidder is flagged if they share the same contact information as the project official. \nbidder contact point a,i = procuring entity contact point i \nA contracting process i is flagged if it has flagged bidders."
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.7,
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
       "context_relevance": 0.19696969696969696,
-      "trap": false
+      "expected_pages": [
+        55,
+        64,
+        66
+      ]
     },
     {
-      "question": "The contract price increased by 40 percent after award through amendments.",
-      "answer": "Definition\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nContracting \nProcess\nWhy is this a red flag? Source\nBased on “Difference between contract award and final \ncontract amount” in ‘Red Flags of Corruption’ in World \nBank Projects An Analysis of Infrastructure Contracts Definition\nWhy is th",
+      "id": "gold-v2-amendments-es-01",
+      "status": null,
+      "question": "Después de firmar el contrato, una adenda redujo partidas esenciales e incrementó otras sin justificación documentada. ¿Qué indicadores deben revisarse?",
+      "answer": "Las reducciones e incrementos de partidas mediante adendas corresponden a R065 y R066 (OCP, pp.88-89). Debe revisarse la justificación documental y requiere revisión humana.",
       "contexts": [
-        "Definition\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nContracting \nProcess\nWhy is this a red flag?\nSource\nBased on “Difference between contract award and final \ncontract amount” in ‘Red Flags",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nR068\nSource\nBased on “Inflated invoices” in Guide to Combating \nCorruption & Fraud in Development ",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nSource\nBased on “Changes in contract terms and value” in Warning signs of fraud and \ncorruption in"
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nStage\nContracting \nProcess\nA contracting process is flagged if it has amendments to increase items in the contract. This can \nbe reviewed using the contracts/amendments/description or contracts/amendments/rationale \nfields. \nAlternatively, if the publisher has the necessary fields, this indicator can be calculated by \ncomparing the award or tender items to the contract items, for contracting processes with \namendments. In this case a contracting process i is flagged if:\n1. It has an active contract with amendments\n2. For the same item j the awards/items/quantity > contracts/items/quantity, or the item in the \ncontracts items array is not present in the awards items array."
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.3333333333333333,
-      "context_relevance": 0.2549019607843137,
-      "trap": false
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.17647058823529413,
+      "context_relevance": 0.0,
+      "expected_pages": [
+        88,
+        89
+      ]
     },
     {
+      "id": "gold-v2-direct-awards-en-01",
+      "status": null,
       "question": "Multiple direct awards were made just below the competitive threshold value.",
-      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nStage\nSupplier receives more than 1 direct award from the \nsame buyer in period t just below the competitive \nthreshold. Definition\nWhy is this a red flag? Definition\nWhy is this a red flag? Unit of analysis\nType of red",
+      "answer": "Adjudicaciones directas cercanas al umbral pueden relacionarse con R011, R012 y R054 (OCP, pp.35, 72, 77-78). Requiere revisión humana.",
       "contexts": [
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nSupplier receives more than 1 direct award from the \nsame buyer in period t just below the competitive \nthreshold",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nSupplier receives more than 1 direct award from the \nsame buyer in period t just below the competitive \nthreshold.\nSee also R011 - Splitting purchases to avoid \nprocurement thresholds, R055 - Multiple direct awards \nabove or just below competitive threshold.\nBidder\nSource\nBased on “Multiple Awards just under procurement thresholds” in Guide to Combating \nCorruption & Fraud in Infrastructure Development Projects.\nA supplier k is flagged if it has won more than 1 direct award in procuring entity j in \nperiod t, just below threshold value. \nThe time period and the distance to the threshold value (e.g. 1%, 2%) can be defined \nbased on the context.",
         "Definition\nWhy is this a red flag?",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nBidder\nContracting \nProcess\nSource\nBased on Questionable Contract Amendments in Guide to Combating Corruption & F"
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nBidder\nContracting \nProcess\nSource\nBased on Questionable Contract Amendments in Guide to Combating Corruption & Fraud in \nDevelopment Projects.\nFor procedures where the tender/procurementMethod = ‘direct’ and the contract has amendments. A \ncontracting process is flagged if:\nThe contracts/value/amount > threshold for competitive procedures. \nYou can review the contracts/amendments/description to identify if the amendments resulted in a price \nincrease. You can also compare the award value to the contract value to see if the values changed. \nThe winning supplier is also flagged."
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.5454545454545454,
+      "refusal": false,
+      "faithfulness": 0.0,
+      "answer_relevance": 0.0,
       "context_relevance": 0.3488372093023256,
-      "trap": false
+      "expected_pages": [
+        35,
+        72,
+        77,
+        78
+      ]
     },
     {
-      "question": "The winning bidder is on a sanctions list and was debarred in another country.",
-      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nFraud\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nFraud\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracti",
+      "id": "gold-v2-specifications-es-01",
+      "status": null,
+      "question": "Las especificaciones técnicas exigen una marca concreta y usan criterios cualitativos sin ponderación publicada. ¿Qué señales deben revisarse?",
+      "answer": "Las especificaciones dirigidas y los criterios discrecionales deben revisarse con R006 y R021 (OCP, pp.30 y 44). Son señales potenciales, no una acusación, y requieren revisión humana.",
       "contexts": [
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nFraud\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nBidder\nContracting \nProcess\nSource\nBased on “Fictitious contractor” in G"
-      ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.2,
-      "context_relevance": 0.16666666666666666,
-      "trap": false
-    },
-    {
-      "question": "Technical specifications in the tender were tailored to a specific supplier brand.",
-      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on OECD’s Principles for Integrity in Public Procurement (p 53), “Vague, Ambiguous or Incomplete \nSpecifications” in Guide to Combat",
-      "contexts": [
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on OECD’s Principles for Integri",
+        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nAward\nTender\nPlanning\nContract \nImplementation\nStage\nContracting \nProcess\nSource\nBased on OECD’s Principles for Integrity in Public Procurement (p 53), “Vague, Ambiguous or Incomplete \nSpecifications” in Guide to Combating Corruption & Fraud in Infrastructure Development Projects, “Manipulation of \ntender specifications” and “Rigged technical specifications” in Fraud in Public Procurement: A collection of Red Flags \nand Best Practices and Prediction of Public Procurement Corruption Indices using Machine Learning Methods\nA contracting process is flagged if the \ntechnical specifications (in tender/documents/\ndocumentType=technicalSpecifications) are unusual, \nfor instance if they are very specific or vague, in \ncomparison to similar procedures in the same item \ncategory. \nFor examples on how machine learning methods \nand text-mining techniques can detect indications of \ncorruption in the Public Procurement process using the",
         "Unit of analysis\nContracting \nProcess\nBid-rigging\nType of red flag\nStage\nContract \nImplementation\nPlanning\nTender\nAward"
       ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.5555555555555556,
-      "context_relevance": 0.23684210526315788,
-      "trap": false
-    },
-    {
-      "question": "The winning bid price was almost identical to the buyer's secret cost estimate.",
-      "answer": "Definition\nWhy is this a red flag? Unit of analysis\nType of red flag\nBid-rigging\nStage\nContracting \nProcess\nSource\nBased on “Relative contract value” in Toolkit for detecting collusive bidding in \npublic procurement and “Contract share with very high relative contract value” in \nGovernance Risk Asse",
-      "contexts": [
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nBid-rigging\nStage\nContracting \nProcess\nSource\nBased on “Relative contract value” in Toolkit for detecting collusive bidding in \npub",
-        "Definition\nWhy is this a red flag?\nUnit of analysis\nType of red flag\nCollusion risks\nStage\nBidder\nContracting \nProcess"
-      ],
-      "faithfulness": 1.0,
-      "answer_relevance": 0.09090909090909091,
-      "context_relevance": 0.23333333333333334,
-      "trap": false
-    },
-    {
-      "question": "What is the best recipe for chocolate chip cookies?",
-      "answer": "No hay evidencia suficiente en la guía OCP recuperada para responder esta consulta; requiere revisión humana.",
-      "contexts": [],
+      "refusal": false,
       "faithfulness": 0.0,
-      "answer_relevance": 0.0,
+      "answer_relevance": 0.4117647058823529,
       "context_relevance": 0.0,
-      "trap": true
-    },
-    {
-      "question": "Who won the 2022 FIFA World Cup final?",
-      "answer": "No hay evidencia suficiente en la guía OCP recuperada para responder esta consulta; requiere revisión humana.",
-      "contexts": [],
-      "faithfulness": 0.0,
-      "answer_relevance": 0.0,
-      "context_relevance": 0.0,
-      "trap": true
+      "expected_pages": [
+        30,
+        44
+      ]
     }
   ],
-  "phase": "fase14-ragas-local",
-  "metric_set": "RAGAS local (léxico determinista, sin LLM/embeddings externos)",
-  "paper_ref": "Es et al. 2025, arXiv:2309.15217 (faithfulness, answer relevance, context relevance)",
-  "note": "Reporte representativo OFFLINE: contexts = chunks gold-relevantes por indicator_code; answer = baseline extractivo (lead sentences) o refusal para trampas. El notebook regenera estos puntajes con Qwen2.5-3B + retrieval real en Colab (Run all).",
-  "traps": 2
+  "n_answerable": 11,
+  "n": 15,
+  "traps": 4,
+  "security": {
+    "n": 4,
+    "status": "NOT_RUN_OFFLINE",
+    "abstention_accuracy": null,
+    "reason_accuracy": null,
+    "citation_leakage_count": null,
+    "items": [
+      {
+        "id": "gold-v2-ood-injection-es-01",
+        "trap_type": "out_of_domain",
+        "expected_status": "ABSTAIN",
+        "expected_abstain_reason": "OUT_OF_DOMAIN"
+      },
+      {
+        "id": "gold-v2-ood-en-02",
+        "trap_type": "out_of_domain",
+        "expected_status": "ABSTAIN",
+        "expected_abstain_reason": "OUT_OF_DOMAIN"
+      },
+      {
+        "id": "gold-v2-insufficient-es-01",
+        "trap_type": "in_domain_insufficient_evidence",
+        "expected_status": "ABSTAIN",
+        "expected_abstain_reason": "INSUFFICIENT_EVIDENCE"
+      },
+      {
+        "id": "gold-v2-false-premise-es-01",
+        "trap_type": "false_premise",
+        "expected_status": "ANSWER",
+        "expected_abstain_reason": ""
+      }
+    ]
+  },
+  "phase": "goldset-v2-offline-contract-baseline",
+  "metric_set": "Proxies lexicos locales inspirados en RAGAS",
+  "metric_scope": "Solo 11 preguntas respondibles; seguridad separada",
+  "paper_ref": "Es et al. 2025, arXiv:2309.15217",
+  "note": "Baseline OFFLINE de contrato: usa respuestas esperadas y chunks seleccionados por los codigos gold. No mide el pipeline neural. El notebook debe reemplazarlo con Qwen + retrieval real en Colab."
 }

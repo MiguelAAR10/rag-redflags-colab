@@ -248,6 +248,10 @@ class TestAgentUnit:
 
 
 class TestIntegration:
+    @pytest.fixture(autouse=True)
+    def _require_sentence_transformers(self):
+        pytest.importorskip("sentence_transformers")
+
     def test_analyze_with_faiss_retrieval(self):
         try:
             from packages.rag_core.retrievers import faiss_search, load_chunks

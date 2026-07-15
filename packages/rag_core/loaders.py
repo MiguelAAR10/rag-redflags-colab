@@ -106,10 +106,26 @@ def extract_indicator_title(page_info: Dict) -> Optional[str]:
     return None
 
 
-def extract_indicator_code(page_info: Dict) -> Optional[str]:
-    """Extract Rxxx code from page text."""
-    text = page_info["full_text"]
-    codes = re.findall(r'R\d{3}', text)
+def extract_indicator_code(
+    page_info: Dict,
+    title: Optional[str] = None,
+) -> Optional[str]:
+    """Extract Rxxx code from page text.
+
+    When ``title`` is provided, prefer the code on the same line as the title
+    (or within a small window) to avoid picking up cross-reference codes that
+    point to other indicators (e.g. ``See also R011``).
+    """
+    text = page_info.get("full_text", "")
+    if title:
+        title_norm = re.sub(r"\s+", " ", title.strip().lower())
+        for raw_line in text.splitlines():
+            line = re.sub(r"\s+", " ", raw_line.strip().lower())
+            if title_norm and title_norm in line:
+                match = re.search(r"R\d{3}", line)
+                if match:
+                    return match.group(0)
+    codes = re.findall(r"R\d{3}", text)
     return codes[0] if codes else None
 
 
@@ -254,7 +270,7 @@ def split_indicator_blocks(text: str) -> List[Tuple[str, str]]:
 def process_indicator_page(page_num: int, page_info: Dict) -> List[Dict]:
     """Process an indicator page into logical units."""
     title = extract_indicator_title(page_info)
-    code = extract_indicator_code(page_info)
+    code = extract_indicator_code(page_info, title=title)
     stage = infer_stage_from_title(title) if title else 'unknown'
     family = stage_to_family(stage)
     

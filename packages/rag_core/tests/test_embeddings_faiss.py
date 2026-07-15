@@ -197,6 +197,10 @@ class TestIndexingUnit:
 class TestEmbeddingsIntegration:
     """Tests con modelo real de embeddings (skip si no instalado)."""
 
+    @pytest.fixture(autouse=True)
+    def _require_sentence_transformers(self):
+        pytest.importorskip("sentence_transformers")
+
     def test_embed_texts_shape_and_norm(self):
         """embed_texts produce matriz normalizada."""
         try:
